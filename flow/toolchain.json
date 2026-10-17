@@ -1,0 +1,10 @@
+{
+  "klayout_tools": {
+    "repo": "https://github.com/2AMLogic/klayout-tools",
+    "commit": "81ac4d3915c1ae787ba66c26b74a55a31b277ed2",
+    "reported_version": "0.7.1.dev1754+g81ac4d3915c1"
+  },
+  "yosys": "0.67+post (git sha1 b8e7da6f40ae8f552c116bf6c359b07c6533e159)",
+  "openroad": "26Q3-1510-g6cb3f2b704",
+  "icarus": "13.0 (stable) (v13_0)"
+}

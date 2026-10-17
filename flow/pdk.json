@@ -1,0 +1,10 @@
+{
+  "open_pdks": {
+    "repo": "https://github.com/RTimothyEdwards/open_pdks",
+    "commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "provisioned_by": "ciel (klt resolves it from ~/.ciel via `klt pdk find`)"
+  },
+  "variant": "sky130A",
+  "cell_library": "sky130_fd_sc_hd",
+  "smoke_corner": "tt_025C_1v80"
+}

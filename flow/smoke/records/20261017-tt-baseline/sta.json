@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "engine": "openroad",
+  "engine_version": "26Q3-1510-g6cb3f2b704",
+  "hdl_toplevel": "counter",
+  "status": "ok",
+  "def_path": {
+    "path": "flow/build/smoke/.klt/place-and-route/counter.def",
+    "scope": "repo"
+  },
+  "verilog_path": null,
+  "geometry_source": "routed",
+  "wire_load_model": null,
+  "wire_load_mode": null,
+  "clock_mode": "propagated",
+  "spef_path": null,
+  "worst_slack_ns": 18.8852,
+  "total_negative_slack_ns": 0,
+  "worst_hold_slack_ns": 0.44575,
+  "total_negative_hold_slack_ns": 0,
+  "fmax_mhz": 897.02,
+  "timing_status": "constrained",
+  "constraint_completeness": {
+    "status": "incomplete",
+    "unconstrained_endpoints": {
+      "status": "ok",
+      "count": 8,
+      "sample": [
+        "q[0]",
+        "q[1]",
+        "q[2]",
+        "q[3]",
+        "q[4]",
+        "q[5]",
+        "q[6]",
+        "q[7]"
+      ],
+      "truncated": false,
+      "reason": null
+    },
+    "unclocked_registers": {
+      "status": "ok",
+      "count": 0,
+      "sample": [],
+      "truncated": false,
+      "reason": null
+    },
+    "sample_limit": 20
+  },
+  "setup_violation_count": 0,
+  "hold_violation_count": 0,
+  "worst_setup_path": {
+    "status": "ok",
+    "check_type": "setup",
+    "engine_check_role": "setup",
+    "startpoint": "_40_/Q",
+    "endpoint": "_47_/D",
+    "slack_ns": 18.8852,
+    "consistent_with_aggregate": true,
+    "reason": null
+  },
+  "worst_hold_path": {
+    "status": "ok",
+    "check_type": "hold",
+    "engine_check_role": "hold",
+    "startpoint": "_46_/Q",
+    "endpoint": "_46_/D",
+    "slack_ns": 0.44574,
+    "consistent_with_aggregate": true,
+    "reason": null
+  },
+  "clock_skew_ns": 0,
+  "estimated_power_mw": 0.0278,
+  "provenance": {
+    "klt_version": "0.7.1.dev1754+g81ac4d3915c1",
+    "klayout_version": "0.30.12",
+    "pdk": {
+      "name": "sky130A",
+      "source": "search root: ~/.ciel",
+      "version": "open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+      "ambiguous_sources": [
+        "search root: ~/.volare"
+      ]
+    },
+    "deck": {
+      "name": "sky130_fd_sc_hd__tt_025C_1v80",
+      "content_hash": "sha256:8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+      "released": false
+    },
+    "input": {
+      "content_hash": "sha256:4e0907c1eae0f96767c495a07d571698bf276d1a10f128e9c1c1ddbe291b59ee",
+      "role": "layout"
+    }
+  },
+  "spef_annotation": null,
+  "clock_propagation": {
+    "clock_sinks": 1,
+    "max_network_latency_ns": 0.234244,
+    "clock_sinks_sample": [
+      "_40_/CLK"
+    ]
+  },
+  "sdf": null,
+  "electrical_checks": {
+    "parasitics_source": "none",
+    "max_transition": {
+      "coverage": "checked",
+      "limit_source": "liberty",
+      "unit": "ns",
+      "violation_count": 0,
+      "net_count": 0,
+      "worst_excess": null,
+      "worst_pin": null
+    },
+    "max_capacitance": {
+      "coverage": "checked",
+      "limit_source": "liberty",
+      "unit": "pF",
+      "violation_count": 0,
+      "net_count": 0,
+      "worst_excess": null,
+      "worst_pin": null
+    }
+  },
+  "engine_log": {
+    "invocation_id": "fbf33c8a0121436d951bff23283f7db4",
+    "script_name": "sta_counter.tcl",
+    "script_path": {
+      "path": "flow/build/smoke/.klt/sta/sta_counter.tcl",
+      "scope": "repo"
+    },
+    "script_sha256": "141f322651f058e49dc30bd877b617e69b5b9964b7b504a01fb452512aa35fc6",
+    "metrics_path": {
+      "path": "flow/build/smoke/.klt/sta/counter_metrics.json",
+      "scope": "repo"
+    },
+    "outcome": "exited",
+    "returncode": 0,
+    "directory": {
+      "path": "flow/build/smoke/.klt/sta/openroad-logs/fbf33c8a0121436d951bff23283f7db4",
+      "scope": "repo"
+    },
+    "stdout_path": {
+      "path": "flow/build/smoke/.klt/sta/openroad-logs/fbf33c8a0121436d951bff23283f7db4/stdout.log",
+      "scope": "repo"
+    },
+    "stderr_path": {
+      "path": "flow/build/smoke/.klt/sta/openroad-logs/fbf33c8a0121436d951bff23283f7db4/stderr.log",
+      "scope": "repo"
+    },
+    "metadata_path": {
+      "path": "flow/build/smoke/.klt/sta/openroad-logs/fbf33c8a0121436d951bff23283f7db4/invocation.json",
+      "scope": "repo"
+    },
+    "retention_errors": []
+  }
+}
