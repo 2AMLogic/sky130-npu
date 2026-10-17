@@ -6,7 +6,7 @@ PDK — an INT8 multiply-accumulate array fed by banked SRAM — designed by AI
 agents driving [klayout-tools](https://github.com/2AMLogic/klayout-tools) and
 the open-source cocotb + Icarus, Yosys and OpenROAD flow.
 
-**Status: just opened, specification phase.** Nothing is designed yet.
+**Status: specification ratified.** No RTL or golden model yet.
 
 **Built agent-native.** Every specification, decision record, testbench, and
 line of documentation here is produced by AI agents working from a ratified
@@ -42,17 +42,20 @@ and testbenches are designed here once.
   `sky130-sram-compiler` canary once it delivers, or standard-cell RAM), a
   processor (the host is external), floating point, and training.
 
-## Target specification (DRAFT — engineering to ratify, see issue #1)
+## Target specification (ratified — see [spec/npu.md](spec/npu.md))
 
 | Parameter | Target | Fallback | Stretch |
 |---|---|---|---|
 | MAC array | 8 x 8 (64 MACs), INT8 x INT8 → INT32 | 4 x 4 | 16 x 16 |
-| Dataflow | weight-stationary systolic (to ratify) | — | — |
+| Dataflow | output-stationary ([decision](spec/decisions/0001-dataflow.md)) | same | same |
 | On-chip SRAM | 4 banks, 16 KB total | 2 banks, 4 KB | 8 banks, 64 KB |
-| Operations | matrix multiply, 2-D convolution via im2col, ReLU, requantize | matrix multiply | depthwise convolution |
+| Operations | matrix multiply, 2-D convolution via im2col (host-side), bias, requantize, ReLU | matrix multiply | depthwise convolution (deferred) |
 | Signoff clock (post-route STA, slow corner) | 50 MHz | 25 MHz | 100 MHz |
 | Numerical correctness | bit-exact against the integer golden model | — | — |
-| Signoff | DRC + LVS clean, STA closed at every ratified corner | — | — |
+| Signoff | DRC + LVS clean, STA closed at every ratified corner that has all its views; the 50 MHz target is not met until the slow-corner macro view exists (spec G1) | — | — |
+
+The macro source is [OpenRAM sky130](spec/decisions/0002-sram-source.md); its
+slow-corner Liberty view is an open gap, so the 50 MHz figure is unverified.
 
 Throughput is a derived figure — MACs per cycle times the signoff clock — and
 is only quoted together with the array utilization observed in simulation on
@@ -61,7 +64,7 @@ a stated workload.
 Maturity ladder: spec ratified → golden model and RTL bit-exact on the
 reference workloads → synthesized with timing met → placed and routed with
 the SRAM banks, DRC/LVS-clean → post-route multi-corner STA closed →
-shuttle seat → measured silicon. **Current position: pre-spec.**
+shuttle seat → measured silicon. **Current position: spec ratified; golden model, harness and RTL not started.**
 
 ## Repo layout
 
