@@ -6,6 +6,8 @@ placeholders until the pinned macro LEF is read (spec gap G1 region, issue #6).
 Target: `ARRAY_N = 8`, 4 banks. A feeds the array from the west edge, B from
 the north edge; results go back to an A bank (the idle one).
 
+Diagram labels map to bank indices: A0, A1 = banks 0, 1; B0, B1 = banks 2, 3.
+
 ```
           B0 (4 KB)          B1 (4 KB)
         +-----------+      +-----------+

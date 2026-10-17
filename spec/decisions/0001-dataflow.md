@@ -42,3 +42,14 @@ accumulators are drained, biased and requantized once per tile.
   (spec section 9).
 - Not measured: all numbers here are derived from port counts, not from a
   simulation or a macro datasheet.
+
+## Addendum: fallback result bank and host access (PR #13 review)
+
+At the fallback (`ARRAY_N = 4`, 2 banks) both banks hold operands, so "a bank
+other than A or B" left no legal `OUT_BANK`, and "no host access to the active
+bank" left no way to fill the free port. Decision: `OUT_BANK` may share a bank
+with an operand when the result range does not overlap the operand ranges
+(`ERR_CODE` 3 is redefined to that overlap), and at `ARRAY_N = 4` the host may
+use the RW port of an active bank outside the active operand and result ranges.
+Unchanged at `ARRAY_N >= 8`. Spec sections 5.2, 5.3 and 6 carry the rule. Not
+simulated; derived from port and capacity counts.

@@ -30,7 +30,7 @@ Rules that bind this document:
 | Host interface | Wishbone B4 classic, 32-bit, slave only | same | same | Decided (section 6). |
 | Signoff clock, post-route STA, slow corner | 50 MHz | 25 MHz | 100 MHz | Decided as the target. Reachability is unverified, see gap G1 (section 7). |
 | Numerical correctness | bit-exact vs the integer golden model | same | same | Decided (section 3, 4). |
-| Signoff | DRC + LVS clean, STA closed at every corner in section 7 that has all its views | same | same | Decided. A corner with a missing view is reported as a gap, never as closed. |
+| Signoff | DRC + LVS clean, STA closed at every corner in section 7 that has all its views | same | same | Decided. A corner with a missing view is reported as a gap, never as closed. The 50 MHz target is not met until the slow-corner macro view exists (G1): `tt` alone closing does not satisfy it. |
 
 The 16 x 16 / 100 MHz / 64 KB column is recorded as parameter ranges only.
 Nothing in this spec is designed for it (CLAUDE.md: stretch does not drive the
@@ -63,7 +63,8 @@ operand stream and both its ports are busy. That forces **ping-pong double
 buffering**: while the array reads bank X on both ports, the host fills the
 partner bank. Bank count follows: `2 operands x 2 (ping-pong) = 4` at
 `N = 8`. At `N = 4` an operand needs 1 word/cycle, one port suffices, the other
-port is free for host fill, and no ping-pong is needed: `2` banks. At `N = 16`
+port is free for host fill, and no bank-level ping-pong is needed: `2` banks. The
+host fills the next tile at a different offset in the same bank (section 5.3). At `N = 16`
 an operand needs 4 words/cycle, so two banks interleaved, doubled for
 ping-pong: `8`. These are the README's 2 / 4 / 8.
 
@@ -190,12 +191,22 @@ the rest of a B bank is unused in this spec (a second weight tile is
 `deferred`, section 9).
 
 Result tile: `ARRAY_N x ARRAY_N` INT8, row-major (byte `m*N + n`), written at
-`OUT_OFF` in `OUT_BANK` (a bank other than the current A or B bank).
+`OUT_OFF` in `OUT_BANK`. `OUT_BANK` may equal `A_BANK` or `B_BANK` only if the
+result range `[OUT_OFF, OUT_OFF + N*N)` overlaps neither operand range in that
+bank (`[A_OFF, A_OFF + K*N)`, `[B_OFF, B_OFF + K*N)`). At the target the result
+goes to the idle A ping-pong bank; at the fallback (no idle bank) it goes to
+bank 0 beside the A tile: a 1 KB operand tile (`K_MAX x 4`) plus a 16 B result
+tile fit a 2 KB bank. Decision record: [0001](decisions/0001-dataflow.md),
+addendum.
 
 ### 5.3 Access rules
 
 - While BUSY, a host access to the active A bank or active B bank returns bus
-  error; all other banks are host-accessible (that is the ping-pong).
+  error; all other banks are host-accessible (that is the ping-pong). Exception,
+  `ARRAY_N = 4` only: the array reads each operand through the read port alone,
+  so the host may access an active bank through the RW port outside the active
+  operand range and outside the result range (that is how the next tile is
+  filled in the fallback). A host access inside either range returns bus error.
 - Result writes use the macro's RW port and take priority over host writes
   on that bank; the host access waits.
 - Bank sizes and port count are fixed by this spec; port **timing** at the
@@ -237,7 +248,7 @@ Registers (reset value 0 unless noted):
 | `0x30` | `PERF_CYCLES` | RO | cycles from `START` accepted to `DONE`, saturating; last operation |
 
 `ERR_CODE`: 1 = `K` out of range; 2 = misaligned or out-of-bank offset or bank
-index; 3 = `OUT_BANK` equals `A_BANK` or `B_BANK`; 4 = `shift > 47`; 5 = `START`
+index; 3 = the result range overlaps the `A` or `B` operand range in a shared bank (section 5.2); 4 = `shift > 47`; 5 = `START`
 while BUSY. On ERR no bank is written.
 
 ## 7. PVT corners and STA

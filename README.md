@@ -52,7 +52,7 @@ and testbenches are designed here once.
 | Operations | matrix multiply, 2-D convolution via im2col (host-side), bias, requantize, ReLU | matrix multiply | depthwise convolution (deferred) |
 | Signoff clock (post-route STA, slow corner) | 50 MHz | 25 MHz | 100 MHz |
 | Numerical correctness | bit-exact against the integer golden model | — | — |
-| Signoff | DRC + LVS clean, STA closed at every ratified corner that has all its views | — | — |
+| Signoff | DRC + LVS clean, STA closed at every ratified corner that has all its views; the 50 MHz target is not met until the slow-corner macro view exists (spec G1) | — | — |
 
 The macro source is [OpenRAM sky130](spec/decisions/0002-sram-source.md); its
 slow-corner Liberty view is an open gap, so the 50 MHz figure is unverified.
