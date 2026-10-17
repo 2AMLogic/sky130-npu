@@ -1,0 +1,6 @@
+{
+  "schema": "klt.lvs.request/1",
+  "engine": "klayout",
+  "layout": { "netlist": "layout.gate.spice", "top": "counter" },
+  "reference": { "netlist": ".klt/place-and-route/counter.v", "top": "counter", "form": "gate-level-verilog", "library": "sky130_fd_sc_hd" }
+}

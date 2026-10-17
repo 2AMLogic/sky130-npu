@@ -1,0 +1,13 @@
+{
+  "schema": "klt.place_and_route.request/1",
+  "engine": "openroad",
+  "netlist": ".klt/synthesize/run-aed130c2683d4a698296f544a3b59132/counter_synth.v",
+  "hdl_toplevel": "counter",
+  "pdk": { "cell_library": "sky130_fd_sc_hd", "corner": "tt_025C_1v80" },
+  "floorplan": { "method": "utilization", "utilization_pct": 20, "aspect_ratio": 1.0, "core_margin_um": 2.0, "site": "unithd" },
+  "io": { "layer_h": "met3", "layer_v": "met2" },
+  "power": { "preset": "sky130hd" },
+  "constraints": { "clock_port": "clk", "clock_period_ns": 20.0 },
+  "seed": 1,
+  "target_stage": "route"
+}

@@ -71,6 +71,7 @@ rtl/           MAC array, controller, SRAM bank interface
 verification/  golden model, cocotb testbenches, workload runs
 layout/        GDS + DRC/LVS reports + STA reports (klayout-tools driven)
 measurements/  silicon characterization (empty until tape-out)
+flow/          pinned PDK + toolchain and the klt flow smoke run (see [flow/README.md](flow/README.md))
 ```
 
 ## License

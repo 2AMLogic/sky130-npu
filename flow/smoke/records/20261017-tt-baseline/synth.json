@@ -1,0 +1,131 @@
+{
+  "schema_version": 2,
+  "engine": "yosys",
+  "engine_version": "0.67+post",
+  "hdl_toplevel": "counter",
+  "parameters": {},
+  "run_id": "run-aed130c2683d4a698296f544a3b59132",
+  "status": "ok",
+  "instance_count": 28,
+  "area_um2": 284.0224,
+  "sequential_area_um2": 160.1536,
+  "instance_counts_by_type": {
+    "sky130_fd_sc_hd__a21oi_1": 4,
+    "sky130_fd_sc_hd__and2_2": 1,
+    "sky130_fd_sc_hd__and3_1": 1,
+    "sky130_fd_sc_hd__and3_2": 1,
+    "sky130_fd_sc_hd__and3_4": 1,
+    "sky130_fd_sc_hd__and4_4": 1,
+    "sky130_fd_sc_hd__dfxtp_1": 8,
+    "sky130_fd_sc_hd__nor2_1": 4,
+    "sky130_fd_sc_hd__nor3_1": 4,
+    "sky130_fd_sc_hd__nor3_2": 1,
+    "sky130_fd_sc_hd__o21a_1": 1,
+    "sky130_fd_sc_hd__o21bai_1": 1
+  },
+  "leakage_power_nw": 0.11533648660000001,
+  "leakage_by_type_nw": {
+    "sky130_fd_sc_hd__a21oi_1": 0.001652086,
+    "sky130_fd_sc_hd__and2_2": 0.003369228,
+    "sky130_fd_sc_hd__and3_1": 0.005593908,
+    "sky130_fd_sc_hd__and3_2": 0.005181649,
+    "sky130_fd_sc_hd__and3_4": 0.004190529,
+    "sky130_fd_sc_hd__and4_4": 0.004306832,
+    "sky130_fd_sc_hd__dfxtp_1": 0.008438635,
+    "sky130_fd_sc_hd__nor2_1": 0.0019697,
+    "sky130_fd_sc_hd__nor3_1": 0.0009251654,
+    "sky130_fd_sc_hd__nor3_2": 0.001920483,
+    "sky130_fd_sc_hd__o21a_1": 0.002208678,
+    "sky130_fd_sc_hd__o21bai_1": 0.002868294
+  },
+  "timing": {
+    "source": "abc_stime",
+    "wire_load": null,
+    "critical_path_ps": 767.44,
+    "delay_target_ps": null
+  },
+  "clock_targets": {
+    "clocks": [],
+    "delay_target_ps": null,
+    "delay_target_basis": "none",
+    "per_clock_enforced": false
+  },
+  "sta": null,
+  "sta_unavailable_reason": "the optional klt_statime_native extension is not installed, so no gate-level static timing analysis was attempted -- from a repo checkout, run `uv sync --group statime` (or `maturin develop --release` inside native/statime/) and re-run to populate `sta`",
+  "structural": {
+    "latches": 0,
+    "expected_latches": 0,
+    "unexpected_latches": 0,
+    "comb_loops": 0,
+    "multi_driven": 0,
+    "has_critical": false
+  },
+  "cell_exclusions": {
+    "mode": "additive",
+    "requested": [],
+    "library_defaults": [
+      "sky130_fd_sc_hd__lpflow_*",
+      "sky130_fd_sc_hd__probe*"
+    ],
+    "effective": [
+      "sky130_fd_sc_hd__lpflow_*",
+      "sky130_fd_sc_hd__probe*"
+    ],
+    "validated": null,
+    "engine_supports_dont_use": true
+  },
+  "warnings": {
+    "total": 0,
+    "by_category": {},
+    "representatives": []
+  },
+  "memory_mapping": {
+    "status": "none_detected",
+    "reason": null,
+    "modules": [],
+    "script_path": {
+      "path": "flow/build/smoke/.klt/synthesize/run-aed130c2683d4a698296f544a3b59132/counter_memory_evidence.ys",
+      "scope": "repo"
+    }
+  },
+  "blackbox_modules": [],
+  "netlist_path": {
+    "path": "flow/build/smoke/.klt/synthesize/run-aed130c2683d4a698296f544a3b59132/counter_synth.v",
+    "scope": "repo"
+  },
+  "netlist_sha256": "f46c48f515bb6e6b3b6717de19f473411cef0b37fde5877b13b6b9a625a0b6e8",
+  "script_path": {
+    "path": "flow/build/smoke/.klt/synthesize/run-aed130c2683d4a698296f544a3b59132/synth_counter.ys",
+    "scope": "repo"
+  },
+  "run_script_path": {
+    "path": "flow/build/smoke/.klt/synthesize/run-aed130c2683d4a698296f544a3b59132/synth_counter.run.ys",
+    "scope": "repo"
+  },
+  "provenance": {
+    "klt_version": "0.7.1.dev1754+g81ac4d3915c1",
+    "klayout_version": "0.30.12",
+    "pdk": {
+      "name": "sky130A",
+      "source": "search root: ~/.ciel",
+      "version": "open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+      "ambiguous_sources": [
+        "search root: ~/.volare"
+      ]
+    },
+    "deck": {
+      "name": "sky130_fd_sc_hd__tt_025C_1v80",
+      "content_hash": "sha256:8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+      "released": false
+    },
+    "input": {
+      "content_hash": "sha256:899b514a08bad388288f77c235ec5e3bae8d0fef0b49479dc713a451a41ae077",
+      "role": "source"
+    },
+    "parameters": {}
+  },
+  "equivalence": null,
+  "restructuring": null,
+  "arithmetic": null,
+  "baseline": null
+}
