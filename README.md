@@ -73,6 +73,12 @@ layout/        GDS + DRC/LVS reports + STA reports (klayout-tools driven)
 measurements/  silicon characterization (empty until tape-out)
 ```
 
+## Reproduce
+
+The block's graded gap-to-T1 state is committed in `manifests/`. To regenerate
+it, run the `klt signoff` command in [manifests/README.md](manifests/README.md);
+CI re-runs it and fails if the committed report differs.
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
