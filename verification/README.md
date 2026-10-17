@@ -1,3 +1,49 @@
 # verification
 
-Empty until the first work lands here. See the repo README for scope.
+cocotb + Icarus harness skeleton. It decides nothing about the design: the DUT
+is a throwaway placeholder and the golden model is a stub (both pending #3).
+
+## Cold start
+
+Needs Python 3.9+ and Icarus Verilog 13.0 (CI builds tag `v13_0`; the runner
+records the `iverilog -V` string in every record).
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r verification/requirements.txt
+.venv/bin/python verification/runner.py
+```
+
+Exits 0 and writes one record under `verification/records/` on success; exits
+non-zero on any test failure (a failing run still writes its record). To
+enforce the Icarus version: `EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py`.
+
+The runner takes the DUT from arguments or env, so nothing needs editing in a
+stamped copy:
+
+```sh
+.venv/bin/python verification/runner.py --toplevel mydut \
+    --sources rtl/a.v rtl/b.v --param WIDTH=16 --test-module test_smoke
+```
+
+(`HDL_TOPLEVEL`, `HDL_SOURCES`, `HDL_PARAMS`, `TEST_MODULE`, `TEST_DIR`,
+`RECORDS_DIR`, `BUILD_DIR` are the env equivalents.) Parameters are also
+exported to the test as environment variables.
+
+## Layout
+
+| Path | Role |
+|---|---|
+| `runner.py` | cocotb runner, Icarus, parameter-driven; writes the ledger record |
+| `requirements.txt` | pinned cocotb |
+| `tests/test_smoke.py` | reset, clocking and scoreboard against the DUT |
+| `golden/` | seam for the integer golden model; stubs raise `NotImplementedError("specified by #3")` |
+| `placeholder/` | throwaway DUT; delete when real RTL lands |
+| `records/` | results ledger, **append-only** (see `records/README.md`) |
+
+## PDK-independent files (stamped into `asap7-npu`)
+
+All of them: `runner.py`, `requirements.txt`, `tests/`, `golden/`,
+`records/README.md` and this README, plus `.github/workflows/verification.yml`.
+Nothing here references sky130 or any PDK. `placeholder/` is stamped only as a
+bring-up aid and is dropped with the first real DUT.
