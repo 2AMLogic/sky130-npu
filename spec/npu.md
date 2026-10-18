@@ -304,13 +304,17 @@ independent of `ARRAY_N`.
 Inputs are generated, not hand-written. Generator: SplitMix64, 64-bit state,
 seed = the workload id's ASCII bytes read as a big-endian integer (truncated to
 64 bits by keeping the **last** 8 bytes). Draw order: `A` row-major, `B` row-major
-(`b[k][n]`), then `bias`. Each int8 is the low 8 bits of one draw interpreted as
+(`b[k][n]`), then `bias`; for `conv-*` the draws are the input tensor
+`H x W x C`, then the flat `K x F` weights, then `bias`, and `a.hex` holds the
+im2col matrix (decision 0004). Each int8 is the low 8 bits of one draw interpreted as
 two's complement; each bias is `(draw & 0xFFFF) - 32768`. `mult` is 40000 for
 `conv-*` and 1 for `mm-*`. `shift = max(0, bit_length(max|t| * mult) - 7)`
 over the workload's full `t`, `relu = 1` for `conv-*` and 0 for `mm-*`.
 The committed integer inputs and expected outputs live under
 `verification/workloads/<id>/` (created with the golden model, the #7 harness;
-files `a.hex`, `b.hex`, `bias.hex`, `params.json`, `expected_out.hex`).
+files `a.hex`, `b.hex`, `bias.hex`, `params.json`, `expected_out.hex`; their
+format and the `params.json` keys are pinned in
+`spec/decisions/0004-workload-vector-layout.md`).
 
 Utilization is a quantity to be observed in simulation, never assumed:
 
