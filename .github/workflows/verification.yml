@@ -44,3 +44,15 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -r verification/requirements.txt
           EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py
+
+  golden:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Golden model unit tests
+        run: python -m unittest discover -s verification/tests -p 'test_golden.py'
