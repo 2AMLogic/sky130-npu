@@ -64,7 +64,13 @@ buffering**: while the array reads bank X on both ports, the host fills the
 partner bank. Bank count follows: `2 operands x 2 (ping-pong) = 4` at
 `N = 8`. At `N = 4` an operand needs 1 word/cycle, one port suffices, the other
 port is free for host fill, and no bank-level ping-pong is needed: `2` banks. The
-host fills the next tile at a different offset in the same bank (section 5.3). At `N = 16`
+host fills the next tile at a different offset in the same bank (section 5.3).
+That overlap has a capacity limit: the current A tile, the next A tile and the
+result tile need `2 x (K x 4) + 16 = 8K + 16` bytes in a 2 KB bank, so it holds
+only for `K <= 254` (`8 x 254 + 16 = 2048`; at `K = 255`, 2056 B; at `K = 256`,
+2064 B). For `K` of 255 or 256 the host loads the next tile only after the
+current tile's compute has finished (serialized; correctness unchanged).
+Decision record: [0003](decisions/0003-fallback-overlap-limit.md). At `N = 16`
 an operand needs 4 words/cycle, so two banks interleaved, doubled for
 ping-pong: `8`. These are the README's 2 / 4 / 8.
 
@@ -196,8 +202,14 @@ result range `[OUT_OFF, OUT_OFF + N*N)` overlaps neither operand range in that
 bank (`[A_OFF, A_OFF + K*N)`, `[B_OFF, B_OFF + K*N)`). At the target the result
 goes to the idle A ping-pong bank; at the fallback (no idle bank) it goes to
 bank 0 beside the A tile: a 1 KB operand tile (`K_MAX x 4`) plus a 16 B result
-tile fit a 2 KB bank. Decision record: [0001](decisions/0001-dataflow.md),
-addendum.
+tile fit a 2 KB bank. That counts one operand tile only. With the next A tile
+also resident for fill/compute overlap (section 2) the bank needs
+`8K + 16 <= 2048`, i.e. `K <= 254`. At `K` of 255 or 256 the next tile is loaded
+after the current tile's compute finishes (serialized; results unchanged), and
+any fallback utilization figure quoted at `K >= 255` must come from simulation
+with that serialized load (section 8). `K_MAX`, `CAP` and the golden model
+interface are unchanged, see [0003](decisions/0003-fallback-overlap-limit.md).
+Decision record: [0001](decisions/0001-dataflow.md), addendum.
 
 ### 5.3 Access rules
 
