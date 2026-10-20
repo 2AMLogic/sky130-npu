@@ -1,0 +1,71 @@
+# Re-grade this block's gap-to-T1 state from the committed signoff manifest.
+#
+# `klt signoff --manifest` is re-run and its output compared with the committed
+# report (manifests/sky130-npu.signoff.json), so a manifest edit, an evidence
+# change or a grading-relevant klt change that is not accompanied by a fresh
+# report fails the build instead of quietly diverging from what the repo claims.
+#
+# Exit 3 means "not yet T1" (some item is unmet): a successful, expected run.
+# The gate is the diff, not the exit code; exit 0 and 3 pass, anything else
+# fails.
+#
+# klt is pinned to one full commit SHA, KLT_SHA below, the single place it is
+# recorded. Its bundled T1 checklist fixes the item skeleton and text, so a
+# floating install would churn the committed report. Bump KLT_SHA together
+# with a regenerated report (see manifests/README.md).
+
+name: signoff
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  KLT_SHA: 7755612adb513f00ec61e7a77ff7091aee7630f5
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Require a full 40-hex klt pin
+        run: |
+          if ! [[ "$KLT_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::KLT_SHA must be a full 40-hex commit SHA, got '$KLT_SHA'"
+            exit 1
+          fi
+
+      - name: Install the pinned klt (klayout-tools)
+        run: |
+          uv tool install "klayout-tools @ git+https://github.com/2AMLogic/klayout-tools@${KLT_SHA}"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Re-run klt signoff and diff against the committed report
+        run: |
+          set +e
+          klt signoff --manifest manifests/sky130-npu.json --format json > /tmp/signoff-fresh.json
+          rc=$?
+          set -e
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 3 ]; then
+            echo "::error::klt signoff failed (exit $rc)"
+            cat /tmp/signoff-fresh.json
+            exit 1
+          fi
+          if [ "$rc" -eq 3 ]; then
+            echo "note: block is not yet T1 (klt signoff exit 3), expected until every item is met"
+          fi
+          if ! diff -u manifests/sky130-npu.signoff.json /tmp/signoff-fresh.json; then
+            echo "::error::fresh klt signoff grade differs from the committed report manifests/sky130-npu.signoff.json"
+            echo "Regenerate it: see manifests/README.md"
+            exit 1
+          fi
+          echo "signoff report reproduced"
