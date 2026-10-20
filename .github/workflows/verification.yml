@@ -59,3 +59,21 @@ jobs:
 
       - name: Golden model unit tests
         run: python -m unittest discover -s verification/tests -p 'test_golden.py'
+
+  # Elaboration and lint of rtl/ at the target (8) and fallback (4) sizes, and
+  # the negative cases (6, 16). Two small Icarus + Yosys `hierarchy -check`
+  # runs plus two expected failures; no synthesis, no simulation. Uses the
+  # distro's iverilog and yosys (not the pins in flow/toolchain.json): this is
+  # an elaboration gate, not a tool-version result.
+  rtl-elaborate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Icarus and Yosys
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog yosys
+
+      - name: Elaborate and lint at ARRAY_N 8 and 4, reject 6 and 16
+        run: ./rtl/check.sh

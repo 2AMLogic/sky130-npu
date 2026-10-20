@@ -1,0 +1,17 @@
+{
+  "schema": "klt.synthesize.request/1",
+  "engine": "yosys",
+  "sources": [
+    "../npu_top.v",
+    "../npu_host.v",
+    "../npu_ctrl.v",
+    "../npu_banks.v",
+    "../npu_array.v",
+    "../npu_pe.v",
+    "../npu_requant.v",
+    "../pdk/sky130/npu_sram_bank.v"
+  ],
+  "hdl_toplevel": "npu_top",
+  "pdk": { "cell_library": "sky130_fd_sc_hd", "corner": "tt_025C_1v80" },
+  "constraints": { "clock_period_ns": null }
+}
