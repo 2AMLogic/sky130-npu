@@ -22,6 +22,7 @@ _None._
 
 - **#11**: Parameterised NPU RTL with array size as one parameter
 - **#12**: Bit-exact cocotb testbenches against the golden model
+- **#25**: Pin the SRAM macro and write the npu_sram_bank wrapper (reuse.lock.json owner)
 
 ## Ready
 
@@ -68,7 +69,7 @@ _None._
 |------|-------|
 | Operator merge-risk holds | 0 |
 | Very important | 0 |
-| Important | 2 |
+| Important | 3 |
 | Ready (`loom:issue`) | 0 |
 | In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 0 |
