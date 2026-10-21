@@ -5,6 +5,7 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-10-20
 
+- **PR #24**: feat(rtl): parameterised output-stationary NPU RTL for ARRAY_N 4 and 8
 - **PR #20**: feat: add bit-exact integer golden model and reference workload vectors
 - **PR #9**: ci: grade a committed klt signoff manifest on every push and PR
 - **Issue #10** (closed): Integer golden model (INT8, INT32 accumulate, requantization)
