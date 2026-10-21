@@ -33,7 +33,7 @@ _None._
 
 Issues currently being built (`loom:building`).
 
-- **#11**: Parameterised NPU RTL with array size as one parameter
+_None._
 
 ## PRs Awaiting Review
 
@@ -56,7 +56,7 @@ Issues carrying `loom:curated`.
 
 ## Proposed (Architect / Hermit)
 
-_None._
+- **#18**: Remove vacuous package.json stub scripts (check:ci/check:all/test/lint always exit 0) *(hermit)*
 
 ## Epics
 
@@ -70,10 +70,10 @@ _None._
 | Very important | 0 |
 | Important | 2 |
 | Ready (`loom:issue`) | 0 |
-| In Progress (`loom:building`) | 1 |
+| In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 0 |
 | Approved PRs awaiting merge | 0 |
 | Curated | 2 |
-| Architect / Hermit proposals | 0 |
+| Architect / Hermit proposals | 1 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
