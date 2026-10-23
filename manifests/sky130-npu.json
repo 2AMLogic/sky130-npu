@@ -1,5 +1,18 @@
 {
   "block": "sky130-npu",
   "kind": "digital",
-  "evidence": {}
+  "evidence": {
+    "6": {
+      "not_applicable": {
+        "spec": {
+          "file": "manifests/spec-rows.json",
+          "content_hash": "sha256:96f48a19db44bca7e97aea393e317b665dc8d795a245c4c145fd70581fdb090d"
+        },
+        "statement": {
+          "file": "manifests/item6-na-statement.json",
+          "content_hash": "sha256:763f6a92b6a68b85d9a5d881a547042c60daa9ebda07a4dde859ddf5a6fa6d8a"
+        }
+      }
+    }
+  }
 }

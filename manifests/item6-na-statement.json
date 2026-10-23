@@ -1,0 +1,59 @@
+{
+  "rows": [
+    {
+      "id": "mac-array",
+      "class": "architectural-choice",
+      "reason": "ARRAY_N is a decided RTL parameter with legal values {4, 8, 16}; a chosen design size, not a measured or sampled quantity."
+    },
+    {
+      "id": "operand-accumulator",
+      "class": "architectural-choice",
+      "reason": "The INT8 x INT8 -> INT32 signed two's complement format is a decided number format; there is no distribution to characterise."
+    },
+    {
+      "id": "dataflow",
+      "class": "architectural-choice",
+      "reason": "Output-stationary is a decided architectural choice recorded in decision 0001; it is not a performance figure with spread."
+    },
+    {
+      "id": "sram-banks",
+      "class": "architectural-choice",
+      "reason": "Bank count and size are decided structural values; there is nothing to sample."
+    },
+    {
+      "id": "sram-macro-port",
+      "class": "architectural-choice",
+      "reason": "The macro port shape (1rw1r, 32-bit word, byte write mask) is a decided interface with its source recorded in decision 0002."
+    },
+    {
+      "id": "operations",
+      "class": "architectural-choice",
+      "reason": "The supported operation set is a decided feature list; presence of an operation is not statistical."
+    },
+    {
+      "id": "k-max",
+      "class": "architectural-choice",
+      "reason": "K_MAX is a decided architectural limit, an exact integer bound."
+    },
+    {
+      "id": "host-interface",
+      "class": "architectural-choice",
+      "reason": "Wishbone B4 classic, 32-bit, slave only is a decided protocol choice, checked by protocol-level testbenches rather than statistics."
+    },
+    {
+      "id": "signoff-clock",
+      "class": "sta-bounded",
+      "reason": "The signoff clock is a post-route STA figure bounded per corner by static timing analysis, which is deterministic for a given netlist, parasitics and Liberty views, not a Monte Carlo or distributional result."
+    },
+    {
+      "id": "numerical-correctness",
+      "class": "bit-exact",
+      "reason": "Correctness is an exact bit-for-bit comparison against the integer golden model; any mismatch is a failure, so there is no tolerance, yield or statistical spread."
+    },
+    {
+      "id": "signoff",
+      "class": "drc-lvs-pass-fail",
+      "reason": "DRC and LVS are deterministic pass/fail checks and STA closure is per-corner; none is a statistical measure."
+    }
+  ]
+}
