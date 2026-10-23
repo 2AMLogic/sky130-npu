@@ -83,6 +83,42 @@ The block's graded gap-to-T1 state is committed in `manifests/`. To regenerate
 it, run the `klt signoff` command in [manifests/README.md](manifests/README.md);
 CI re-runs it and fails if the committed report differs.
 
+The steps below run from the repo root. Tool versions are pinned in
+[flow/toolchain.json](flow/toolchain.json) and the PDK in
+[flow/pdk.json](flow/pdk.json) (sky130A, `sky130_fd_sc_hd`, provisioned with
+`ciel`).
+
+**Golden model tests** (Python 3.9+, no other dependency, about 2 s):
+
+```sh
+python3 -m unittest discover -s verification/tests -p 'test_golden.py'
+```
+
+**Verification suite** (cocotb + Icarus Verilog 13.0; see
+[verification/README.md](verification/README.md)). Exits 0 and writes one
+record under `verification/records/`:
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r verification/requirements.txt
+EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py
+```
+
+**Synthesis estimate** (Yosys, generic gates, no Liberty; about 5 min and
+340 MB; an estimate, not area or timing):
+
+```sh
+./rtl/synth/synth.sh 8 core
+```
+
+**Flow smoke** (the whole `klt` digital flow on a throwaway counter at
+`tt_025C_1v80`; needs `klt`, Yosys, OpenROAD and the PDK pinned above; this is
+toolchain evidence, not block evidence; see [flow/README.md](flow/README.md)):
+
+```sh
+./flow/smoke/run.sh
+```
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
