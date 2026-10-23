@@ -1,0 +1,18 @@
+{
+  "status": "ratified",
+  "note": "One id per row of the section 1 'Parameters' table of spec/npu.md (11 rows, last touched by commit 962429d). The spec table has no id column, so the ids are slugs of the Parameter column, defined here. This file must change whenever section 1 gains or loses a row (see README.md).",
+  "source": {"file": "spec/npu.md", "section": "1. Parameters", "commit": "962429d"},
+  "rows": [
+    {"id": "mac-array"},
+    {"id": "operand-accumulator"},
+    {"id": "dataflow"},
+    {"id": "sram-banks"},
+    {"id": "sram-macro-port"},
+    {"id": "operations"},
+    {"id": "k-max"},
+    {"id": "host-interface"},
+    {"id": "signoff-clock"},
+    {"id": "numerical-correctness"},
+    {"id": "signoff"}
+  ]
+}
