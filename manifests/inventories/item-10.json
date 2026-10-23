@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "kind": "t1-attestation-inventory",
+  "t1_item": 10,
+  "description": "Repo hygiene: README with spec table and reproduction steps, license, and the two CI workflows.",
+  "hygiene": [
+    "README.md",
+    "LICENSE",
+    ".github/workflows/verification.yml",
+    ".github/workflows/signoff.yml"
+  ],
+  "checks": [
+    {
+      "name": "golden-model-tests",
+      "argv": ["python3", "-I", "-m", "unittest", "discover", "-s", "verification/tests", "-p", "test_golden.py"]
+    }
+  ]
+}

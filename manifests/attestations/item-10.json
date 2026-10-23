@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "generic",
+  "status": "pass",
+  "t1_item": 10,
+  "summary": "T1 item 10 (Repo hygiene): 5/5 attestation checks passed (klt signoff --attest)",
+  "source": "manifests/inventories/item-10.json",
+  "attestation": {
+    "producer": "klt signoff --attest",
+    "inventory_schema_version": 1,
+    "hash_algorithm": "sha256-raw-bytes",
+    "check_count": 5,
+    "passed_count": 5,
+    "checks": [
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": ".github/workflows/signoff.yml",
+        "passed": true,
+        "content_hash": "sha256:f520cd1707b777e7aa31f830ccc4e4820ea02bbfd11fc5e692811b02c57e51fb"
+      },
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": ".github/workflows/verification.yml",
+        "passed": true,
+        "content_hash": "sha256:214513a29cf8a9748c04e0dfc3dd5304f367fd337ff4ae008588b754a29885b7"
+      },
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": "LICENSE",
+        "passed": true,
+        "content_hash": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": "README.md",
+        "passed": true,
+        "content_hash": "sha256:6e4c3f9a5ce68c164fae762ab63cb023915ca97a26a673431eb4167a3c64a995"
+      },
+      {
+        "check": "command",
+        "role": "audit",
+        "name": "golden-model-tests",
+        "argv": [
+          "python3",
+          "-I",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "verification/tests",
+          "-p",
+          "test_golden.py"
+        ],
+        "cwd": ".",
+        "exit_status": 0,
+        "passed": true
+      }
+    ]
+  },
+  "provenance": {
+    "klt_version": "0.7.1.dev1413+g67e684ed9b2b",
+    "klayout_version": null,
+    "pdk": null,
+    "deck": null,
+    "input": {
+      "path": {
+        "path": "manifests/inventories/item-10.json",
+        "scope": "repo"
+      },
+      "content_hash": "sha256:e64fded544885d17d500e2a88f1212a0ebfb81e3549d804f4c998df77efadad9"
+    }
+  }
+}

@@ -4,10 +4,16 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 ([klayout-tools](https://github.com/2AMLogic/klayout-tools)).
 
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
-  `kind: digital`, and `evidence: {}`: no evidence is cited yet, so every
-  item grades `unmet` and `tier` is `null`. Evidence is added by later work,
-  and items 1, 9 and 10 are attested with `klt signoff --attest` once there is
-  something to inventory.
+  `kind: digital`. Item 10 cites `attestations/item-10.json`; every other
+  item is still uncited and grades `unmet`, so `tier` is `null`. Items 1 and 9
+  are attested the same way once there is something to inventory.
+- **`inventories/`** and **`attestations/`**: the item-10 inventory (README,
+  LICENSE, both workflows, plus the golden-model tests) and the envelope
+  `klt signoff --attest 10` produced from it. Regenerate after any edit to an
+  inventoried file, with the pinned klt as below:
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10.json`,
+  then update the cited `content_hash` in the manifest and re-render the
+  report. CI runs the same command with `--check`.
 - **`sky130-npu.signoff.json`**: the committed output of
   `klt signoff --manifest manifests/sky130-npu.json --format json`, verbatim.
   This is the verdict of record for the block's gap to T1.

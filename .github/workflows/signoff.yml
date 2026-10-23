@@ -25,7 +25,7 @@ permissions:
   contents: read
 
 env:
-  KLT_SHA: 7755612adb513f00ec61e7a77ff7091aee7630f5
+  KLT_SHA: 67e684ed9b2b28a14ea4f33bf16f1a0d01f8b0e0
 
 jobs:
   grade:
@@ -69,3 +69,10 @@ jobs:
             exit 1
           fi
           echo "signoff report reproduced"
+
+      - name: Re-attest T1 item 10 and check the committed attestation
+        run: |
+          klt signoff --attest 10 \
+            --inventory manifests/inventories/item-10.json \
+            --check manifests/attestations/item-10.json \
+            --format json

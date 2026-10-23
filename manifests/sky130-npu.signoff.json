@@ -5,17 +5,17 @@
   "tier": null,
   "t1_item_count": 11,
   "build_t1_item_count": 11,
-  "t1_met_count": 0,
+  "t1_met_count": 1,
   "source_doc": "docs/design-evidence-tiers.md",
-  "source_doc_content_hash": "sha256:43a8b74966522a29e8a1adf66bf02d7cc1e882455ac8f83144700d9748dd2319",
+  "source_doc_content_hash": "sha256:9fae9c1fe9cc277708980ee098ef1f276f622f2a338d3489a2062882c14a642e",
   "build": {
-    "version": "0.7.1.dev1312+g7755612adb51",
-    "package_version": "0.7.1.dev1312+g7755612adb51",
-    "git_commit": "7755612adb513f00ec61e7a77ff7091aee7630f5",
+    "version": "0.7.1.dev1413+g67e684ed9b2b",
+    "package_version": "0.7.1.dev1413+g67e684ed9b2b",
+    "git_commit": "67e684ed9b2b28a14ea4f33bf16f1a0d01f8b0e0",
     "git_tag": null,
     "dirty": false,
     "is_release": false,
-    "grading_ruleset_id": "sha256:af517243b40f0d84971b0c45f012b602769dbea07d355314ed8637ba9b2f9d55"
+    "grading_ruleset_id": "sha256:0b0fc9de5a0e8f31e8d474602fb84ef8d5b91816a437544bf5a7b6cee553eb5f"
   },
   "items": [
     {
@@ -137,10 +137,35 @@
       "partition": null,
       "text": "a README stating what the block is, its spec table, and how to reproduce every result; a license; CI that at minimum keeps the harness and evidence formats valid.",
       "notes": [],
-      "status": "unmet",
-      "reason": "no_evidence",
+      "status": "met",
+      "reason": null,
       "graded_by_build": true,
-      "citation": null
+      "citation": {
+        "file": "manifests/attestations/item-10.json",
+        "command": null,
+        "kind": "generic",
+        "check_status": "pass",
+        "content_hash": "sha256:e64fded544885d17d500e2a88f1212a0ebfb81e3549d804f4c998df77efadad9",
+        "input_verified": true,
+        "exit_status": 0,
+        "artifact_binding": {
+          "t1_item": 10,
+          "path": {
+            "path": "manifests/inventories/item-10.json",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:e64fded544885d17d500e2a88f1212a0ebfb81e3549d804f4c998df77efadad9",
+          "input_verified": true,
+          "summary": "T1 item 10 (Repo hygiene): 5/5 attestation checks passed (klt signoff --attest)",
+          "source": "manifests/inventories/item-10.json",
+          "attestation": {
+            "producer": "klt signoff --attest",
+            "inventory_schema_version": 1,
+            "check_count": 5,
+            "passed_count": 5
+          }
+        }
+      }
     },
     {
       "tier": "T1",
