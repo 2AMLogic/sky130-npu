@@ -110,13 +110,14 @@ Timing contract: both ports are synchronous; read data appears the cycle after
 the address; `rw_we[i]` enables byte `i` (byte 0 = bits `[7:0]`); a same-cycle
 read and write of one word on different ports is never issued by the NPU.
 
-`pdk/sky130/npu_sram_bank.v` is the **behavioral simulation model**, not a
-macro. No OpenRAM macro is imported or pinned: `reuse.lock.json` does not
-exist and its macro pin has no open owner (decision 0002; spec section 9 names
-#6, which closed as the PDK/toolchain bring-up). A wrapper over a real macro
-keeps this port list and read latency; a read latency other than one cycle
-needs a controller change and a decision record. The slow-corner Liberty view
-of the macro is spec gap G1; nothing here says whether a macro's access time
+`pdk/sky130/npu_sram_bank.v` holds two bodies: the **behavioral simulation
+model** (default, what `check.sh` compiles) and, under `-DNPU_SRAM_MACRO`, a
+wrapper over the pinned OpenRAM macro. The pin is `reuse.lock.json`; view
+inventory, the read-hold finding and the evidence are in `pdk/sky130/README.md`
+and decision 0005. Only the 512 x 32 macro is pre-generated upstream; the
+1024 x 32 macro is a pinned generator config with no views imported. The wrapper
+keeps this port list and one-cycle read latency. Slow and fast Liberty views are
+still missing (spec gaps G1, G2); nothing here says whether a macro's access time
 fits a 50 MHz cycle.
 
 To port to another PDK, replace `pdk/sky130/`; no other file changes.
