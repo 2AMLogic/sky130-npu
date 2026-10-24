@@ -218,15 +218,11 @@ class Bench:
         for n0 in range(0, n_total, n):
             nn = min(n, n_total - n0)
             b_tile = [row[n0:n0 + nn] for row in b]
+            await self.set_bias(bias[n0:n0 + nn])
             await self.store_bytes(1, 0, pack_b(b_tile, n))
             for m0 in range(0, m_total, n):
                 mm = min(n, m_total - m0)
                 await self.store_bytes(0, 0, pack_a(a[m0:m0 + mm], n))
-                # BIAS goes last, after every bank load: a bank-window write at
-                # offset 0x100..0x13F currently also lands in BIAS (see
-                # test_bank_window_does_not_alias_bias, issue #37). Loading in this order
-                # keeps that defect from corrupting every other result.
-                await self.set_bias(bias[n0:n0 + nn])
                 lay = self.layout(k)
                 total_cycles += await self.run_tile(k, mult, shift, relu, lay)
                 raw = await self.load_bytes(lay["out_bank"], lay["out_off"], n * n)
