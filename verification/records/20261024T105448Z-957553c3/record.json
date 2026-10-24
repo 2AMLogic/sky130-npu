@@ -1,0 +1,78 @@
+{
+  "cocotb": "2.0.1",
+  "failures": 1,
+  "id": "957553c3",
+  "parameters": {
+    "ARRAY_N": "4"
+  },
+  "passed": false,
+  "results": {
+    "random": {
+      "basis": "simulated",
+      "gemms": 8,
+      "mismatches": 0,
+      "seed": 4102277790
+    },
+    "seed": 4102277790,
+    "workload:conv-3x3-a": {
+      "K": 144,
+      "M": 256,
+      "N": 32,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 81408,
+      "u_array": 0.9056603773584906
+    },
+    "workload:conv-3x3-edge": {
+      "K": 72,
+      "M": 196,
+      "N": 20,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 21315,
+      "u_array": 0.8275862068965517
+    },
+    "workload:mm-fc": {
+      "K": 256,
+      "M": 64,
+      "N": 64,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 69376,
+      "u_array": 0.9446494464944649
+    },
+    "workload:mm-smoke": {
+      "K": 64,
+      "M": 8,
+      "N": 8,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 316,
+      "u_array": 0.810126582278481
+    }
+  },
+  "rtl_commit": "28f4405604a48e40fea588c8815b7add64a2fd5a",
+  "seed": 4102277790,
+  "simulator": "Icarus Verilog version 13.0 (stable) (v13_0)",
+  "sources": [
+    "rtl/npu_top.v",
+    "rtl/npu_host.v",
+    "rtl/npu_ctrl.v",
+    "rtl/npu_banks.v",
+    "rtl/npu_array.v",
+    "rtl/npu_pe.v",
+    "rtl/npu_requant.v",
+    "rtl/pdk/sky130/npu_sram_bank.v"
+  ],
+  "sources_dirty": false,
+  "sources_last_commit": "385fab0f5559ba90a3401166105192d5a358184b",
+  "test_module": "test_bitexact",
+  "testcase": null,
+  "tests": 11,
+  "toplevel": "npu_top",
+  "utc": "2026-10-24T10:54:48.774392+00:00"
+}
