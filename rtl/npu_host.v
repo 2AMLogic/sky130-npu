@@ -138,7 +138,7 @@ module npu_host #(
     wire [BW-1:0] w_bank = wb_adr_i[15:12] - 4'd1;
     wire [11:0]   w_off  = wb_adr_i[11:0];
 
-    wire is_bias = (wb_adr_i[11:6] == 6'd4);                // 0x100-0x13F
+    wire is_bias = in_regs && (wb_adr_i[11:6] == 6'd4);       // 0x100-0x13F of the register block
     wire [3:0] bias_idx = wb_adr_i[5:2];
     wire [5:0] reg_idx  = wb_adr_i[7:2];                    // valid if adr[11:8] == 0
     wire is_reg  = in_regs && (wb_adr_i[11:8] == 4'd0);
