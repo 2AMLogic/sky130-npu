@@ -3,6 +3,13 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-10-23
+
+- **PR #33**: docs(signoff): attest repo hygiene and extend README reproduction steps
+- **PR #32**: feat: record item 6 not_applicable statement for the digital spec
+- **Issue #31** (closed): T1 item 10: complete the README reproduction steps and attest repo hygiene with klt signoff --attest 10
+- **Issue #30** (closed): T1 item 6: record the bound not_applicable statement for the digital spec (no statistical row)
+
 ### 2026-10-21
 
 - **PR #28**: Bump Repo Skills 0.24.3 -> 0.24.7
