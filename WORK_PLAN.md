@@ -20,9 +20,7 @@ _None._
 
 `loom:important`; taken before unlabelled work.
 
-- **#11**: Parameterised NPU RTL with array size as one parameter
-- **#12**: Bit-exact cocotb testbenches against the golden model
-- **#25**: Pin the SRAM macro and write the npu_sram_bank wrapper (reuse.lock.json owner)
+_None._
 
 ## Ready
 
@@ -53,7 +51,7 @@ _None._
 Issues carrying `loom:curated`.
 
 - **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)*
-- **#11**: Parameterised NPU RTL with array size as one parameter *(curated)*
+- **#8**: Track the RTL, integer golden model and testbenches the ports pin *(curated)*
 
 ## Proposed (Architect / Hermit)
 
@@ -69,7 +67,7 @@ _None._
 |------|-------|
 | Operator merge-risk holds | 0 |
 | Very important | 0 |
-| Important | 3 |
+| Important | 0 |
 | Ready (`loom:issue`) | 0 |
 | In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 0 |
