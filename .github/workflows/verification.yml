@@ -11,7 +11,7 @@ env:
   ICARUS_TAG: v13_0
 
 jobs:
-  smoke:
+  bitexact:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -41,12 +41,20 @@ jobs:
           make -j2
           make install
 
-      - name: Smoke test
+      - name: Bit-exact suite, ARRAY_N 8 and 4
         run: |
           export PATH="$HOME/icarus/bin:$PATH"
           python -m venv .venv
           .venv/bin/pip install -r verification/requirements.txt
-          EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py
+          EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py --param ARRAY_N=8
+          EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py --param ARRAY_N=4
+
+      - name: One-bit RTL corruption is caught
+        if: ${{ !cancelled() }}
+        run: |
+          export PATH="$HOME/icarus/bin:$PATH"
+          ./verification/check_mutation.sh 8
+          ./verification/check_mutation.sh 4
 
   golden:
     runs-on: ubuntu-24.04
