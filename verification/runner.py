@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """cocotb + Icarus runner. Parameter-driven; nothing here names a DUT.
 
-Defaults run the placeholder DUT. Every default can be overridden by an
-argument or an environment variable, so a stamped copy needs no edits:
+Defaults run the bit-exact suite against ``npu_top`` at ARRAY_N=8. Every
+default can be overridden by an argument or an environment variable, so a
+stamped copy needs no edits:
 
   python verification/runner.py
+  python verification/runner.py --param ARRAY_N=4
   python verification/runner.py --toplevel mydut --sources rtl/a.v rtl/b.v \
-      --param WIDTH=16 --test-module test_smoke
+      --param WIDTH=16 --test-module test_mydut
 
 Each run adds one record under ``verification/records/`` (append-only, see the
 README there) and exits non-zero if any test failed.
@@ -15,6 +17,7 @@ README there) and exits non-zero if any test failed.
 import argparse
 import json
 import os
+import random
 import re
 import subprocess
 import sys
@@ -27,6 +30,14 @@ import cocotb
 from cocotb_tools.runner import get_runner
 
 HERE = Path(__file__).resolve().parent
+REPO = HERE.parent
+
+# Same source list as rtl/check.sh.
+DEFAULT_SOURCES = [
+    f"rtl/{f}.v"
+    for f in ("npu_top", "npu_host", "npu_ctrl", "npu_banks", "npu_array",
+              "npu_pe", "npu_requant")
+] + ["rtl/pdk/sky130/npu_sram_bank.v"]
 
 
 def env(name, default):
@@ -37,13 +48,13 @@ def parse_args(argv):
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     p.add_argument(
         "--toplevel",
-        default=env("HDL_TOPLEVEL", "passthru"),
+        default=env("HDL_TOPLEVEL", "npu_top"),
         help="top-level HDL module (env HDL_TOPLEVEL)",
     )
     p.add_argument(
         "--sources",
         nargs="+",
-        default=env("HDL_SOURCES", str(HERE / "placeholder" / "passthru.v")).split(),
+        default=env("HDL_SOURCES", " ".join(str(REPO / s) for s in DEFAULT_SOURCES)).split(),
         help="HDL source files (env HDL_SOURCES, space-separated)",
     )
     p.add_argument(
@@ -56,7 +67,7 @@ def parse_args(argv):
     )
     p.add_argument(
         "--test-module",
-        default=env("TEST_MODULE", "test_smoke"),
+        default=env("TEST_MODULE", "test_bitexact"),
         help="Python test module under --test-dir (env TEST_MODULE)",
     )
     p.add_argument("--test-dir", default=env("TEST_DIR", str(HERE / "tests")))
@@ -67,8 +78,19 @@ def parse_args(argv):
         default=env("EXPECT_ICARUS", ""),
         help="fail unless `iverilog -V` mentions this version (env EXPECT_ICARUS)",
     )
+    p.add_argument(
+        "--testcase",
+        default=env("TESTCASE", ""),
+        help="run only this test function (env TESTCASE)",
+    )
+    p.add_argument(
+        "--seed",
+        default=env("NPU_SEED", ""),
+        help="random-test seed, exported as NPU_SEED and recorded; drawn "
+        "fresh when empty (env NPU_SEED)",
+    )
     args = p.parse_args(argv)
-    raw = args.param or env("HDL_PARAMS", "WIDTH=8").split()
+    raw = args.param or env("HDL_PARAMS", "ARRAY_N=8").split()
     args.params = dict(kv.split("=", 1) for kv in raw)
     return args
 
@@ -90,6 +112,23 @@ def count_results(xml_path):
     return tests, failures
 
 
+def git(*cmd):
+    out = subprocess.run(
+        ["git", "-C", str(REPO), *cmd], capture_output=True, text=True
+    )
+    return out.stdout.strip() if out.returncode == 0 else None
+
+
+def source_provenance(sources):
+    """HEAD, the last commit touching the sources, and whether they are dirty."""
+    rel = [os.path.relpath(s, REPO) for s in sources]
+    return {
+        "rtl_commit": git("rev-parse", "HEAD"),
+        "sources_last_commit": git("log", "-1", "--format=%H", "--", *rel),
+        "sources_dirty": bool(git("status", "--porcelain", "--", *rel)),
+    }
+
+
 def write_record(records_dir, record):
     now = datetime.now(timezone.utc)
     rid = uuid.uuid4().hex[:8]
@@ -108,12 +147,20 @@ def main(argv=None):
     if args.expect_icarus and args.expect_icarus not in version:
         sys.exit(f"Icarus mismatch: want {args.expect_icarus!r}, have {version!r}")
 
+    seed = int(args.seed) if args.seed else random.SystemRandom().getrandbits(32)
+    build_dir = Path(args.build_dir)
+    build_dir.mkdir(parents=True, exist_ok=True)
+    results_file = build_dir / "npu_results.json"
+    results_file.unlink(missing_ok=True)
+
     runner = get_runner("icarus")
     runner.build(
         sources=[Path(s) for s in args.sources],
         hdl_toplevel=args.toplevel,
         parameters=args.params,
         build_dir=args.build_dir,
+        build_args=["-g2012"],
+        timescale=("1ns", "1ps"),
         always=True,
     )
     results_xml = runner.test(
@@ -121,7 +168,12 @@ def main(argv=None):
         test_module=args.test_module,
         test_dir=args.test_dir,
         build_dir=args.build_dir,
-        extra_env=dict(args.params),
+        test_filter=args.testcase or None,
+        extra_env={
+            **args.params,
+            "NPU_SEED": str(seed),
+            "NPU_RESULTS_FILE": str(results_file),
+        },
     )
     tests, failures = count_results(results_xml)
     passed = tests > 0 and failures == 0
@@ -137,6 +189,12 @@ def main(argv=None):
             "passed": passed,
             "tests": tests,
             "failures": failures,
+            "seed": seed,
+            "testcase": args.testcase or None,
+            "results": (
+                json.loads(results_file.read_text()) if results_file.exists() else {}
+            ),
+            **source_provenance(args.sources),
         },
     )
     print(f"record: {rec_dir}")
