@@ -3,6 +3,16 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-10-24
+
+- **PR #39**: fix(rtl): qualify BIAS decode with in_regs so bank writes never alias it
+- **PR #38**: feat(verification): bit-exact cocotb suite for npu_top with mutation check and ledger records
+- **PR #36**: feat(rtl): pin OpenRAM sky130 SRAM macros and add macro wrapper for npu_sram_bank
+- **Issue #37** (closed): bug(rtl): bank-window write at offset 0x100-0x13F also writes BIAS
+- **Issue #25** (closed): Pin the SRAM macro and write the npu_sram_bank wrapper (reuse.lock.json owner)
+- **Issue #12** (closed): Bit-exact cocotb testbenches against the golden model
+- **Issue #11** (closed): Parameterised NPU RTL with array size as one parameter
+
 ### 2026-10-23
 
 - **PR #33**: docs(signoff): attest repo hygiene and extend README reproduction steps
