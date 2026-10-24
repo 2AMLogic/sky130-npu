@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "note": "Pins imported blocks per spec/decisions/0002-sram-source.md. Nothing is pinned unless listed here.",
+  "pins": [
+    {
+      "name": "sky130-sram-macro-1rw1r-32x1024-8",
+      "role": "target bank (4 KB, 1024 x 32); spec section 9",
+      "kind": "generator-config",
+      "source_repo": "https://github.com/VLSIDA/sky130_sram_macros",
+      "commit": "965df150c754fe2b3f93a0bd1f9883eb114279b2",
+      "config_name": "configs/sky130_sram_4kbyte_1rw1r_32x1024_8.py",
+      "config_files": {
+        "configs/sky130_sram_4kbyte_1rw1r_32x1024_8.py": "ff0b70cc76778fd0a15b9e9124132129ff5d758270dd3bd2a4484b5ea25ac3b6",
+        "configs/sky130_sram_common.py": "4a4e89004c7dd4f05839be6dec649bcfe00c898698d853b5a832c880036ea963"
+      },
+      "generator": "OpenRAM (VLSIDA); the pre-generated 2 KB macro's log reports v1.1.15. Generator commit NOT pinned: not yet generated here.",
+      "pre_generated": false,
+      "views": {},
+      "views_note": "No pre-generated 1024 x 32 macro exists at this commit. Verilog, LEF, GDS and Liberty views are NOT imported; they do not exist until the generator is run. Gaps G1, G2 stay open.",
+      "date": "2026-10-24"
+    },
+    {
+      "name": "sky130-sram-macro-1rw1r-32x512-8",
+      "role": "fallback bank (2 KB, 512 x 32); also the only macro Verilog the wrapper is checked against",
+      "kind": "pre-generated-macro",
+      "source_repo": "https://github.com/VLSIDA/sky130_sram_macros",
+      "commit": "965df150c754fe2b3f93a0bd1f9883eb114279b2",
+      "config_name": "configs/sky130_sram_2kbyte_1rw1r_32x512_8.py",
+      "config_files": {
+        "configs/sky130_sram_2kbyte_1rw1r_32x512_8.py": "fe9e9c2a32a34de7781d2f46a781c86d0a9ed1ebd90dc9687f854173b83c48fd",
+        "configs/sky130_sram_common.py": "4a4e89004c7dd4f05839be6dec649bcfe00c898698d853b5a832c880036ea963"
+      },
+      "generator": "OpenRAM v1.1.15 (from the macro's .log)",
+      "pre_generated": true,
+      "views": {
+        "sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.v": {"kind": "verilog", "origin": "shipped with macro", "sha256": "2712357fbc3d1ee3343c4bcb7d630de92ca87d869fb5d50d1d3cea967f288208"},
+        "sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.lef": {"kind": "lef", "origin": "shipped with macro", "sha256": "e35072ac14a991285619477f13c80fd3837e76ef7ed354ae6ab80d9232ce7a2e"},
+        "sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.gds": {"kind": "gds", "origin": "shipped with macro", "sha256": "d32efcfe8079379f94070bcbcedad7f1239e27f8996eb184141840e31c9302b2"},
+        "sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib": {"kind": "liberty", "corner": "TT 1.8 V 25 C", "origin": "shipped with macro", "sha256": "8656384775f5e10b44bed97b7193dd3188ce8cd60b7c8e02a5a4ad9e35ed03ba"}
+      },
+      "views_note": "Only a TT 1.8 V 25 C Liberty view ships (common config sets nominal_corner_only = True). No slow or fast view exists: gaps G1 and G2 remain open.",
+      "date": "2026-10-24"
+    }
+  ]
+}
