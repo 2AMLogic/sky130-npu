@@ -16,6 +16,8 @@ cd "${HERE}"
 
 SRC=(npu_top.v npu_host.v npu_ctrl.v npu_banks.v npu_array.v npu_pe.v npu_requant.v
      pdk/sky130/npu_sram_bank.v)
+# Synthesis view (macro as a black box): the same file list with the wrapper swapped.
+SRC_BB=("${SRC[@]/pdk\/sky130\/npu_sram_bank.v/pdk/sky130/npu_sram_bank_bb.v}")
 TOP=npu_top
 GOOD=("$@"); [ "${#GOOD[@]}" -gt 0 ] || GOOD=(8 4)
 BAD=(6 16)
@@ -33,6 +35,16 @@ for n in "${GOOD[@]}"; do
     say "PASS  ARRAY_N=${n}: iverilog + yosys hierarchy -check"
   else
     say "FAIL  ARRAY_N=${n}: expected to elaborate"; FAIL=1
+  fi
+done
+
+# The black-box view carries the 1024-word macro only, which is the ARRAY_N=8 bank.
+for n in 8; do
+  if iverilog -g2012 -Wall -P"${TOP}.ARRAY_N=${n}" -s "${TOP}" -o /dev/null "${SRC_BB[@]}" \
+     && yosys -q -p "read_verilog -sv -defer ${SRC_BB[*]}; chparam -set ARRAY_N ${n} ${TOP}; hierarchy -check -top ${TOP}"; then
+    say "PASS  ARRAY_N=${n}: synthesis view (npu_sram_bank_bb.v) elaborates"
+  else
+    say "FAIL  ARRAY_N=${n}: synthesis view (npu_sram_bank_bb.v) expected to elaborate"; FAIL=1
   fi
 done
 

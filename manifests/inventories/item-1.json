@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "t1-attestation-inventory",
+  "t1_item": 1,
+  "description": "Design sources: the RTL at ARRAY_N = 8 plus the sky130_fd_sc_hd gate-level netlist klt synthesize derived from it, with the SRAM macro left as a black box. The check re-hashes the request's RTL and the Liberty against the committed report and fails when the RTL changed without a new netlist.",
+  "sources": [
+    "rtl/npu_top.v",
+    "rtl/npu_host.v",
+    "rtl/npu_ctrl.v",
+    "rtl/npu_banks.v",
+    "rtl/npu_array.v",
+    "rtl/npu_pe.v",
+    "rtl/npu_requant.v",
+    "rtl/pdk/sky130/npu_sram_bank_bb.v",
+    "rtl/synth/synth-request.json"
+  ],
+  "derived": [
+    {
+      "path": "rtl/synth/records/20261027-sky130-hd/npu_top_synth.v",
+      "generator": "klt synthesize --pdk sky130A --format json rtl/synth/synth-request.json",
+      "check": {
+        "argv": [
+          "klt",
+          "synthesize",
+          "--pdk",
+          "sky130A",
+          "--check",
+          "rtl/synth/records/20261027-sky130-hd/synth-report.json",
+          "rtl/synth/synth-request.json"
+        ]
+      }
+    }
+  ]
+}
