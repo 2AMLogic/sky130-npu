@@ -5,10 +5,9 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
   `kind: digital`. Item 6 is discharged by a recorded `not_applicable`
-  statement (below). Items 9 and 10 cite `attestations/item-9.json` and
-  `attestations/item-10.json`; every other item is still uncited and grades
-  `unmet`, so `tier` is `null`. Item 1 is attested the same way once there is
-  something to inventory.
+  statement (below). Items 1, 9 and 10 cite `attestations/item-1.json`, `item-9.json` and
+  `item-10.json`; every other item is still uncited and grades
+  `unmet`, so `tier` is `null`.
 - **`spec-rows.json`**: the ratified target spec for item 6, one `id` per row
   of `spec/npu.md` section 1 (a slug of the Parameter column, since the table
   has no id column).
@@ -32,6 +31,17 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   benches) must add it to `inventories/item-9.json` and re-attest with
   `klt signoff --attest 9 --inventory manifests/inventories/item-9.json -o manifests/attestations/item-9.json`,
   then update the cited `content_hash` and re-render the report.
+- **Item 1** (design sources) is attested from `inventories/item-1.json`: the
+  RTL, the synthesis request and the `klt synthesize` netlist in
+  `rtl/synth/records/20261027-sky130-hd/` (SRAM macro as a black box; see
+  `rtl/synth/README.md`). Its freshness check is `klt synthesize --pdk sky130A
+  --check <report> <request>`, which needs the sky130A PDK locally. The
+  manifest grade re-hashes only the inventory, so an RTL edit without a new
+  netlist shows up as exit 3 from `klt signoff --attest 1 --inventory
+  manifests/inventories/item-1.json --check manifests/attestations/item-1.json`,
+  not as a changed row in the report. CI does not run it (no PDK there). The
+  cited `content_hash` for items 1, 9 and 10 is the inventory's sha256 (the
+  envelope's `provenance.input.content_hash`), not the envelope file's.
 - **`sky130-npu.signoff.json`**: the committed output of
   `klt signoff --manifest manifests/sky130-npu.json --format json`, verbatim.
   This is the verdict of record for the block's gap to T1.
