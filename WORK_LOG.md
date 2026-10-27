@@ -3,6 +3,11 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-10-27
+
+- **PR #53**: feat(manifests): attest T1 item 9 testbenches shipped
+- **Issue #49** (closed): T1 item 9 (testbenches shipped): testbench inventory and klt signoff --attest 9
+
 ### 2026-10-24
 
 - **PR #39**: fix(rtl): qualify BIAS decode with in_regs so bank writes never alias it
