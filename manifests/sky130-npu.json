@@ -2,6 +2,10 @@
   "block": "sky130-npu",
   "kind": "digital",
   "evidence": {
+    "1": {
+      "file": "manifests/attestations/item-1.json",
+      "content_hash": "sha256:870c3fa367f5e16a1a4e8ef562532e35f690be7d61bbf6f68b56025ea97254aa"
+    },
     "6": {
       "not_applicable": {
         "spec": {

@@ -1,0 +1,22 @@
+# Machine-local rehydration of 'synth_npu_top.ys' (issue #1870): the PDK-root
+# placeholder has been substituted with this machine's resolved PDK
+# install root, so this file is runnable but NOT commit-safe. Commit
+# 'synth_npu_top.ys' instead.
+read_verilog rtl/npu_top.v
+read_verilog rtl/npu_host.v
+read_verilog rtl/npu_ctrl.v
+read_verilog rtl/npu_banks.v
+read_verilog rtl/npu_array.v
+read_verilog rtl/npu_pe.v
+read_verilog rtl/npu_requant.v
+read_verilog rtl/pdk/sky130/npu_sram_bank_bb.v
+chparam -set ARRAY_N 8 npu_top
+hierarchy -check -top npu_top
+synth -top npu_top
+dfflibmap -liberty /home/ubuntu/.ciel/ciel/sky130/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+tee -q -o rtl/synth/records/20261027-sky130-hd/npu_top_abc.log abc -liberty /home/ubuntu/.ciel/ciel/sky130/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -constr rtl/synth/records/20261027-sky130-hd/npu_top_abc.constr -dont_use sky130_fd_sc_hd__lpflow_* -dont_use sky130_fd_sc_hd__probe*
+clean
+setundef -zero
+hilomap -hicell sky130_fd_sc_hd__conb_1 HI -locell sky130_fd_sc_hd__conb_1 LO
+tee -q -o rtl/synth/records/20261027-sky130-hd/npu_top_stats.json stat -liberty /home/ubuntu/.ciel/ciel/sky130/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -json -top npu_top
+write_verilog -noattr rtl/synth/records/20261027-sky130-hd/npu_top_synth.v

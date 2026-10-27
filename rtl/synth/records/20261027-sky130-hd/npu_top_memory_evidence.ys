@@ -1,0 +1,15 @@
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_top.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_host.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_ctrl.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_banks.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_array.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_pe.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/npu_requant.v
+read_verilog /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/pdk/sky130/npu_sram_bank_bb.v
+chparam -set ARRAY_N 8 npu_top
+hierarchy -check -top npu_top
+tee -q -o /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/synth/records/20261027-sky130-hd/npu_top_blackboxes.txt select -list =A:blackbox =A:whitebox
+proc
+tee -q -o /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/synth/records/20261027-sky130-hd/npu_top_memory_elaborated.json stat -json
+synth -top npu_top -run :fine
+tee -q -o /home/ubuntu/GitHub/sky130-npu/.loom/worktrees/issue-42/rtl/synth/records/20261027-sky130-hd/npu_top_memory_pre_lowering.json stat -json

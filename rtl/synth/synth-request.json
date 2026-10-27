@@ -9,9 +9,20 @@
     "../npu_array.v",
     "../npu_pe.v",
     "../npu_requant.v",
-    "../pdk/sky130/npu_sram_bank.v"
+    "../pdk/sky130/npu_sram_bank_bb.v"
   ],
   "hdl_toplevel": "npu_top",
-  "pdk": { "cell_library": "sky130_fd_sc_hd", "corner": "tt_025C_1v80" },
-  "constraints": { "clock_period_ns": null }
+  "pdk": {
+    "cell_library": "sky130_fd_sc_hd",
+    "corner": "tt_025C_1v80"
+  },
+  "constraints": {
+    "clock_period_ns": null
+  },
+  "parameters": {
+    "ARRAY_N": 8
+  },
+  "outputs": {
+    "dir": "records/20261027-sky130-hd"
+  }
 }
