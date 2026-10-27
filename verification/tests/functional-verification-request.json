@@ -1,0 +1,17 @@
+{
+  "hdl_toplevel": "npu_top",
+  "engine": "icarus",
+  "sources": [
+    "../../rtl/npu_top.v",
+    "../../rtl/npu_host.v",
+    "../../rtl/npu_ctrl.v",
+    "../../rtl/npu_banks.v",
+    "../../rtl/npu_array.v",
+    "../../rtl/npu_pe.v",
+    "../../rtl/npu_requant.v",
+    "../../rtl/pdk/sky130/npu_sram_bank.v"
+  ],
+  "testbench": { "module": "test_bitexact" },
+  "parameters": { "ARRAY_N": 8 },
+  "options": { "random_seed": 1 }
+}

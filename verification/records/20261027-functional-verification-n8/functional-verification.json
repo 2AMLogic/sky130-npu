@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "engine": "icarus",
+  "hdl_toplevel": "npu_top",
+  "testbench": "test_bitexact",
+  "status": "pass",
+  "test_count": 11,
+  "passed_count": 11,
+  "failed_count": 0,
+  "skipped_count": 0,
+  "tests": [
+    {
+      "name": "test_workload_mm_smoke",
+      "status": "passed",
+      "sim_time_ns": 6895.0,
+      "real_time_s": 0.065
+    },
+    {
+      "name": "test_workload_mm_fc",
+      "status": "passed",
+      "sim_time_ns": 960705.0,
+      "real_time_s": 10.066
+    },
+    {
+      "name": "test_workload_conv_3x3_a",
+      "status": "passed",
+      "sim_time_ns": 1061825.0,
+      "real_time_s": 10.924
+    },
+    {
+      "name": "test_workload_conv_3x3_edge",
+      "status": "passed",
+      "sim_time_ns": 347435.0,
+      "real_time_s": 3.383
+    },
+    {
+      "name": "test_requant_edges",
+      "status": "passed",
+      "sim_time_ns": 34525.0,
+      "real_time_s": 0.314
+    },
+    {
+      "name": "test_k_extremes",
+      "status": "passed",
+      "sim_time_ns": 149285.0,
+      "real_time_s": 1.408
+    },
+    {
+      "name": "test_back_to_back",
+      "status": "passed",
+      "sim_time_ns": 4805.0,
+      "real_time_s": 0.044
+    },
+    {
+      "name": "test_reset_mid_run",
+      "status": "passed",
+      "sim_time_ns": 12555.0,
+      "real_time_s": 0.108
+    },
+    {
+      "name": "test_errors_write_nothing",
+      "status": "passed",
+      "sim_time_ns": 177185.0,
+      "real_time_s": 1.563
+    },
+    {
+      "name": "test_constrained_random",
+      "status": "passed",
+      "sim_time_ns": 64355.0,
+      "real_time_s": 0.596
+    },
+    {
+      "name": "test_bank_window_does_not_alias_bias",
+      "status": "passed",
+      "sim_time_ns": 825.0,
+      "real_time_s": 0.007
+    }
+  ],
+  "coverage": null,
+  "trace": null,
+  "environment": {
+    "engine": "icarus",
+    "engine_version": "13.0",
+    "cocotb_version": "2.1.0",
+    "results_xml": "/tmp/fv46/results_icarus.xml",
+    "test_log": "/tmp/fv46/test_icarus.log",
+    "build_log": "/tmp/fv46/build_icarus.log",
+    "random_seed": 1,
+    "source_defines": {},
+    "initial_state": null,
+    "sdf": null
+  }
+}
