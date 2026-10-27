@@ -5,6 +5,9 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-10-27
 
+- **PR #55**: feat(synth): commit sky130 gate-level netlist with SRAM black boxes and attest T1 item 1
+- **PR #54**: test(verification): add klt functional-verification request and ARRAY_N=8 envelope
+- **Issue #42** (closed): T1 item 1 (design sources): synthesize npu_top to sky130_fd_sc_hd with SRAM macros black-boxed, and attest the netlist
 - **PR #53**: feat(manifests): attest T1 item 9 testbenches shipped
 - **Issue #49** (closed): T1 item 9 (testbenches shipped): testbench inventory and klt signoff --attest 9
 
