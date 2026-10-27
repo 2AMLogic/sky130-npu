@@ -11,7 +11,7 @@ and nothing from it may be cited in a block manifest.
 | File | What it pins |
 |---|---|
 | `pdk.json` | `open_pdks` commit (full SHA), variant `sky130A`, library `sky130_fd_sc_hd`, smoke corner |
-| `toolchain.json` | klayout-tools commit (full SHA, recorded once), Yosys, OpenROAD, Icarus versions |
+| `toolchain.json` | klayout-tools PyPI release, tag and tag commit, Yosys, OpenROAD, Icarus versions |
 | `smoke/` | fixture RTL, request JSONs, ERC stackup spec, `run.sh` |
 | `smoke/records/<id>/` | envelopes from one run. Append-only: `run.sh` refuses an existing id |
 
@@ -24,9 +24,9 @@ here rather than carry a second copy.
 From a clean clone, with the pinned PDK and tools installed:
 
 ```bash
-# 1. klt at the pinned commit (a throwaway tool env, not a host-wide install)
-uvx --from "git+https://github.com/2AMLogic/klayout-tools.git@$(jq -r .klayout_tools.commit flow/toolchain.json)" klt --version
-#    -> must report 0.7.1.dev1754+g81ac4d3915c1
+# 1. klt at the pinned release (a throwaway tool env, not a host-wide install)
+uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" klt --version
+#    -> must report klt 0.8.0
 # 2. the PDK: open_pdks commit from flow/pdk.json (klt resolves ~/.ciel, then ~/.volare)
 klt pdk find --pdk sky130A --format json | jq -r .version
 #    -> must report open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7

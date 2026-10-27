@@ -9,10 +9,10 @@
 # The gate is the diff, not the exit code; exit 0 and 3 pass, anything else
 # fails.
 #
-# klt is pinned to one full commit SHA, KLT_SHA below, the single place it is
-# recorded. Its bundled T1 checklist fixes the item skeleton and text, so a
-# floating install would churn the committed report. Bump KLT_SHA together
-# with a regenerated report (see manifests/README.md).
+# klt is pinned to one PyPI release, KLT_VERSION below. Its bundled T1
+# checklist fixes the item skeleton and text, so a floating install would
+# churn the committed report. Bump KLT_VERSION (and flow/toolchain.json)
+# together with a regenerated report (see manifests/README.md).
 
 name: signoff
 
@@ -25,7 +25,7 @@ permissions:
   contents: read
 
 env:
-  KLT_SHA: 67e684ed9b2b28a14ea4f33bf16f1a0d01f8b0e0
+  KLT_VERSION: 0.8.0
 
 jobs:
   grade:
@@ -37,17 +37,16 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Require a full 40-hex klt pin
-        run: |
-          if ! [[ "$KLT_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::KLT_SHA must be a full 40-hex commit SHA, got '$KLT_SHA'"
-            exit 1
-          fi
-
       - name: Install the pinned klt (klayout-tools)
         run: |
-          uv tool install "klayout-tools @ git+https://github.com/2AMLogic/klayout-tools@${KLT_SHA}"
+          uv tool install "klayout-tools==${KLT_VERSION}"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Show the klt version
+        run: |
+          v="$(klt --version)"
+          echo "$v"
+          [ "$v" = "klt ${KLT_VERSION}" ] || { echo "::error::expected 'klt ${KLT_VERSION}', got '$v'"; exit 1; }
 
       - name: Re-run klt signoff and diff against the committed report
         run: |

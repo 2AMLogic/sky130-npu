@@ -57,12 +57,12 @@ that does not match the spec rows is rejected by the grader.
 
 ## Regenerate
 
-Use the klt commit pinned in `KLT_SHA` in `.github/workflows/signoff.yml`
-(the only place the pin is recorded), in a throwaway environment rather than a
-host-wide install:
+Use the klt release pinned in `KLT_VERSION` in `.github/workflows/signoff.yml`
+(kept equal to `flow/toolchain.json`), in a throwaway environment rather than
+a host-wide install:
 
 ```
-uvx --from "klayout-tools @ git+https://github.com/2AMLogic/klayout-tools@<KLT_SHA>" \
+uvx --from "klayout-tools==<KLT_VERSION>" \
   klt signoff --manifest manifests/sky130-npu.json --format json \
   > manifests/sky130-npu.signoff.json
 ```
@@ -76,6 +76,6 @@ report.
 
 ## Bumping the klt pin
 
-A change to `KLT_SHA` lands together with a regenerated
+A change to `KLT_VERSION` lands together with a regenerated
 `sky130-npu.signoff.json` in the same PR, because the pinned klt's bundled
 checklist text is part of the report.
