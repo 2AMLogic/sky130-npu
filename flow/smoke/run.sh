@@ -37,13 +37,11 @@ for tool in klt yosys openroad jq; do
   command -v "${tool}" >/dev/null || { echo "error: ${tool} not on PATH" >&2; exit 2; }
 done
 
-# Pin check: the klt on PATH must be the build flow/toolchain.json names.
-PIN_SHORT="$(jq -r '.klayout_tools.commit[0:12]' "${REPO_ROOT}/flow/toolchain.json")"
+# Pin check: the klt on PATH must be the release flow/toolchain.json names.
+PIN_VERSION="$(jq -r '.klayout_tools.reported_version' "${REPO_ROOT}/flow/toolchain.json")"
 KLT_VERSION="$(klt --version)"
-case "${KLT_VERSION}" in
-  *"+g${PIN_SHORT}"*) ;;
-  *) echo "error: klt '${KLT_VERSION}' is not the pinned build (commit ${PIN_SHORT}); see flow/toolchain.json" >&2; exit 2 ;;
-esac
+[ "${KLT_VERSION}" = "klt ${PIN_VERSION}" ] || {
+  echo "error: klt '${KLT_VERSION}' is not the pinned release (klt ${PIN_VERSION}); see flow/toolchain.json" >&2; exit 2; }
 
 # Pin check: the PDK klt resolves must be the open_pdks commit in flow/pdk.json.
 PDK_WANT="$(jq -r '.open_pdks.commit' "${REPO_ROOT}/flow/pdk.json")"
