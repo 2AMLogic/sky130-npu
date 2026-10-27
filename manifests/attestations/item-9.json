@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "kind": "generic",
+  "status": "pass",
+  "t1_item": 9,
+  "summary": "T1 item 9 (Testbenches shipped): 9/9 attestation checks passed (klt signoff --attest)",
+  "source": "manifests/inventories/item-9.json",
+  "attestation": {
+    "producer": "klt signoff --attest",
+    "inventory_schema_version": 1,
+    "hash_algorithm": "sha256-raw-bytes",
+    "check_count": 9,
+    "passed_count": 9,
+    "checks": [
+      {
+        "check": "present",
+        "role": "testbench",
+        "path": ".github/workflows/verification.yml",
+        "passed": true,
+        "content_hash": "sha256:fb9e821b05ac9813db02e997b004e42f4590b1b21fc17fad4c8802bf3e82d088"
+      },
+      {
+        "check": "present",
+        "role": "testbench",
+        "path": "verification/check_mutation.sh",
+        "passed": true,
+        "content_hash": "sha256:35e0eaa3b96c506c50cc1492f1f931710afeb63f67b7ab952c7b176347efcecd"
+      },
+      {
+        "check": "present",
+        "role": "testbench",
+        "path": "verification/runner.py",
+        "passed": true,
+        "content_hash": "sha256:dbf2b51f7ec517d94e39917317f860e29b5deae6d87011a3679ea27e9457d9d8"
+      },
+      {
+        "check": "present",
+        "role": "testbench",
+        "path": "verification/tests/test_bank_alias_bias.py",
+        "passed": true,
+        "content_hash": "sha256:4f0b53792d454c8aa2300c7220731626bc08464a5f16601c515d050410458a3c"
+      },
+      {
+        "check": "present",
+        "role": "testbench",
+        "path": "verification/tests/test_bitexact.py",
+        "passed": true,
+        "content_hash": "sha256:7e76663bfb6e3b1e95e7883f1e26b95f8d2d97361e9d2ea9f0d192a9f61baeea"
+      },
+      {
+        "check": "present",
+        "role": "testbench",
+        "path": "verification/tests/test_golden.py",
+        "passed": true,
+        "content_hash": "sha256:2bf10619e9047fb969eecb0d70cf4b5ddb7711ef26349419bb9df763cab39b83"
+      },
+      {
+        "check": "command",
+        "role": "cold_start",
+        "argv": [
+          "sh",
+          "-c",
+          "set -e; T=$(mktemp -d); trap 'rm -rf \"$T\"' EXIT; python3 -m venv \"$T/venv\"; \"$T/venv/bin/pip\" install -q -r verification/requirements.txt; EXPECT_ICARUS=13.0 \"$T/venv/bin/python\" verification/runner.py --records-dir \"$T/records\" --build-dir \"$T/build\"; PYTHON=\"$T/venv/bin/python\" ./verification/check_mutation.sh"
+        ],
+        "cwd": ".",
+        "exit_status": 0,
+        "passed": true
+      },
+      {
+        "check": "pin",
+        "role": "pdk",
+        "passed": true,
+        "value": {
+          "name": "sky130A",
+          "revision": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7"
+        }
+      },
+      {
+        "check": "pin",
+        "role": "tools",
+        "passed": true,
+        "value": {
+          "cocotb": "2.0.1",
+          "icarus": "13.0"
+        }
+      }
+    ]
+  },
+  "provenance": {
+    "klt_version": "0.7.1.dev1413+g67e684ed9b2b",
+    "klayout_version": null,
+    "pdk": null,
+    "deck": null,
+    "input": {
+      "path": {
+        "path": "manifests/inventories/item-9.json",
+        "scope": "repo"
+      },
+      "content_hash": "sha256:c394d2d5dd42ee58b9ac3c691ccea87081e73f2dfd215f1001cc66e63feda3ec"
+    }
+  }
+}

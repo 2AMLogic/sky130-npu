@@ -5,9 +5,10 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
   `kind: digital`. Item 6 is discharged by a recorded `not_applicable`
-  statement (below). Item 10 cites `attestations/item-10.json`; every other
-  item is still uncited and grades `unmet`, so `tier` is `null`. Items 1 and 9
-  are attested the same way once there is something to inventory.
+  statement (below). Items 9 and 10 cite `attestations/item-9.json` and
+  `attestations/item-10.json`; every other item is still uncited and grades
+  `unmet`, so `tier` is `null`. Item 1 is attested the same way once there is
+  something to inventory.
 - **`spec-rows.json`**: the ratified target spec for item 6, one `id` per row
   of `spec/npu.md` section 1 (a slug of the Parameter column, since the table
   has no id column).
@@ -22,6 +23,15 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10.json`,
   then update the cited `content_hash` in the manifest and re-render the
   report. CI runs the same command with `--check`.
+  The item-9 inventory lists the testbenches (bit-exact, golden-model,
+  bank-alias bench, mutation check, runner, verification workflow), a
+  `cold_start` that builds a fresh venv and runs `verification/README.md`
+  "Cold start" (runner at `ARRAY_N=8`, then the mutation check) with records
+  and build output in a temp dir, and the pins (open_pdks `f6eeac7`, Icarus
+  13.0, cocotb 2.0.1). Any later item that adds a bench (items 3 to 7 flow
+  benches) must add it to `inventories/item-9.json` and re-attest with
+  `klt signoff --attest 9 --inventory manifests/inventories/item-9.json -o manifests/attestations/item-9.json`,
+  then update the cited `content_hash` and re-render the report.
 - **`sky130-npu.signoff.json`**: the committed output of
   `klt signoff --manifest manifests/sky130-npu.json --format json`, verbatim.
   This is the verdict of record for the block's gap to T1.
