@@ -7,7 +7,6 @@ triage agent; entries are grouped by date, newest first.
 
 - **PR #59**: build: pin klayout-tools to the 0.8.0 PyPI release
 - **Issue #58** (closed): Bump klayout-tools pin 67e684ed9b2b → 0.8.0
-
 - **PR #55**: feat(synth): commit sky130 gate-level netlist with SRAM black boxes and attest T1 item 1
 - **PR #54**: test(verification): add klt functional-verification request and ARRAY_N=8 envelope
 - **Issue #42** (closed): T1 item 1 (design sources): synthesize npu_top to sky130_fd_sc_hd with SRAM macros black-boxed, and attest the netlist
