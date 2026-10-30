@@ -5,6 +5,8 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-10-30
 
+- **PR #67**: test(verification): record passing bit-exact runs at ARRAY_N=4 and 8 on current rtl head
+- **Issue #66** (closed): Re-run the bit-exact ledger (#12 suite) on current main so rtl-v0.1.0 can be tagged (#35)
 - **PR #64**: build: parameterize harness RTL and PDK-seam directories for stamped ports
 - **Issue #62** (closed): Parameterize the verification harness RTL and PDK-seam paths so stamped ports can run it
 
