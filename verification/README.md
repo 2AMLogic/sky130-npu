@@ -68,5 +68,19 @@ Both sizes run every workload; wall time on one core is about 30 s (N=8) and
 All of them: `runner.py`, `check_mutation.sh`, `requirements.txt`, `tests/`
 (`npu_bench.py`, `test_bitexact.py`, `test_golden.py`), `golden/`, `workloads/`,
 `records/README.md` and this README, plus `.github/workflows/verification.yml`.
-Nothing here references sky130 or any PDK. The runner's default source list names
-`rtl/pdk/sky130/npu_sram_bank.v`; a port points `--sources` at its own wrapper.
+Nothing here references sky130 or any PDK except the default seam value
+(`rtl/pdk/sky130`).
+
+## Pointing the harness at another layout
+
+`rtl/check.sh`, `runner.py` and `check_mutation.sh` read two variables, so a
+stamped port edits no script:
+
+- `NPU_RTL_DIR` (default `rtl`): the 7 PDK-independent RTL files.
+- `NPU_PDK_DIR` (default `rtl/pdk/sky130`): `npu_sram_bank.v` and
+  `npu_sram_bank_bb.v`.
+
+Relative values resolve against the repo root; absolute values are used as given.
+The two directories need not be nested. `verification.yml` sets both in its
+workflow-level `env:`, which is the one place a port changes.
+`tests/test_relocated_layout.py` runs `rtl/check.sh` against a relocated copy.

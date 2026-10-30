@@ -8,16 +8,27 @@
 # The parameter is the only thing that changes between sizes. This is an
 # elaboration/lint gate: it says nothing about functional correctness (that is
 # the testbench issue's job).
+#
+# A stamped port points the gate at its own layout with two variables (relative
+# values resolve against the repo root, absolute values are used as given):
+#   NPU_RTL_DIR   the 7 PDK-independent files            (default: rtl)
+#   NPU_PDK_DIR   npu_sram_bank.v and npu_sram_bank_bb.v (default: rtl/pdk/sky130)
 
 set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "${HERE}"
+REPO="$(dirname "${HERE}")"
+resolve() { case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s\n' "${REPO}/$1" ;; esac; }
+RTL_DIR="$(resolve "${NPU_RTL_DIR:-rtl}")"
+PDK_DIR="$(resolve "${NPU_PDK_DIR:-rtl/pdk/sky130}")"
 
-SRC=(npu_top.v npu_host.v npu_ctrl.v npu_banks.v npu_array.v npu_pe.v npu_requant.v
-     pdk/sky130/npu_sram_bank.v)
+SRC=()
+for f in npu_top npu_host npu_ctrl npu_banks npu_array npu_pe npu_requant; do
+  SRC+=("${RTL_DIR}/${f}.v")
+done
+SRC+=("${PDK_DIR}/npu_sram_bank.v")
 # Synthesis view (macro as a black box): the same file list with the wrapper swapped.
-SRC_BB=("${SRC[@]/pdk\/sky130\/npu_sram_bank.v/pdk/sky130/npu_sram_bank_bb.v}")
+SRC_BB=("${SRC[@]:0:7}" "${PDK_DIR}/npu_sram_bank_bb.v")
 TOP=npu_top
 GOOD=("$@"); [ "${#GOOD[@]}" -gt 0 ] || GOOD=(8 4)
 BAD=(6 16)
