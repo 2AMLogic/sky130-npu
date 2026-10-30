@@ -28,7 +28,7 @@ _None._
 
 Human-approved issues ready for implementation (`loom:issue`).
 
-_None._
+- **#62**: Parameterize the verification harness RTL and PDK-seam paths so stamped ports can run it
 
 ## In Progress
 
@@ -56,6 +56,7 @@ Issues carrying `loom:curated`.
 - **#8**: Track the RTL, integer golden model and testbenches the ports pin *(curated)*
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)*
 - **#51**: Generate and pin the 4 KB (1024x32) OpenRAM macro views: LEF, GDS, Verilog, Liberty *(curated)*
+- **#62**: Parameterize the verification harness RTL and PDK-seam paths so stamped ports can run it *(curated)*
 
 ## Proposed (Architect / Hermit)
 
@@ -72,11 +73,11 @@ _None._
 | Operator merge-risk holds | 0 |
 | Very important | 0 |
 | Important | 3 |
-| Ready (`loom:issue`) | 0 |
+| Ready (`loom:issue`) | 1 |
 | In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 0 |
 | Approved PRs awaiting merge | 0 |
-| Curated | 4 |
+| Curated | 5 |
 | Architect / Hermit proposals | 1 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
