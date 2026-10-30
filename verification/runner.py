@@ -32,16 +32,23 @@ from cocotb_tools.runner import get_runner
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 
-# Same source list as rtl/check.sh.
-DEFAULT_SOURCES = [
-    f"rtl/{f}.v"
-    for f in ("npu_top", "npu_host", "npu_ctrl", "npu_banks", "npu_array",
-              "npu_pe", "npu_requant")
-] + ["rtl/pdk/sky130/npu_sram_bank.v"]
-
-
 def env(name, default):
     return os.environ.get(name, default)
+
+
+def _dir(name, default):
+    """A directory from the environment; relative values resolve against REPO."""
+    return (REPO / env(name, default)).resolve()
+
+
+# Same source list and directory variables as rtl/check.sh.
+RTL_DIR = _dir("NPU_RTL_DIR", "rtl")
+PDK_DIR = _dir("NPU_PDK_DIR", "rtl/pdk/sky130")
+DEFAULT_SOURCES = [
+    str(RTL_DIR / f"{f}.v")
+    for f in ("npu_top", "npu_host", "npu_ctrl", "npu_banks", "npu_array",
+              "npu_pe", "npu_requant")
+] + [str(PDK_DIR / "npu_sram_bank.v")]
 
 
 def parse_args(argv):
@@ -54,7 +61,7 @@ def parse_args(argv):
     p.add_argument(
         "--sources",
         nargs="+",
-        default=env("HDL_SOURCES", " ".join(str(REPO / s) for s in DEFAULT_SOURCES)).split(),
+        default=env("HDL_SOURCES", " ".join(DEFAULT_SOURCES)).split(),
         help="HDL source files (env HDL_SOURCES, space-separated)",
     )
     p.add_argument(
@@ -121,7 +128,9 @@ def git(*cmd):
 
 def source_provenance(sources):
     """HEAD, the last commit touching the sources, and whether they are dirty."""
-    rel = [os.path.relpath(s, REPO) for s in sources]
+    # Sources outside the repo (a relocated layout) have no history here.
+    rel = [r for r in (os.path.relpath(s, REPO) for s in sources)
+           if not r.startswith(os.pardir)]
     return {
         "rtl_commit": git("rev-parse", "HEAD"),
         "sources_last_commit": git("log", "-1", "--format=%H", "--", *rel),

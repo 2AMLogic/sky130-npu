@@ -10,6 +10,10 @@
 # is never inside the repo, and the run writes its record to a temp ledger.
 # Exit 1: the corruption was not caught (or the mutation did not apply, or the
 # run failed for a reason other than a recorded test failure).
+#
+# NPU_RTL_DIR / NPU_PDK_DIR (defaults rtl, rtl/pdk/sky130; relative values
+# resolve against the repo root) point it at a port's layout; the two
+# directories need not be nested.
 
 set -uo pipefail
 
@@ -21,19 +25,25 @@ PY="${PYTHON:-python3}"
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "${TMP}"' EXIT
-cp -r "${REPO}/rtl" "${TMP}/rtl"
+resolve() { case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s\n' "${REPO}/$1" ;; esac; }
+RTL_DIR="$(resolve "${NPU_RTL_DIR:-rtl}")"
+PDK_DIR="$(resolve "${NPU_PDK_DIR:-rtl/pdk/sky130}")"
+mkdir "${TMP}/rtl" "${TMP}/pdk"
+cp "${RTL_DIR}"/*.v "${TMP}/rtl/"
+cp "${PDK_DIR}"/*.v "${TMP}/pdk/"
 
 sed -i 's/lane_out = r\[7:0\];/lane_out = {r[7:1], ~r[0]};/' "${TMP}/rtl/npu_requant.v"
-if cmp -s "${REPO}/rtl/npu_requant.v" "${TMP}/rtl/npu_requant.v"; then
+if cmp -s "${RTL_DIR}/npu_requant.v" "${TMP}/rtl/npu_requant.v"; then
   echo "FAIL: the mutation did not apply (npu_requant.v changed shape?)" >&2
   exit 1
 fi
-echo "mutation: $(diff "${REPO}/rtl/npu_requant.v" "${TMP}/rtl/npu_requant.v" | grep '^>' )"
+echo "mutation: $(diff "${RTL_DIR}/npu_requant.v" "${TMP}/rtl/npu_requant.v" | grep '^>' )"
 
 SRC=()
-for f in npu_top npu_host npu_ctrl npu_banks npu_array npu_pe npu_requant pdk/sky130/npu_sram_bank; do
+for f in npu_top npu_host npu_ctrl npu_banks npu_array npu_pe npu_requant; do
   SRC+=("${TMP}/rtl/${f}.v")
 done
+SRC+=("${TMP}/pdk/npu_sram_bank.v")
 
 TESTCASE=test_workload_mm_smoke "${PY}" "${HERE}/runner.py" \
   --sources "${SRC[@]}" --param "ARRAY_N=${N}" \

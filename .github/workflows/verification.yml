@@ -9,6 +9,9 @@ permissions:
 
 env:
   ICARUS_TAG: v13_0
+  # Where the harness finds the RTL. A stamped port changes only these two.
+  NPU_RTL_DIR: rtl
+  NPU_PDK_DIR: rtl/pdk/sky130
 
 jobs:
   bitexact:

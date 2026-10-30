@@ -104,6 +104,10 @@ python3 -m venv .venv
 EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py
 ```
 
+A stamped port with a different layout sets `NPU_RTL_DIR` and `NPU_PDK_DIR`
+(the workflow's `env:`) instead of editing scripts; see
+[verification/README.md](verification/README.md#pointing-the-harness-at-another-layout).
+
 **Synthesis estimate** (Yosys, generic gates, no Liberty; about 5 min and
 340 MB; an estimate, not area or timing):
 
