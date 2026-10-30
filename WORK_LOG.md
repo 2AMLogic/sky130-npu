@@ -3,6 +3,11 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-10-30
+
+- **PR #64**: build: parameterize harness RTL and PDK-seam directories for stamped ports
+- **Issue #62** (closed): Parameterize the verification harness RTL and PDK-seam paths so stamped ports can run it
+
 ### 2026-10-27
 
 - **PR #59**: build: pin klayout-tools to the 0.8.0 PyPI release
