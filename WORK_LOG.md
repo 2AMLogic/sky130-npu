@@ -3,6 +3,10 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-10-31
+
+- **PR #71**: Bump Repo Skills 0.24.7 -> 0.25.1
+
 ### 2026-10-30
 
 - **Issue #35** (closed): Tag rtl-v0.1.0 once #12 shows bit-exactness
