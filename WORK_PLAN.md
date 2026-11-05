@@ -14,7 +14,7 @@ _None._
 
 `loom:very-important` (one counts per workspace); every stage takes these first.
 
-_None._
+- **#74**: Repo-local pinned fetch of sky130_fd_bd_sram cell views so OpenRAM runs without a worker change
 
 ## Important
 
@@ -23,7 +23,6 @@ _None._
 - **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz
 - **#51**: Generate and pin the 4 KB (1024x32) OpenRAM macro views: LEF, GDS, Verilog, Liberty
-- **#74**: Repo-local pinned fetch of sky130_fd_bd_sram cell views so OpenRAM runs without a worker change
 
 ## Ready
 
@@ -54,9 +53,9 @@ _None._
 Issues carrying `loom:curated`.
 
 - **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)*
-- **#8**: Track the RTL, integer golden model and testbenches the ports pin *(curated)*
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)*
 - **#51**: Generate and pin the 4 KB (1024x32) OpenRAM macro views: LEF, GDS, Verilog, Liberty *(curated)*
+- **#74**: Repo-local pinned fetch of sky130_fd_bd_sram cell views so OpenRAM runs without a worker change *(curated)*
 
 ## Proposed (Architect / Hermit)
 
@@ -72,8 +71,8 @@ _None._
 | Bucket | Count |
 |------|-------|
 | Operator merge-risk holds | 0 |
-| Very important | 0 |
-| Important | 4 |
+| Very important | 1 |
+| Important | 3 |
 | Ready (`loom:issue`) | 1 |
 | In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 0 |
