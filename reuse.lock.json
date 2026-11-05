@@ -40,6 +40,45 @@
       },
       "views_note": "Only a TT 1.8 V 25 C Liberty view ships (common config sets nominal_corner_only = True). No slow or fast view exists: gaps G1 and G2 remain open.",
       "date": "2026-10-24"
+    },
+    {
+      "name": "openram-toolchain",
+      "role": "generator toolchain for the OpenRAM macros (flow/sram/setup.sh); fetched into a scratch dir, nothing installed host-wide",
+      "kind": "toolchain",
+      "openram": {
+        "repo": "https://github.com/VLSIDA/OpenRAM",
+        "commit": "2f7b3866418ac1ce17ad959207a1489033d8c577",
+        "version": "1.2.50",
+        "tree_sha256": "38d0f8b4cc196517b7761f06d0a99adbd6a6d1f5e159ae2a7d8fb4bbffbbb992"
+      },
+      "sram_cells": {
+        "repo": "https://github.com/vlsida/sky130_fd_bd_sram.git",
+        "commit": "fc63b12883b4bf458ee8c756ba64c37063e1ffb9",
+        "tree_sha256": "1fd7ef368e7b7fc6a08297a81f02039dd450c079b1ab66dccd9e6c54ce36ec49",
+        "note": "The commit OpenRAM 1.2.50's own Makefile pins (SRAM_LIB_GIT_COMMIT). Holds the 2-port openram_dp_cell views (SPICE, GDS, LVS) that the worker's sky130A install lacks."
+      },
+      "std_cell_views": {
+        "repo": "https://github.com/google/skywater-pdk-libs-sky130_fd_sc_hd",
+        "commit": "ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1",
+        "tree_sha256": "8eef40675941de4b1d200fd816bdd9b5688731b250f7c891a8b70bdcbcf81a0a",
+        "note": "Only cells/dlxtn/sky130_fd_sc_hd__dlxtn_1.{gds,spice} are used, as OpenRAM's make sky130-install does."
+      },
+      "macro_configs": {
+        "repo": "https://github.com/VLSIDA/sky130_sram_macros",
+        "commit": "965df150c754fe2b3f93a0bd1f9883eb114279b2",
+        "tree_sha256": "1b5fe4023b2edbafdc4afee0f28dad23804587eabc5a12a780e2ba6d54789f39",
+        "common_py_sha256": "4a4e89004c7dd4f05839be6dec649bcfe00c898698d853b5a832c880036ea963",
+        "note": "Same commit as the macro pins above; sky130_sram_common.py hash matches theirs."
+      },
+      "python_packages": {
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "scikit-learn": "1.9.1",
+        "coverage": "7.17.2",
+        "ciel": "3.2.0"
+      },
+      "python_packages_note": "Versions the probe was run with (CPython 3.12). PyPI wheel hashes are not pinned; pip verifies wheels against PyPI metadata only.",
+      "date": "2026-11-05"
     }
   ]
 }

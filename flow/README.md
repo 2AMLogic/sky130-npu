@@ -47,6 +47,20 @@ It runs single-unit, one local corner (`tt_025C_1v80`). It is not a corner
 grid and does not use the batch fleet. The clock period (20 ns) is arbitrary:
 it only gives `klt sta` something to time against. It is not a target.
 
+## OpenRAM toolchain: `flow/sram/setup.sh`
+
+Pinned, repo-local OpenRAM environment for the SRAM macros (#74), so a macro run
+needs no worker change. With only `git`, `python3` (+ `venv`), `curl` and network
+access it fetches, into a scratch directory outside the repo, OpenRAM, the
+`sky130_fd_bd_sram` bitcell views (the 2-port `openram_dp_cell` family the
+worker's sky130A lacks), the std-cell latch views, the macro configs and the
+sky130A tech files (via `ciel`, at the `flow/pdk.json` commit). It checks every
+commit and a tree sha256 against the `openram-toolchain` pin in `reuse.lock.json`,
+builds the tech overlay and runs a 16 x 32 1rw1r probe (`probe_16x32_1rw1r.py`,
+characterization and DRC/LVS off). `--env-only` stops after the overlay;
+`--record <id>` writes `flow/sram/records/<id>/` (append-only). The probe is
+environment evidence, not a design macro. Pip wheel hashes are not pinned.
+
 ## What each step proves
 
 | Step | Command | Proves | Does not prove |

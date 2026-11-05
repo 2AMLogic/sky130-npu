@@ -1,0 +1,13 @@
+date_utc: 2026-11-05T05:02:23Z
+openram_commit: 2f7b3866418ac1ce17ad959207a1489033d8c577
+openram_version: 1.2.50
+sram_cells_commit: fc63b12883b4bf458ee8c756ba64c37063e1ffb9
+python: Python 3.12.3
+probe_config: flow/sram/probe_16x32_1rw1r.py (check_lvsdrc=False, analytical_delay=True)
+exit_code: 0
+wall_seconds: 86
+bitcell_creation_passed: yes
+outputs_sha256:
+  41c457db77c9b9317d207a0e19ecf9d53b75d866aeb338f5caa87819f0c10445  probe_sram_32x16_1rw1r.lef
+  391cf83f524f7898953ada43132108add2d8bc55160b6eb8dc632cbbc8c44fa8  probe_sram_32x16_1rw1r.gds
+  45ed27c31b3a55f8b7c7fd845f82954dd5b291e49473b5bb5234194ef9d00942  probe_sram_32x16_1rw1r.v
