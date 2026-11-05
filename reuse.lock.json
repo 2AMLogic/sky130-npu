@@ -70,14 +70,15 @@
         "common_py_sha256": "4a4e89004c7dd4f05839be6dec649bcfe00c898698d853b5a832c880036ea963",
         "note": "Same commit as the macro pins above; sky130_sram_common.py hash matches theirs."
       },
-      "python_packages": {
-        "numpy": "2.5.4",
-        "scipy": "1.18.1",
-        "scikit-learn": "1.9.1",
-        "coverage": "7.17.2",
-        "ciel": "3.2.0"
+      "requirements": {
+        "file": "flow/sram/requirements.lock.txt",
+        "sha256": "2916f4c9888350ef7bd8aeb09902b842fa72970222b0744448f58ef9fefd90c3",
+        "note": "pip install --require-hashes; direct pins numpy 2.5.4, scipy 1.18.1, scikit-learn 1.9.1, coverage 7.17.2, ciel 3.2.0 plus transitive deps. Resolved for CPython 3.12, x86_64 manylinux_2_28."
       },
-      "python_packages_note": "Versions the probe was run with (CPython 3.12). PyPI wheel hashes are not pinned; pip verifies wheels against PyPI metadata only.",
+      "pdk_libs_tech": {
+        "tree_sha256": "d20fbac9037b6b1abb9cd8400e2e9b0b56c8da4eb773a842f91b50299c2f5179",
+        "note": "Sorted sha256 listing of every file under $PDK_ROOT/sky130A/libs.tech after ciel enable at the flow/pdk.json open_pdks commit (sky130_fd_sc_hd only)."
+      },
       "date": "2026-11-05"
     }
   ]
