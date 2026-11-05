@@ -3,6 +3,15 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-05
+
+- **PR #79**: ci: run relocated-layout seam test in rtl-elaborate
+- **Issue #78** (closed): CI never runs test_relocated_layout.py: wire it into rtl-elaborate
+- **PR #77**: feat(flow): hash-pin OpenRAM toolchain wheels and libs.tech payload
+- **Issue #76** (closed): Pin pip wheel hashes and ciel PDK payload hash for flow/sram/setup.sh
+- **PR #75**: feat(flow): pinned repo-local OpenRAM toolchain and 16x32 probe run
+- **Issue #8** (closed): Track the RTL, integer golden model and testbenches the ports pin
+
 ### 2026-10-31
 
 - **PR #71**: Bump Repo Skills 0.24.7 -> 0.25.1
