@@ -59,7 +59,18 @@ commit and a tree sha256 against the `openram-toolchain` pin in `reuse.lock.json
 builds the tech overlay and runs a 16 x 32 1rw1r probe (`probe_16x32_1rw1r.py`,
 characterization and DRC/LVS off). `--env-only` stops after the overlay;
 `--record <id>` writes `flow/sram/records/<id>/` (append-only). The probe is
-environment evidence, not a design macro. Pip wheel hashes are not pinned.
+environment evidence, not a design macro.
+
+Python packages install from `flow/sram/requirements.lock.txt` with
+`pip install --require-hashes` (all transitive deps; every published artifact of
+each pinned version is hashed). The file's own sha256 and a sha256 of the
+`$PDK_ROOT/sky130A/libs.tech` payload `ciel` fetched are pinned in
+`reuse.lock.json`; a mismatch of either exits 3 before the overlay or probe.
+The requirements were resolved for CPython 3.12 on x86_64 manylinux_2_28; another
+Python or platform tag may fail to find a matching hashed wheel (fail closed).
+To bump a pin, regenerate the requirements (command in the file header), then run
+`SETUP_PRINT_PINS=1 flow/sram/setup.sh --env-only` and copy the printed
+`PIN ... = <sha256>` values into `reuse.lock.json`.
 
 ## What each step proves
 

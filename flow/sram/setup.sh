@@ -3,7 +3,8 @@
 #
 # Needs only git, python3 (with venv) and curl. No conda, no Nix, no root, and
 # nothing is installed outside the scratch directory. Every input is pinned by
-# commit and sha256 in reuse.lock.json (pins[].name == "openram-toolchain").
+# commit and sha256 in reuse.lock.json (pins[].name == "openram-toolchain"),
+# including the hash-pinned Python wheels and the sky130A libs.tech payload.
 #
 #   flow/sram/setup.sh                     # fetch, verify, build overlay, run the probe
 #   flow/sram/setup.sh --env-only          # stop after the overlay; print env for #51
@@ -113,14 +114,10 @@ check "sky130_sram_common.py sha256" "$(pin macro_configs.common_py_sha256)" "$(
 # --- Python venv -------------------------------------------------------------
 VENV="$SCRATCH/venv"
 [ -x "$VENV/bin/python" ] || python3 -m venv "$VENV"
-PKGS="$(python3 -I - "$LOCK" <<'PY'
-import json, sys
-t = next(p for p in json.load(open(sys.argv[1]))["pins"] if p["name"] == "openram-toolchain")
-print(" ".join(f"{k}=={v}" for k, v in t["python_packages"].items()))
-PY
-)"
-# shellcheck disable=SC2086
-"$VENV/bin/python" -m pip install -q --disable-pip-version-check $PKGS
+REQS="$HERE/requirements.lock.txt"
+check "requirements.lock.txt sha256" "$(pin requirements.sha256)" "$(sha256sum "$REQS" | cut -d' ' -f1)"
+# --require-hashes: every wheel (and transitive dep) must match a hash in REQS.
+"$VENV/bin/python" -m pip install -q --disable-pip-version-check --require-hashes -r "$REQS"
 
 # --- sky130A tech files (SPICE models, magic/netgen rc) at the PDK pin ---------
 # OpenRAM's sky130 tech reads $PDK_ROOT/sky130A/libs.tech. The commit is the one
@@ -132,6 +129,12 @@ if [ ! -e "$PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice" ]; then
 fi
 [ -e "$PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice" ] || { echo "FAIL: ciel did not provide sky130A libs.tech" >&2; exit 3; }
 echo "pdk: open_pdks $PDK_COMMIT"
+# Hash the libs.tech payload ciel fetched, so a tampered or drifted payload fails
+# before the overlay and the probe use it. Sorted "sha256  path" listing.
+dir_sha256() {
+  ( cd "$1" && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1 )
+}
+check "sky130A libs.tech tree sha256" "$(pin pdk_libs_tech.tree_sha256)" "$(dir_sha256 "$PDK_ROOT/sky130A/libs.tech")"
 
 # --- Tech overlay: the same install OpenRAM's `make sky130-install` does -----
 T="$OR/technology/sky130"
