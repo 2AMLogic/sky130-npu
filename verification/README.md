@@ -100,7 +100,7 @@ What this is, and is not:
   wrapper.
 - The record carries `defines`, `baked_parameters` and `source_sha256` (netlist,
   both PDK model files, the stand-in).
-- Wall time on one core is tens of minutes (about 1,900 simulated ns per second).
+- Wall time on one core is about 75 minutes for the whole suite (about 630 simulated ns per second), plus a few minutes of simulator teardown before the record is written.
 
 Stand-in fidelity checks (Icarus, from the repo root):
 
