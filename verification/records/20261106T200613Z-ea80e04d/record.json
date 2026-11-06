@@ -1,0 +1,87 @@
+{
+  "baked_parameters": [
+    "ARRAY_N"
+  ],
+  "cocotb": "2.1.0",
+  "defines": [
+    "FUNCTIONAL",
+    "UNIT_DELAY=#0"
+  ],
+  "failures": 0,
+  "id": "ea80e04d",
+  "parameters": {
+    "ARRAY_N": "8"
+  },
+  "passed": true,
+  "results": {
+    "random": {
+      "basis": "simulated",
+      "gemms": 8,
+      "mismatches": 0,
+      "seed": 1461685959
+    },
+    "seed": 1461685959,
+    "workload:conv-3x3-a": {
+      "K": 144,
+      "M": 256,
+      "N": 32,
+      "array_n": 8,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 22912,
+      "u_array": 0.8044692737430168
+    },
+    "workload:conv-3x3-edge": {
+      "K": 72,
+      "M": 196,
+      "N": 20,
+      "array_n": 8,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 8025,
+      "u_array": 0.5495327102803739
+    },
+    "workload:mm-fc": {
+      "K": 256,
+      "M": 64,
+      "N": 64,
+      "array_n": 8,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 18624,
+      "u_array": 0.8797250859106529
+    },
+    "workload:mm-smoke": {
+      "K": 64,
+      "M": 8,
+      "N": 8,
+      "array_n": 8,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 99,
+      "u_array": 0.6464646464646465
+    }
+  },
+  "rtl_commit": "56ea0cc24723ec2cae4115464892be138d5f2c2e",
+  "seed": 1461685959,
+  "simulator": "Icarus Verilog version 13.0 (stable) (v13_0)",
+  "source_sha256": {
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v": "7d4b1441d06b0f2b9662befa675a0484d77149e04eb42a5f1fa2d4cfded7b2ce",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v": "4a183a476baef9abb68d82808d24d8f2907ed7b6cdebff8d03002f45b12e7833",
+    "rtl/synth/records/20261027-sky130-hd/npu_top_synth.v": "e43b49aadb1c7240f41045cda864d1cb3d5fc621ff7e4047adb654f413de2317",
+    "verification/models/sky130_sram_4kbyte_standin.v": "45a02d0b3ea8b037c2a2dba6ff168f6a04f17b9ea554bf6ac799a03860fb8189"
+  },
+  "sources": [
+    "rtl/synth/records/20261027-sky130-hd/npu_top_synth.v",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v",
+    "verification/models/sky130_sram_4kbyte_standin.v"
+  ],
+  "sources_dirty": false,
+  "sources_last_commit": "56ea0cc24723ec2cae4115464892be138d5f2c2e",
+  "test_module": "test_bitexact",
+  "testcase": null,
+  "tests": 11,
+  "toplevel": "npu_top",
+  "utc": "2026-11-06T20:06:13.734709+00:00"
+}
