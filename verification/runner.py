@@ -15,6 +15,7 @@ README there) and exits non-zero if any test failed.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import random
@@ -73,6 +74,23 @@ def parse_args(argv):
         "(env HDL_PARAMS, space-separated NAME=VALUE)",
     )
     p.add_argument(
+        "--baked-param",
+        action="append",
+        default=[],
+        metavar="NAME=VALUE",
+        help="parameter already elaborated into the sources (a synthesized "
+        "netlist has no parameters left): exported to the test env and "
+        "recorded, but not passed to iverilog -P; repeatable",
+    )
+    p.add_argument(
+        "--define",
+        action="append",
+        default=[],
+        metavar="NAME[=VALUE]",
+        help="preprocessor define passed to iverilog as -DNAME[=VALUE], "
+        "repeatable (env HDL_DEFINES, space-separated)",
+    )
+    p.add_argument(
         "--test-module",
         default=env("TEST_MODULE", "test_bitexact"),
         help="Python test module under --test-dir (env TEST_MODULE)",
@@ -97,8 +115,12 @@ def parse_args(argv):
         "fresh when empty (env NPU_SEED)",
     )
     args = p.parse_args(argv)
-    raw = args.param or env("HDL_PARAMS", "ARRAY_N=8").split()
+    raw = args.param or (
+        [] if args.baked_param else env("HDL_PARAMS", "ARRAY_N=8").split()
+    )
     args.params = dict(kv.split("=", 1) for kv in raw)
+    args.baked = dict(kv.split("=", 1) for kv in args.baked_param)
+    args.defines = args.define or env("HDL_DEFINES", "").split()
     return args
 
 
@@ -138,6 +160,10 @@ def source_provenance(sources):
     }
 
 
+def sha256_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
 def write_record(records_dir, record):
     now = datetime.now(timezone.utc)
     rid = uuid.uuid4().hex[:8]
@@ -166,9 +192,9 @@ def main(argv=None):
     runner.build(
         sources=[Path(s) for s in args.sources],
         hdl_toplevel=args.toplevel,
-        parameters=args.params,
+        parameters=args.params,  # baked params are not -P overrides
         build_dir=args.build_dir,
-        build_args=["-g2012"],
+        build_args=["-g2012", *(f"-D{d}" for d in args.defines)],
         timescale=("1ns", "1ps"),
         always=True,
     )
@@ -180,6 +206,7 @@ def main(argv=None):
         test_filter=args.testcase or None,
         extra_env={
             **args.params,
+            **args.baked,
             "NPU_SEED": str(seed),
             "NPU_RESULTS_FILE": str(results_file),
         },
@@ -191,7 +218,12 @@ def main(argv=None):
         {
             "toplevel": args.toplevel,
             "sources": [os.path.relpath(s, HERE.parent) for s in args.sources],
-            "parameters": args.params,
+            "source_sha256": {
+                os.path.relpath(s, HERE.parent): sha256_file(s) for s in args.sources
+            },
+            "defines": args.defines,
+            "parameters": {**args.params, **args.baked},
+            "baked_parameters": sorted(args.baked),
             "test_module": args.test_module,
             "cocotb": cocotb.__version__,
             "simulator": version,

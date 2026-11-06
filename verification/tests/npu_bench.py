@@ -114,7 +114,14 @@ class Bench:
             await FallingEdge(d.clk)  # outputs settled after this edge's update
             ack, err = int(d.wb_ack_o.value), int(d.wb_err_o.value)
             if ack or err:
-                data = 0 if (we or err) else int(d.wb_dat_o.value)
+                data = 0
+                if not (we or err):
+                    # A master captures dat_o at the next rising edge (ACK is
+                    # still high until that edge updates). Sampling here, not
+                    # at the falling edge, matters with the SRAM macro: its
+                    # dout is only driven after the falling edge.
+                    await RisingEdge(d.clk)
+                    data = int(d.wb_dat_o.value)
                 d.wb_cyc_i.value = 0
                 d.wb_stb_i.value = 0
                 if err and not allow_err:
