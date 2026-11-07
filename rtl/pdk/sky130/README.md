@@ -8,27 +8,43 @@ Source: VLSIDA `sky130_sram_macros` @ `965df150c754fe2b3f93a0bd1f9883eb114279b2`
 
 | Bank | Macro | Pre-generated upstream | Views imported |
 |---|---|---|---|
-| 1024 x 32 (target) | `sky130_sram_4kbyte_1rw1r_32x1024_8` | No: only the generator config exists | None. Config hashes pinned. |
+| 1024 x 32 (target) | `sky130_sram_4kbyte_1rw1r_32x1024_8` | No: only the generator config exists; generated here (`flow/sram/gen_4kb_1rw1r_32x1024.py`, issue #51) | Verilog, LEF, GDS (`.gds.gz`), TT Liberty under `macro/`: sha256 in the lock |
 | 512 x 32 (fallback) | `sky130_sram_2kbyte_1rw1r_32x512_8` | Yes | Verilog, LEF, GDS, TT Liberty: sha256 in the lock |
 
 Nothing from the upstream repo is copied into this repo; the lock records
-where each file comes from and its hash.
+where each file comes from and its hash. The 1024 x 32 views are the exception:
+no upstream copy exists, and LEF/GDS are not byte-reproducible across runs, so
+the generated files are committed under `macro/sky130_sram_4kbyte_1rw1r_32x1024_8/`
+and the lock hashes those files.
 
 ## Liberty / LEF view inventory (spec gaps G1, G2)
 
 | View | 512 x 32 | 1024 x 32 |
 |---|---|---|
-| Liberty TT 1.8 V 25 C | shipped with the macro | not generated |
-| Liberty slow (ss) | **missing: G1 stays open** | not generated: G1 stays open |
-| Liberty fast (ff) | **missing: G2 stays open** | not generated: G2 stays open |
-| LEF | shipped with the macro | not generated |
+| Liberty TT 1.8 V 25 C | shipped with the macro | generated 2026-11-07, OpenRAM analytical delay model (not SPICE) |
+| Liberty slow (ss) | **missing: G1 stays open** | **missing: G1 stays open** |
+| Liberty fast (ff) | **missing: G2 stays open** | **missing: G2 stays open** |
+| LEF | shipped with the macro | generated 2026-11-07 (699.89 x 677.565 um) |
+| GDS | shipped with the macro | generated 2026-11-07; DRC/LVS off (magic/netgen absent), not signed off |
 
 The shipped 512 x 32 Liberty reports `minimum_period` 1.956 ns and a `dout0`
 delay of 0.383 to 0.529 ns, TT only. That says nothing about a 20 ns slow-corner
 cycle. No timing claim is made from it. A timing result through a macro must
 name the view's origin: here "shipped with the 512 x 32 macro, TT only".
 To close G1/G2 the generator must be run with multiple corners
-(`nominal_corner_only = False`); not done here.
+(`nominal_corner_only = False`); not done here. The 1024 x 32 run used the
+pinned config unchanged on corners (`nominal_corner_only = True`), so it also
+yields TT only. Its Liberty is analytical, so no timing claim rests on it either;
+a timing result through this macro must name the view as "generated at
+OpenRAM 1.2.50, TT only, analytical delay model".
+
+The generated Verilog's port map (clk0, csb0, web0, wmask0[3:0], addr0[9:0],
+din0[31:0], dout0[31:0], clk1, csb1, addr1[9:0], dout1[31:0]) matches
+`npu_sram_bank_bb.v` exactly (yosys port comparison), and `npu_sram_bank.v` under
+`-DNPU_SRAM_MACRO` elaborates over it with Icarus and Yosys `hierarchy -check`.
+The generator names the module `..._4kbytes_...` from the pinned config; the
+generator wrapper overrides `output_name` so the module, LEF MACRO and Liberty
+cell keep the `..._4kbyte_...` name every consumer already uses.
 
 ## Read latency finding (decision 0005)
 

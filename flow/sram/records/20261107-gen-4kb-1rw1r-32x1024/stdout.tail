@@ -1,0 +1,60 @@
+[openram.modules.dff_buf_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_dff_buf_array_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_7
+** Submodules: 12.5 seconds
+** Placement: 0.0 seconds
+[openram.base.hierarchy_layout/get_bbox]: Size: 684.9300000000001 x 662.605 with perimeter margin 0
+[openram.router.router_tech/__init__]: Minimum track width: 0.680
+[openram.router.router_tech/__init__]: Minimum track space: 0.300
+[openram.router.router_tech/__init__]: Minimum track wire width: 0.380
+[openram.router.signal_escape_router/route]: Running signal escape router...
+[openram.router.router_tech/__init__]: Minimum track width: 0.680
+[openram.router.router_tech/__init__]: Minimum track space: 0.300
+[openram.router.router_tech/__init__]: Minimum track wire width: 0.380
+[openram.router.supply_router/route]: Running router for vdd and gnd...
+** Routing: 1176.7 seconds
+** Verification: 0.0 seconds
+** SRAM creation: 1189.3 seconds
+SP: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.sp
+[openram.characterizer.functional/__init__]: Random seed for functional simulation: 1794072088225618157
+** Spice writing: 0.5 seconds
+DELAY: Writing stimulus...
+[openram.characterizer.delay/create_sen_and_bitline_path_measures]: self.bl_name = xsky130_sram_4kbyte_1rw1r_32x1024_8.xbank0.bl_0_127
+** DELAY: 1.8 seconds
+GDS: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.gds
+** GDS: 0.5 seconds
+LEF: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.lef
+** LEF: 0.0 seconds
+LVS: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.lvs.sp
+** LVS writing: 0.4 seconds
+LIB: Characterizing... 
+[openram.characterizer.lib/prepare_tables]: Slews: [0.00125 0.005   0.04   ]
+[openram.characterizer.lib/prepare_tables]: Loads: [ 1.7225  6.89   27.56  ]
+[openram.characterizer.lib/prepare_tables]: self.load_slews : [(np.float64(1.7225), np.float64(0.00125)), (np.float64(6.89), np.float64(0.00125)), (np.float64(27.56), np.float64(0.00125)), (np.float64(1.7225), np.float64(0.005)), (np.float64(6.89), np.float64(0.005)), (np.float64(27.56), np.float64(0.005)), (np.float64(1.7225), np.float64(0.04)), (np.float64(6.89), np.float64(0.04)), (np.float64(27.56), np.float64(0.04))]
+[openram.characterizer.lib/characterize_corners]: Characterizing corners: [('TT', 1.8, 25)]
+[openram.characterizer.lib/characterize_corners]: Corner: ('TT', 1.8, 25)
+[openram.characterizer.lib/characterize_corners]: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8_TT_1p8V_25C.lib
+[openram.characterizer.elmore/analytical_power]: Dynamic Power: 201972621337.50555 mW
+[openram.characterizer.elmore/analytical_power]: Leakage Power: 0.035146 mW
+[openram.characterizer.elmore/get_lib_values]: Slew, Load, Delay(ns), Slew(ns)
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 1.7225, 0.3355331171470992, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 6.89, 0.36460030464709925, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 27.56, 0.48086905464709917, 0.016211249999999996
+[openram.characterizer.elmore/get_lib_values]: 0.005, 1.7225, 0.3355331171470992, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.005, 6.89, 0.36460030464709925, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.005, 27.56, 0.48086905464709917, 0.016211249999999996
+[openram.characterizer.elmore/get_lib_values]: 0.04, 1.7225, 0.3355331171470992, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.04, 6.89, 0.36460030464709925, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.04, 27.56, 0.48086905464709917, 0.016211249999999996
+** Characterization: 5.9 seconds
+Config: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.py
+** Config: 0.0 seconds
+Datasheet: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.html
+** Datasheet: 0.0 seconds
+Verilog: Writing to <scratch>/out51/sky130_sram_4kbyte_1rw1r_32x1024_8.v
+** Verilog: 0.0 seconds
+[openram.globals/purge_temp]: Purging temp directory: <openram-tmp>/
+** End: 1198.9 seconds
+
+real	20m2.879s
+user	20m4.492s
+sys	0m1.333s
