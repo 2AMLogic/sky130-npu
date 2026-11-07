@@ -1,0 +1,16 @@
+Re-run of flow/sram/setup.sh at main 60c6701 (after the hash-pinned wheels and
+libs.tech pins of #77), cold scratch dir, one local OpenRAM job, no grid.
+
+- Cold run: exit 0, bitcell creation passed, 77 s probe wall (about 118 s for
+  the whole script including fetch and pip).
+- Verilog hash equals the 20261105 record. LEF and GDS hashes differ from it
+  (0da5cbda.. / 3c85c146.. vs 41c457db.. / 391cf83f..); the cause is not
+  traced (a timestamp in the files is a guess). Compare views by structure, not
+  by file hash, until that is traced.
+- Idempotent re-run on the same scratch (--env-only): exit 0.
+- Local edit of a fetched file (OpenRAM compiler/globals.py): the scratch tree
+  is reset to the pinned commit before hashing, so the edit is discarded and the
+  run passes. This is by design.
+- Pin mismatch (openram.tree_sha256 altered in a copy of reuse.lock.json, then
+  reverted): "FAIL: OpenRAM tree sha256 mismatch", exit 3, before the overlay.
+- magic and netgen were not needed (DRC/LVS off).
