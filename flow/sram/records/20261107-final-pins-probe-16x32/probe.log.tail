@@ -1,0 +1,192 @@
+[openram.globals/init_openram]: Initializing OpenRAM...
+[openram.globals/setup_paths]: OpenRAM source code found in <scratch>/OpenRAM/compiler
+[openram.globals/setup_paths]: Temporary files saved in <openram-tmp>/
+[openram.globals/read_config]: Configuration file is <repo>/flow/sram/probe_16x32_1rw1r.py
+[openram.globals/read_config]: Output saved in <scratch>/probe-out/
+[openram.globals/import_tech]: Tech directory found in <scratch>/OpenRAM/technology:<scratch>/OpenRAM/compiler/../technology
+[openram.globals/import_tech]: Adding technology path: <scratch>/OpenRAM/technology
+[openram.globals/import_tech]: Adding technology path: <scratch>/OpenRAM/compiler/../technology
+[openram.globals/init_paths]: Creating temp directory: <openram-tmp>/
+[openram.globals/setup_bitcell]: Using bitcell: bitcell_2port
+[openram.characterizer/<module>]: Initializing characterizer...
+[openram.characterizer/<module>]: Analytical model enabled.
+[openram.verify/<module>]: Initializing verify...
+[openram.verify/<module>]: LVS/DRC/PEX disabled.
+[openram.globals/setup_bitcell]: Using bitcell: bitcell_2port
+|==============================================================================|
+|=========                      OpenRAM v1.2.50                       =========|
+|=========                                                            =========|
+|=========               VLSI Design and Automation Lab               =========|
+|=========        Computer Science and Engineering Department         =========|
+|=========            University of California Santa Cruz             =========|
+|=========                                                            =========|
+|=========          Usage help: openram-user-group@ucsc.edu           =========|
+|========= Development help: https://github.com/VLSIDA/OpenRAM/issues =========|
+|=========                See LICENSE for license info                =========|
+|==============================================================================|
+** Start: 11/07/2026 16:18:48
+Technology: sky130
+Total size: 512 bits
+Word size: 32
+Words: 16
+Banks: 1
+Write size: 8
+RW ports: 1
+R-only ports: 1
+W-only ports: 0
+DRC/LVS/PEX is only run on the top-level design to save run-time (inline_lvsdrc=True to do inline checking).
+DRC/LVS/PEX is disabled (check_lvsdrc=True to enable).
+Characterization is disabled (using analytical delay models) (analytical_delay=False to simulate).
+Only generating nominal corner timing.
+Words per row: None
+Output files are: 
+<scratch>/probe-out/probe_sram_32x16_1rw1r.lvs
+<scratch>/probe-out/probe_sram_32x16_1rw1r.sp
+<scratch>/probe-out/probe_sram_32x16_1rw1r.v
+<scratch>/probe-out/probe_sram_32x16_1rw1r.lib
+<scratch>/probe-out/probe_sram_32x16_1rw1r.py
+<scratch>/probe-out/probe_sram_32x16_1rw1r.html
+<scratch>/probe-out/probe_sram_32x16_1rw1r.log
+<scratch>/probe-out/probe_sram_32x16_1rw1r.lef
+<scratch>/probe-out/probe_sram_32x16_1rw1r.gds
+[openram.sram_config/recompute_sizes]: Recomputing with words per row: 1
+[openram.sram_config/recompute_sizes]: Rows: 16 Cols: 32
+[openram.sram_config/recompute_sizes]: Row addr size: 4 Col addr size: 0 Bank addr size: 4
+[openram.sram_config/compute_sizes]: Set SRAM Words Per Row=1
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_capped_replica_bitcell_array 16 x 32
+[openram.modules.capped_replica_bitcell_array/__init__]: Creating probe_sram_32x16_1rw1r_capped_replica_bitcell_array 16 x 32 rbls: [1, 1] left_rbl: [0] right_rbl: [1]
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_replica_bitcell_array 16 x 32
+[openram.modules.replica_bitcell_array/__init__]: Creating probe_sram_32x16_1rw1r_replica_bitcell_array 16 x 32 rbls: [1, 1] left_rbl: [0] right_rbl: [1]
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_bitcell_array 16 x 32
+[openram.modules.bitcell_array/__init__]: Creating probe_sram_32x16_1rw1r_bitcell_array 16 x 32
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_replica_column 18 x 1
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_replica_column_0 18 x 1
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_dummy_array 1 x 32
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_dummy_array_0 1 x 32
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_col_cap_array 1 x 34
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_col_cap_array_0 1 x 34
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_row_cap_array 20 x 1
+[openram.modules.bitcell_base_array/__init__]: Creating probe_sram_32x16_1rw1r_row_cap_array_0 20 x 1
+----------------------------------------------------------------------------------------
+probe_sram_32x16_1rw1r_capped_replica_bitcell_array  strap_routing_endpoints  side='right'  (29 taps, sort by y)
+----------------------------------------------------------------------------------------
+ idx            cx            cy   strap    from  pin                   strap_c
+----------------------------------------------------------------------------------------
+   0      114.6100        3.1600      m4      m2  gnd                   (114.6100,20.1450)
+   1      114.6100        3.7100      m4      m2  rbl_wl_0_1            (114.6100,20.1450)
+   2      114.6100        4.3450      m4      m2  gnd                   (114.6100,20.1450)
+   3      114.6100        5.5300      m4      m2  gnd                   (114.6100,20.1450)
+   4      114.6100        7.1100      m4      m2  gnd                   (114.6100,20.1450)
+   5      114.6100        8.2950      m4      m2  gnd                   (114.6100,20.1450)
+   6      114.6100        9.4800      m4      m2  gnd                   (114.6100,20.1450)
+   7      114.6100       11.0600      m4      m2  gnd                   (114.6100,20.1450)
+   8      114.6100       12.2450      m4      m2  gnd                   (114.6100,20.1450)
+   9      114.6100       13.4300      m4      m2  gnd                   (114.6100,20.1450)
+  10      114.6100       15.0100      m4      m2  gnd                   (114.6100,20.1450)
+  11      114.6100       16.1950      m4      m2  gnd                   (114.6100,20.1450)
+  12      114.6100       17.3800      m4      m2  gnd                   (114.6100,20.1450)
+  13      114.6100       18.9600      m4      m2  gnd                   (114.6100,20.1450)
+  14      114.6100       20.1450      m4      m2  gnd                   (114.6100,20.1450)
+  15      114.6100       21.3300      m4      m2  gnd                   (114.6100,20.1450)
+  16      114.6100       22.9100      m4      m2  gnd                   (114.6100,20.1450)
+  17      114.6100       24.0950      m4      m2  gnd                   (114.6100,20.1450)
+  18      114.6100       25.2800      m4      m2  gnd                   (114.6100,20.1450)
+  19      114.6100       26.8600      m4      m2  gnd                   (114.6100,20.1450)
+  20      114.6100       28.0450      m4      m2  gnd                   (114.6100,20.1450)
+  21      114.6100       29.2300      m4      m2  gnd                   (114.6100,20.1450)
+  22      114.6100       30.8100      m4      m2  gnd                   (114.6100,20.1450)
+  23      114.6100       31.9950      m4      m2  gnd                   (114.6100,20.1450)
+  24      114.6100       33.1800      m4      m2  gnd                   (114.6100,20.1450)
+  25      114.6100       34.7600      m4      m2  gnd                   (114.6100,20.1450)
+  26      114.6100       35.9450      m4      m2  gnd                   (114.6100,20.1450)
+  27      114.6100       37.1300      m4      m2  gnd                   (114.6100,20.1450)
+  28      114.6100       37.6800      m4      m2  rbl_wl_1_0            (114.6100,20.1450)
+----------------------------------------------------------------------------------------
+[openram.modules.and2_dec/__init__]: Creating and2_dec and2_dec
+[openram.modules.and3_dec/__init__]: Creating and3_dec and3_dec
+[openram.modules.and4_dec/__init__]: Creating and4_dec and4_dec
+[openram.modules.wordline_driver_array/__init__]: Creating probe_sram_32x16_1rw1r_wordline_driver_array
+[openram.modules.wordline_driver/__init__]: Creating wordline_driver wordline_driver
+[openram.modules.and2_dec/__init__]: Creating and2_dec and2_dec_0
+[openram.modules.precharge_array/__init__]: Creating probe_sram_32x16_1rw1r_precharge_array
+[openram.modules.sense_amp_array/__init__]: Creating probe_sram_32x16_1rw1r_sense_amp_array
+[openram.modules.write_driver_array/__init__]: Creating probe_sram_32x16_1rw1r_write_driver_array
+[openram.modules.write_mask_and_array/__init__]: Creating probe_sram_32x16_1rw1r_write_mask_and_array
+[openram.modules.pand2/__init__]: Creating pand2 pand2
+[openram.modules.pdriver/__init__]: creating pdriver pdriver
+[openram.modules.precharge_array/__init__]: Creating probe_sram_32x16_1rw1r_precharge_array_0
+[openram.modules.dff_array/__init__]: Creating probe_sram_32x16_1rw1r_row_addr_dff rows=4 cols=1
+[openram.modules.dff_array/__init__]: Creating probe_sram_32x16_1rw1r_data_dff rows=1 cols=32
+[openram.modules.dff_array/__init__]: Creating probe_sram_32x16_1rw1r_wmask_dff rows=1 cols=4
+[openram.modules.control_logic_base/__init__]: Creating control_logic_rw
+[openram.modules.dff_buf/__init__]: Creating probe_sram_32x16_1rw1r_dff_buf
+[openram.modules.dff_buf_array/__init__]: Creating probe_sram_32x16_1rw1r_dff_buf_array
+[openram.modules.dff_buf/__init__]: Creating probe_sram_32x16_1rw1r_dff_buf_0
+[openram.modules.pand2/__init__]: Creating pand2 pand2_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_0
+[openram.modules.pbuf/__init__]: creating pbuf with size of 32
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_1
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_2
+[openram.modules.pand3/__init__]: Creating pand3 pand3
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_3
+[openram.modules.pand3/__init__]: Creating pand3 pand3_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_4
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_5
+[openram.modules.delay_chain/__init__]: creating delay chain [4, 4, 4, 4, 4, 4, 4, 4, 4]
+[openram.modules.control_logic_base/__init__]: Creating control_logic_r
+[openram.modules.dff_buf_array/__init__]: Creating probe_sram_32x16_1rw1r_dff_buf_array_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_6
+** Submodules: 0.9 seconds
+** Placement: 0.0 seconds
+[openram.base.hierarchy_layout/get_bbox]: Size: 341.61 x 158.02 with perimeter margin 0
+[openram.router.router_tech/__init__]: Minimum track width: 0.680
+[openram.router.router_tech/__init__]: Minimum track space: 0.300
+[openram.router.router_tech/__init__]: Minimum track wire width: 0.380
+[openram.router.signal_escape_router/route]: Running signal escape router...
+[openram.router.router_tech/__init__]: Minimum track width: 0.680
+[openram.router.router_tech/__init__]: Minimum track space: 0.300
+[openram.router.router_tech/__init__]: Minimum track wire width: 0.380
+[openram.router.supply_router/route]: Running router for vdd and gnd...
+** Routing: 74.3 seconds
+** Verification: 0.0 seconds
+** SRAM creation: 75.3 seconds
+SP: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.sp
+[openram.characterizer.functional/__init__]: Random seed for functional simulation: 1794068403865596713
+** Spice writing: 0.1 seconds
+DELAY: Writing stimulus...
+[openram.characterizer.delay/create_sen_and_bitline_path_measures]: self.bl_name = xprobe_sram_32x16_1rw1r.xbank0.bl_0_31
+** DELAY: 0.1 seconds
+GDS: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.gds
+** GDS: 0.1 seconds
+LEF: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.lef
+** LEF: 0.0 seconds
+LVS: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.lvs.sp
+** LVS writing: 0.0 seconds
+LIB: Characterizing... 
+[openram.characterizer.lib/prepare_tables]: Slews: [0.00125 0.005   0.04   ]
+[openram.characterizer.lib/prepare_tables]: Loads: [ 1.7225  6.89   27.56  ]
+[openram.characterizer.lib/prepare_tables]: self.load_slews : [(np.float64(1.7225), np.float64(0.00125)), (np.float64(6.89), np.float64(0.00125)), (np.float64(27.56), np.float64(0.00125)), (np.float64(1.7225), np.float64(0.005)), (np.float64(6.89), np.float64(0.005)), (np.float64(27.56), np.float64(0.005)), (np.float64(1.7225), np.float64(0.04)), (np.float64(6.89), np.float64(0.04)), (np.float64(27.56), np.float64(0.04))]
+[openram.characterizer.lib/characterize_corners]: Characterizing corners: [('TT', 1.8, 25)]
+[openram.characterizer.lib/characterize_corners]: Corner: ('TT', 1.8, 25)
+[openram.characterizer.lib/characterize_corners]: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r_TT_1p8V_25C.lib
+[openram.characterizer.elmore/analytical_power]: Dynamic Power: 4395783170.164109 mW
+[openram.characterizer.elmore/analytical_power]: Leakage Power: 0.000878 mW
+[openram.characterizer.elmore/get_lib_values]: Slew, Load, Delay(ns), Slew(ns)
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 1.7225, 0.24856344670954053, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 6.89, 0.27763063420954054, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 27.56, 0.39389938420954046, 0.016211249999999996
+[openram.characterizer.elmore/get_lib_values]: 0.005, 1.7225, 0.24856344670954053, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.005, 6.89, 0.27763063420954054, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.005, 27.56, 0.39389938420954046, 0.016211249999999996
+[openram.characterizer.elmore/get_lib_values]: 0.04, 1.7225, 0.24856344670954053, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.04, 6.89, 0.27763063420954054, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.04, 27.56, 0.39389938420954046, 0.016211249999999996
+** Characterization: 0.1 seconds
+Config: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.py
+** Config: 0.0 seconds
+Datasheet: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.html
+** Datasheet: 0.0 seconds
+Verilog: Writing to <scratch>/probe-out/probe_sram_32x16_1rw1r.v
+** Verilog: 0.0 seconds
+[openram.globals/purge_temp]: Purging temp directory: <openram-tmp>/
+** End: 75.7 seconds
