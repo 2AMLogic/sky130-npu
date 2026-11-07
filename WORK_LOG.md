@@ -5,6 +5,8 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-07
 
+- **PR #87**: docs(flow): record cold re-run of setup.sh at final hash pins
+- **Issue #74** (closed): Repo-local pinned fetch of sky130_fd_bd_sram cell views so OpenRAM runs without a worker change
 - **PR #85**: Bump Repo Skills 0.25.1 -> 0.25.10
 
 ### 2026-11-06
