@@ -3,6 +3,10 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-07
+
+- **PR #85**: Bump Repo Skills 0.25.1 -> 0.25.10
+
 ### 2026-11-06
 
 - **PR #83**: verify: gate-level bit-exact run on the synthesized netlist with an SRAM stand-in
