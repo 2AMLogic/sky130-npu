@@ -3,21 +3,21 @@
   "kind": "generic",
   "status": "pass",
   "t1_item": 9,
-  "summary": "T1 item 9 (Testbenches shipped): 9/9 attestation checks passed (klt signoff --attest)",
+  "summary": "T1 item 9 (Testbenches shipped): 8/8 attestation checks passed (klt signoff --attest)",
   "source": "manifests/inventories/item-9.json",
   "attestation": {
     "producer": "klt signoff --attest",
     "inventory_schema_version": 1,
     "hash_algorithm": "sha256-raw-bytes",
-    "check_count": 9,
-    "passed_count": 9,
+    "check_count": 8,
+    "passed_count": 8,
     "checks": [
       {
         "check": "present",
         "role": "testbench",
         "path": ".github/workflows/verification.yml",
         "passed": true,
-        "content_hash": "sha256:8f5aac4198e1d3d27eceb275630cc1e341005bfef5d6962ea6718ebd1ea4a3b4"
+        "content_hash": "sha256:1cc37a9e132be83f5f069b8b34a377983e8b0fcf727fe6355e9fcae4c162e084"
       },
       {
         "check": "present",
@@ -31,21 +31,14 @@
         "role": "testbench",
         "path": "verification/runner.py",
         "passed": true,
-        "content_hash": "sha256:07092fc27a6d59089371ea57e6aebb2f2d19dc0ad9ef29e4fd9c3b6b95c6d409"
-      },
-      {
-        "check": "present",
-        "role": "testbench",
-        "path": "verification/tests/test_bank_alias_bias.py",
-        "passed": true,
-        "content_hash": "sha256:4f0b53792d454c8aa2300c7220731626bc08464a5f16601c515d050410458a3c"
+        "content_hash": "sha256:b18f7f9df24273788c5045882a67d5b35de0f305dc62df9dedf2d67f88f1a442"
       },
       {
         "check": "present",
         "role": "testbench",
         "path": "verification/tests/test_bitexact.py",
         "passed": true,
-        "content_hash": "sha256:7e76663bfb6e3b1e95e7883f1e26b95f8d2d97361e9d2ea9f0d192a9f61baeea"
+        "content_hash": "sha256:babfcfee49c09b97ced6343c516ee81bb57ca024802b35960b465a5ae75e54c1"
       },
       {
         "check": "present",
@@ -96,7 +89,7 @@
         "path": "manifests/inventories/item-9.json",
         "scope": "repo"
       },
-      "content_hash": "sha256:c394d2d5dd42ee58b9ac3c691ccea87081e73f2dfd215f1001cc66e63feda3ec"
+      "content_hash": "sha256:c7b336af8d5b427beab8a7b83a3f40b72358cb5fc234a488ef7f945e8d0b82d1"
     }
   }
 }

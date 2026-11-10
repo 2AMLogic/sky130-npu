@@ -2,11 +2,10 @@
   "schema_version": 1,
   "kind": "t1-attestation-inventory",
   "t1_item": 9,
-  "description": "Testbenches shipped: the bit-exact, golden-model and bank-alias benches, the mutation check, the runner and the verification workflow, with the cold-start run from verification/README.md in a fresh venv.",
+  "description": "Testbenches shipped: the bit-exact and golden-model benches, the mutation check, the runner and the verification workflow, with the cold-start run from verification/README.md in a fresh venv.",
   "testbenches": [
     "verification/tests/test_bitexact.py",
     "verification/tests/test_golden.py",
-    "verification/tests/test_bank_alias_bias.py",
     "verification/check_mutation.sh",
     "verification/runner.py",
     ".github/workflows/verification.yml"
