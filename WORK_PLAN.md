@@ -32,13 +32,14 @@ Human-approved issues ready for implementation (`loom:issue`).
 
 Issues currently being built (`loom:building`).
 
-_None._
+- **#18**: Remove vacuous package.json stub scripts (check:ci/check:all/test/lint always exit 0)
 
 ## PRs Awaiting Review
 
 PRs waiting on Judge (`loom:review-requested`).
 
 - **#92**: layout: add npu_top place-and-route request and runner with unrouted first record
+- **#95**: build: wire pnpm test/check scripts to the bit-exact verification runner
 
 ## Approved (Awaiting Merge)
 
@@ -51,12 +52,12 @@ _None._
 Issues carrying `loom:curated`.
 
 - **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)*
+- **#18**: Remove vacuous package.json stub scripts (check:ci/check:all/test/lint always exit 0) *(curated)*
 - **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(curated)*
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)*
 
 ## Proposed (Architect / Hermit)
 
-- **#18**: Remove vacuous package.json stub scripts (check:ci/check:all/test/lint always exit 0) *(hermit)*
 - **#68**: Remove orphaned test_bank_alias_bias.py: never run, duplicates test_bitexact and Bench *(hermit)*
 
 ## Epics
@@ -71,10 +72,10 @@ _None._
 | Very important | 1 |
 | Important | 1 |
 | Ready (`loom:issue`) | 1 |
-| In Progress (`loom:building`) | 0 |
-| PRs awaiting review | 1 |
+| In Progress (`loom:building`) | 1 |
+| PRs awaiting review | 2 |
 | Approved PRs awaiting merge | 0 |
-| Curated | 3 |
-| Architect / Hermit proposals | 2 |
+| Curated | 4 |
+| Architect / Hermit proposals | 1 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
