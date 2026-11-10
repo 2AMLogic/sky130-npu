@@ -3,6 +3,11 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-10
+
+- **PR #95**: build: wire pnpm test/check scripts to the bit-exact verification runner
+- **Issue #18** (closed): Remove vacuous package.json stub scripts (check:ci/check:all/test/lint always exit 0)
+
 ### 2026-11-07
 
 - **PR #89**: feat(sram): generate and pin 1024x32 OpenRAM macro views
