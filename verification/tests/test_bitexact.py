@@ -308,18 +308,25 @@ async def test_constrained_random(dut):
 
 @cocotb.test()
 async def test_bank_window_does_not_alias_bias(dut):
-    """A bank-window write must not touch BIAS (spec 6 address map). Fails on
-    the current RTL: issue #37.
+    """A bank-window write must not touch BIAS (spec 6 address map).
 
     BIAS lives at block offset 0x100..0x13C; a bank window starts at 0x1000 *
-    (b + 1), so a write to bank offset 0x100 is a different address and must
-    leave the BIAS registers alone.
+    (b + 1), so a bank write at offset 0x100 is a different address and must
+    leave the BIAS registers alone. Checked in every bank at the neighbours of
+    the BIAS range and at both of its ends; each bank word must also read back
+    what was written.
     """
     bench = await setup(dut)
     n = bench.n
+    nbanks = 4 if n == 8 else 2
     bias = [0x1000 + j for j in range(n)]
     await bench.set_bias(bias)
-    for bank in range(2):
-        await bench.store_bytes(bank, 0x100, bytes([0xEE]) * (4 * n))
-        got = [await bench.read(nb.BIAS_BASE + 4 * j) for j in range(n)]
-        assert got == bias, f"bank {bank} write at offset 0x100 changed BIAS: {got}"
+    for bank in range(nbanks):
+        for k, off in enumerate((0x0FC, 0x100, 0x104, 0x13C, 0x140)):
+            val = 0xEE000000 | (bank << 16) | (k << 8) | 0xA5
+            await bench.write(bench.bank_addr(bank, off), val)
+            got = await bench.read(bench.bank_addr(bank, off))
+            assert got == val, (
+                f"bank {bank} off {off:#x}: wrote {val:#010x}, read {got:#010x}")
+            got = [await bench.read(nb.BIAS_BASE + 4 * j) for j in range(n)]
+            assert got == bias, f"bank {bank} write at offset {off:#x} changed BIAS: {got}"

@@ -23,7 +23,7 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   then update the cited `content_hash` in the manifest and re-render the
   report. CI runs the same command with `--check`.
   The item-9 inventory lists the testbenches (bit-exact, golden-model,
-  bank-alias bench, mutation check, runner, verification workflow), a
+  mutation check, runner, verification workflow), a
   `cold_start` that builds a fresh venv and runs `verification/README.md`
   "Cold start" (runner at `ARRAY_N=8`, then the mutation check) with records
   and build output in a temp dir, and the pins (open_pdks `f6eeac7`, Icarus
