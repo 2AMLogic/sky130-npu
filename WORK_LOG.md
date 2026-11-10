@@ -5,6 +5,8 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-10
 
+- **PR #100**: test: fold bank-window BIAS alias check into live bit-exact test
+- **Issue #68** (closed): Remove orphaned test_bank_alias_bias.py: never run, duplicates test_bitexact and Bench
 - **PR #95**: build: wire pnpm test/check scripts to the bit-exact verification runner
 - **Issue #18** (closed): Remove vacuous package.json stub scripts (check:ci/check:all/test/lint always exit 0)
 
