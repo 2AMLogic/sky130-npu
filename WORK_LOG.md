@@ -5,6 +5,7 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-11
 
+- **PR #108**: layout: floorplan re-run on klt 0.9.1 with sourced counts; density worse, halo blocked by klt
 - **PR #106**: layout: record four floorplan attempts, none routes (congestion counts not re-derived)
 - **PR #105**: verify: gate-level run uses pinned OpenRAM macro Verilog, retire SRAM stand-in
 - **Issue #104** (closed): Retire SRAM stand-in model: pinned macro Verilog now exists (#51 closed)
