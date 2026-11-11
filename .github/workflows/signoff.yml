@@ -25,7 +25,7 @@ permissions:
   contents: read
 
 env:
-  KLT_VERSION: 0.8.0
+  KLT_VERSION: 0.9.1
 
 jobs:
   grade:
@@ -73,5 +73,5 @@ jobs:
         run: |
           klt signoff --attest 10 \
             --inventory manifests/inventories/item-10.json \
-            --check manifests/attestations/item-10.json \
+            --check manifests/attestations/item-10-klt091.json \
             --format json
