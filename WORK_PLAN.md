@@ -32,7 +32,7 @@ Human-approved issues ready for implementation (`loom:issue`).
 
 Issues currently being built (`loom:building`).
 
-- **#68**: Remove orphaned test_bank_alias_bias.py: never run, duplicates test_bitexact and Bench
+_None._
 
 ## PRs Awaiting Review
 
@@ -53,7 +53,6 @@ Issues carrying `loom:curated`.
 - **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)*
 - **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(curated)*
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)*
-- **#68**: Remove orphaned test_bank_alias_bias.py: never run, duplicates test_bitexact and Bench *(curated)*
 
 ## Proposed (Architect / Hermit)
 
@@ -71,10 +70,10 @@ _None._
 | Very important | 1 |
 | Important | 1 |
 | Ready (`loom:issue`) | 1 |
-| In Progress (`loom:building`) | 1 |
+| In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 1 |
 | Approved PRs awaiting merge | 0 |
-| Curated | 4 |
+| Curated | 3 |
 | Architect / Hermit proposals | 0 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
