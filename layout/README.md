@@ -15,5 +15,13 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   wider channel). None routes; lowest unverified reading is 3229 global-routing
   congestion cells (counts not re-derived, logs not committed) (`20261111-wider-channel`, which `par-request.json` now holds).
   Halo and placement density cannot be set through the klt 0.8.0 request.
+- `klt-pin.json`: klt pin for `layout/run.sh` only (0.9.1: halo and
+  `placement_density` exist from 0.9.0). `flow/toolchain.json` still pins
+  synthesis and the smoke flow.
+- `records/20261111-klt091-*`: the same floorplan under klt 0.9.1, with
+  **sourced** counts (OpenROAD logs and route metrics committed). Baseline 3229
+  congestion cells; `placement_density` 0.45 gives 4383 and 0.75 gives 6096
+  (both worse than the 0.6 default). Halo is unusable on this netlist
+  (`PDN-0217`, klayout-tools#5302). Still no routed GDS.
 
 Liberty for the macros is TT-only analytical (`reuse.lock.json`).

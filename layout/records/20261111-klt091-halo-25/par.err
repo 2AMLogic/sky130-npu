@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "error": {
+    "command": "place-and-route",
+    "message": "openroad 'floorplan' stage failed: [ERROR ODB-1014] Blockage coordinates (-14.0, -13.0, 735.89, 714.565) are outside die area (0.0, 0.0, 2800.0, 1410.0) -- openroad invocation: {\"directory\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/fbae70332d854d56aafbe4084eb055ab\", \"scope\": \"repo\"}, \"invocation_id\": \"fbae70332d854d56aafbe4084eb055ab\", \"metadata_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/fbae70332d854d56aafbe4084eb055ab/invocation.json\", \"scope\": \"repo\"}, \"metrics_path\": {\"path\": \"layout/build/.klt/place-and-route/npu_top_floorplan_metrics.json\", \"scope\": \"repo\"}, \"outcome\": \"exited\", \"retention_errors\": [], \"returncode\": 1, \"script_name\": \"pnr_npu_top_floorplan.tcl\", \"script_path\": {\"path\": \"layout/build/.klt/place-and-route/pnr_npu_top_floorplan.tcl\", \"scope\": \"repo\"}, \"script_sha256\": \"6698d1d3a66c66158f6292c07ed273a9d844ba8254de0796a6db94013a423a2c\", \"stderr_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/fbae70332d854d56aafbe4084eb055ab/stderr.log\", \"scope\": \"repo\"}, \"stdout_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/fbae70332d854d56aafbe4084eb055ab/stdout.log\", \"scope\": \"repo\"}}"
+  }
+}
