@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "error": {
+    "command": "place-and-route",
+    "message": "openroad 'floorplan' stage failed: [ERROR PDN-0217] No grid found with name: macro_u_banks/g_bank\\[0\\].u_bank/u_macro -- openroad invocation: {\"directory\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/b4deb5ed556342178b55fbba46f875c2\", \"scope\": \"repo\"}, \"invocation_id\": \"b4deb5ed556342178b55fbba46f875c2\", \"metadata_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/b4deb5ed556342178b55fbba46f875c2/invocation.json\", \"scope\": \"repo\"}, \"metrics_path\": {\"path\": \"layout/build/.klt/place-and-route/npu_top_floorplan_metrics.json\", \"scope\": \"repo\"}, \"outcome\": \"exited\", \"retention_errors\": [], \"returncode\": 1, \"script_name\": \"pnr_npu_top_floorplan.tcl\", \"script_path\": {\"path\": \"layout/build/.klt/place-and-route/pnr_npu_top_floorplan.tcl\", \"scope\": \"repo\"}, \"script_sha256\": \"2ab6202d3f3b61b71741c6941865966242d4d251b624340a0b92fd0b29213c4c\", \"stderr_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/b4deb5ed556342178b55fbba46f875c2/stderr.log\", \"scope\": \"repo\"}, \"stdout_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/b4deb5ed556342178b55fbba46f875c2/stdout.log\", \"scope\": \"repo\"}}"
+  }
+}

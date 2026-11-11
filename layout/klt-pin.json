@@ -1,0 +1,5 @@
+{
+  "note": "layout/run.sh only: klt >= 0.9.0 is needed for macros[].halo (klayout-tools#2635) and request.placement_density (#4716). flow/toolchain.json (0.8.0) still pins synthesis and the smoke flow; it is not bumped here.",
+  "pypi": "klayout-tools==0.9.1",
+  "reported_version": "0.9.1"
+}

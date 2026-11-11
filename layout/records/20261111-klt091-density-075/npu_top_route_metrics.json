@@ -1,0 +1,23 @@
+{
+	"global_route__fastroute__run_s": 0,
+	"global_route__fastroute__initial_rsmt_s": 0.105737,
+	"global_route__fastroute__route_l_s": 0.0676934,
+	"global_route__fastroute__congestion_rsmt_s": 0.209549,
+	"global_route__fastroute__new_route_l_s": 0.0446092,
+	"global_route__fastroute__spiral_s": 0.0651019,
+	"global_route__fastroute__route_z_s": 0.0188214,
+	"global_route__fastroute__monotonic_s": 0.129445,
+	"global_route__fastroute__overflow_iterations_s": 131.233,
+	"global_route__fastroute__finalization_s": 0.411421,
+	"global_route__fastroute__snapshot_batch_route_s": 0,
+	"global_route__fastroute__snapshot_batch_apply_s": 0,
+	"global_route__fastroute__snapshot_batch_sync_s": 0,
+	"global_route__fastroute__snapshot_batch_count": 0,
+	"global_route__fastroute__snapshot_batch_nets": 0,
+	"global_route__fastroute__snapshot_batch_wave_count": 0,
+	"global_route__vias": 518898,
+	"global_route__wirelength": 3832515,
+	"flow__warnings__count": 0,
+	"flow__errors__count": 1,
+	"flow__warnings__type_count": 0
+}
