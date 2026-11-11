@@ -12,8 +12,8 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   CTS, global routing fails with `GRT-0116`. No routed GDS is committed and
   T1 item 2 is not cited. See that directory's `NOTES.md`.
 - `records/20261111-*`: floorplan iterations (orientation, channel width, halo,
-  wider channel). None routes; best controllable result is 3229 global-routing
-  congestion cells (`20261111-wider-channel`, which `par-request.json` now holds).
+  wider channel). None routes; lowest unverified reading is 3229 global-routing
+  congestion cells (counts not re-derived, logs not committed) (`20261111-wider-channel`, which `par-request.json` now holds).
   Halo and placement density cannot be set through the klt 0.8.0 request.
 
 Liberty for the macros is TT-only analytical (`reuse.lock.json`).

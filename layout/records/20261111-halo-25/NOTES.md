@@ -1,5 +1,12 @@
 # 20261111-halo-25 -- lever 3 (halo): NO EFFECT, the request field is ignored
 
+**Provenance of congestion counts: NOT RE-DERIVED.** The figures below were read
+from the OpenROAD/GRT console during the run. The logs and
+`npu_top_route_metrics.json` lived under `layout/build/` (not committed); the surviving local copy holds no route-stage counts, and
+`par.json`/`par.err` in this record carry no counts (only
+`GRT-0116`). Treat every count as an unverified reading, not evidence; the only
+sourced fact here is that the run did not route (`GRT-0116`, no GDS).
+
 Result: NOT routed (`GRT-0116`), and the run is **not evidence about halo**.
 
 Lever changed vs `20261111-wider-channel`: `macros[].halo` 5 -> 25 (all four).

@@ -1,5 +1,12 @@
 # 20261111-wider-channel -- lever 2: wider B-bank channels
 
+**Provenance of congestion counts: NOT RE-DERIVED.** The figures below were read
+from the OpenROAD/GRT console during the run. The logs and
+`npu_top_route_metrics.json` lived under `layout/build/` (not committed); the surviving local copy holds no route-stage counts, and
+`par.json`/`par.err` in this record carry no counts (only
+`GRT-0116`). Treat every count as an unverified reading, not evidence; the only
+sourced fact here is that the run did not route (`GRT-0116`, no GDS).
+
 Result: NOT routed. `GRT-0116`; no GDS.
 
 Lever changed vs `20261107-route-congestion` attempt 2 (orientation back to R0,
