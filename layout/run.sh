@@ -37,14 +37,14 @@ for tool in uvx openroad jq gzip sha256sum; do
 done
 
 # The pinned klt, via uvx (the host klt is not the pin and must not be changed).
-# Layout has its own pin (layout/klt-pin.json, klt >= 0.9.0 for halo/density);
-# flow/toolchain.json still pins synthesis and the smoke flow.
-PIN_PYPI="$(jq -r '.pypi' "${HERE}/klt-pin.json")"
-PIN_VERSION="$(jq -r '.reported_version' "${HERE}/klt-pin.json")"
+# The single klt pin is flow/toolchain.json (layout needs klt >= 0.9.0 for
+# macros[].halo and request.placement_density).
+PIN_PYPI="$(jq -r '.klayout_tools.pypi' "${REPO_ROOT}/flow/toolchain.json")"
+PIN_VERSION="$(jq -r '.klayout_tools.reported_version' "${REPO_ROOT}/flow/toolchain.json")"
 klt() { uvx --from "${PIN_PYPI}" klt "$@"; }
 KLT_VERSION="$(klt --version)"
 [ "${KLT_VERSION}" = "klt ${PIN_VERSION}" ] || {
-  echo "error: klt '${KLT_VERSION}' is not the pinned release (klt ${PIN_VERSION}); see layout/klt-pin.json" >&2; exit 2; }
+  echo "error: klt '${KLT_VERSION}' is not the pinned release (klt ${PIN_VERSION}); see flow/toolchain.json" >&2; exit 2; }
 
 PDK_WANT="$(jq -r '.open_pdks.commit' "${REPO_ROOT}/flow/pdk.json")"
 PDK_VARIANT="$(jq -r '.variant' "${REPO_ROOT}/flow/pdk.json")"

@@ -1,10 +1,10 @@
 {
   "klayout_tools": {
     "repo": "https://github.com/2AMLogic/klayout-tools",
-    "pypi": "klayout-tools==0.8.0",
-    "tag": "v0.8.0",
-    "commit": "c572046be644e0407f693f2410f3abb799d68a3a",
-    "reported_version": "0.8.0"
+    "pypi": "klayout-tools==0.9.1",
+    "tag": "v0.9.1",
+    "commit": "4d0d29be4fd991f499d59e783a908082d5e24c56",
+    "reported_version": "0.9.1"
   },
   "yosys": "0.67+post (git sha1 b8e7da6f40ae8f552c116bf6c359b07c6533e159)",
   "openroad": "26Q3-1510-g6cb3f2b704",

@@ -19,7 +19,7 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   LICENSE, both workflows, plus the golden-model tests) and the envelope
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
-  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10.json`,
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091.json` (earlier attestations stay as evidence; write a new file),
   then update the cited `content_hash` in the manifest and re-render the
   report. CI runs the same command with `--check`.
   The item-9 inventory lists the testbenches (bit-exact, golden-model,

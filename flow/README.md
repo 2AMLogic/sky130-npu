@@ -26,7 +26,7 @@ From a clean clone, with the pinned PDK and tools installed:
 ```bash
 # 1. klt at the pinned release (a throwaway tool env, not a host-wide install)
 uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" klt --version
-#    -> must report klt 0.8.0
+#    -> must report klt 0.9.1
 # 2. the PDK: open_pdks commit from flow/pdk.json (klt resolves ~/.ciel, then ~/.volare)
 klt pdk find --pdk sky130A --format json | jq -r .version
 #    -> must report open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7
