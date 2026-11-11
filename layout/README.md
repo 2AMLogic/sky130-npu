@@ -24,4 +24,9 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   (both worse than the 0.6 default). Halo is unusable on this netlist
   (`PDN-0217`, klayout-tools#5302). Still no routed GDS.
 
+- `records/20261111-macro-pin-geometry/`: analysis, no run. The macro LEF puts
+  port 0 on the west/south edges and port 1 on the east/north edges, and both
+  ports carry array traffic, so no orientation faces both at the logic. Also
+  gives the die/SRAM fraction (macros 1.9 mm^2, 48 % of the 3.95 mm^2 die).
+
 Liberty for the macros is TT-only analytical (`reuse.lock.json`).
