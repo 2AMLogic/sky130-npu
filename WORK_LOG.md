@@ -3,6 +3,13 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-11
+
+- **PR #106**: layout: record four floorplan attempts, none routes (congestion counts not re-derived)
+- **PR #105**: verify: gate-level run uses pinned OpenRAM macro Verilog, retire SRAM stand-in
+- **Issue #104** (closed): Retire SRAM stand-in model: pinned macro Verilog now exists (#51 closed)
+- **PR #92**: layout: add npu_top place-and-route request and runner with unrouted first record
+
 ### 2026-11-10
 
 - **PR #100**: test: fold bank-window BIAS alias check into live bit-exact test
