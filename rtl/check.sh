@@ -12,7 +12,7 @@
 # A stamped port points the gate at its own layout with two variables (relative
 # values resolve against the repo root, absolute values are used as given):
 #   NPU_RTL_DIR   the 7 PDK-independent files            (default: rtl)
-#   NPU_PDK_DIR   npu_sram_bank.v and npu_sram_bank_bb.v (default: rtl/pdk/sky130)
+#   NPU_PDK_DIR   npu_sram_bank.v and macro/<macro>/<macro>.v (default: rtl/pdk/sky130)
 
 set -uo pipefail
 
@@ -27,8 +27,10 @@ for f in npu_top npu_host npu_ctrl npu_banks npu_array npu_pe npu_requant; do
   SRC+=("${RTL_DIR}/${f}.v")
 done
 SRC+=("${PDK_DIR}/npu_sram_bank.v")
-# Synthesis view (macro as a black box): the same file list with the wrapper swapped.
-SRC_BB=("${SRC[@]:0:7}" "${PDK_DIR}/npu_sram_bank_bb.v")
+# Synthesis view: the same wrapper with -DNPU_SRAM_MACRO (the define
+# rtl/synth/synth-request.json sets), over the pinned 1024-word macro's Verilog.
+MACRO=sky130_sram_4kbyte_1rw1r_32x1024_8
+MACRO_V="${PDK_DIR}/macro/${MACRO}/${MACRO}.v"
 TOP=npu_top
 GOOD=("$@"); [ "${#GOOD[@]}" -gt 0 ] || GOOD=(8 4)
 BAD=(6 16)
@@ -49,13 +51,13 @@ for n in "${GOOD[@]}"; do
   fi
 done
 
-# The black-box view carries the 1024-word macro only, which is the ARRAY_N=8 bank.
+# The macro view carries the 1024-word macro only, which is the ARRAY_N=8 bank.
 for n in 8; do
-  if iverilog -g2012 -Wall -P"${TOP}.ARRAY_N=${n}" -s "${TOP}" -o /dev/null "${SRC_BB[@]}" \
-     && yosys -q -p "read_verilog -sv -defer ${SRC_BB[*]}; chparam -set ARRAY_N ${n} ${TOP}; hierarchy -check -top ${TOP}"; then
-    say "PASS  ARRAY_N=${n}: synthesis view (npu_sram_bank_bb.v) elaborates"
+  if iverilog -g2012 -Wall -DNPU_SRAM_MACRO -P"${TOP}.ARRAY_N=${n}" -s "${TOP}" -o /dev/null "${SRC[@]}" "${MACRO_V}" \
+     && yosys -q -p "read_verilog -sv -defer -DNPU_SRAM_MACRO ${SRC[*]} ${MACRO_V}; chparam -set ARRAY_N ${n} ${TOP}; hierarchy -check -top ${TOP}"; then
+    say "PASS  ARRAY_N=${n}: synthesis view (-DNPU_SRAM_MACRO over the macro) elaborates"
   else
-    say "FAIL  ARRAY_N=${n}: synthesis view (npu_sram_bank_bb.v) expected to elaborate"; FAIL=1
+    say "FAIL  ARRAY_N=${n}: synthesis view (-DNPU_SRAM_MACRO over the macro) expected to elaborate"; FAIL=1
   fi
 done
 

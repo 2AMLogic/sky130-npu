@@ -1,0 +1,18 @@
+read_liberty -lib /home/ubuntu/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+tee -q -o rtl/synth/records/20261111-sky130-hd/npu_top_library_cells.txt select -list =A:blackbox
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_top.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_host.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_ctrl.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_banks.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_array.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_pe.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/npu_requant.v
+read_verilog -D NPU_SRAM_MACRO=1 rtl/pdk/sky130/npu_sram_bank.v
+read_verilog -lib rtl/synth/records/20261111-sky130-hd/sky130_sram_4kbyte_1rw1r_32x1024_8_blackbox.v
+chparam -set ARRAY_N 8 npu_top
+hierarchy -check -top npu_top
+tee -q -o rtl/synth/records/20261111-sky130-hd/npu_top_blackboxes.txt select -list =A:blackbox =A:whitebox
+proc
+tee -q -o rtl/synth/records/20261111-sky130-hd/npu_top_memory_elaborated.json stat -json
+synth -top npu_top -run :fine
+tee -q -o rtl/synth/records/20261111-sky130-hd/npu_top_memory_pre_lowering.json stat -json

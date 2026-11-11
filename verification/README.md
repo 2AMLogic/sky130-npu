@@ -98,8 +98,8 @@ What this is, and is not:
   period or the macro's access time.
 - `--baked-param` exports `ARRAY_N` to the tests and the record without passing
   `-P` to Icarus: the netlist has no parameters left.
-- Do not add `rtl/pdk/sky130/npu_sram_bank_bb.v` to this source list; it declares
-  the same macro module as a black box. The netlist already contains the bank
+- Do not add the macro's Verilog (`rtl/pdk/sky130/macro/*/*.v`) to this source list; it declares
+  the same macro module as the netlist's black box. The netlist already contains the bank
   wrapper.
 - The record carries `defines`, `baked_parameters` and `source_sha256` (netlist,
   both PDK model files, the macro model copy).
@@ -120,7 +120,7 @@ stamped port edits no script:
 
 - `NPU_RTL_DIR` (default `rtl`): the 7 PDK-independent RTL files.
 - `NPU_PDK_DIR` (default `rtl/pdk/sky130`): `npu_sram_bank.v` and
-  `npu_sram_bank_bb.v`.
+  `macro/<macro>/<macro>.v`.
 
 Relative values resolve against the repo root; absolute values are used as given.
 The two directories need not be nested. `verification.yml` sets both in its

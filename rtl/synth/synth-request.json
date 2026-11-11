@@ -9,7 +9,7 @@
     "../npu_array.v",
     "../npu_pe.v",
     "../npu_requant.v",
-    "../pdk/sky130/npu_sram_bank_bb.v"
+    "../pdk/sky130/npu_sram_bank.v"
   ],
   "hdl_toplevel": "npu_top",
   "pdk": {
@@ -23,6 +23,14 @@
     "ARRAY_N": 8
   },
   "outputs": {
-    "dir": "records/20261027-sky130-hd"
-  }
+    "dir": "records/20261111-sky130-hd"
+  },
+  "defines": {
+    "NPU_SRAM_MACRO": "1"
+  },
+  "macros": [
+    {
+      "lef": "../pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.lef"
+    }
+  ]
 }
