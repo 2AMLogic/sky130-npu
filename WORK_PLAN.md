@@ -26,7 +26,7 @@ _None._
 
 Human-approved issues ready for implementation (`loom:issue`).
 
-- **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed
+_None._
 
 ## In Progress
 
@@ -38,7 +38,7 @@ _None._
 
 PRs waiting on Judge (`loom:review-requested`).
 
-_None._
+- **#111**: layout: record sandwich floorplan attempt (not routed, GRT-0116)
 
 ## Approved (Awaiting Merge)
 
@@ -69,9 +69,9 @@ _None._
 | Operator merge-risk holds | 0 |
 | Very important | 1 |
 | Important | 1 |
-| Ready (`loom:issue`) | 1 |
+| Ready (`loom:issue`) | 0 |
 | In Progress (`loom:building`) | 0 |
-| PRs awaiting review | 0 |
+| PRs awaiting review | 1 |
 | Approved PRs awaiting merge | 0 |
 | Curated | 3 |
 | Architect / Hermit proposals | 0 |
