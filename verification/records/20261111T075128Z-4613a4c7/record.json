@@ -1,0 +1,51 @@
+{
+  "baked_parameters": [
+    "ARRAY_N"
+  ],
+  "cocotb": "2.0.1",
+  "defines": [
+    "FUNCTIONAL",
+    "UNIT_DELAY=#0"
+  ],
+  "failures": 0,
+  "id": "4613a4c7",
+  "parameters": {
+    "ARRAY_N": "8"
+  },
+  "passed": true,
+  "results": {
+    "seed": 2009429484,
+    "workload:mm-smoke": {
+      "K": 64,
+      "M": 8,
+      "N": 8,
+      "array_n": 8,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 99,
+      "u_array": 0.6464646464646465
+    }
+  },
+  "rtl_commit": "8534b27275a525e3f4e30f6e42662bf41b518aea",
+  "seed": 2009429484,
+  "simulator": "Icarus Verilog version 13.0 (stable) (v13_0)",
+  "source_sha256": {
+    "../../../../../../../tmp/i104/macro.v": "675f524958e16a8b8d5bfb9e1e6d3ac69aaf869b171054e3d3d1bdb37bd8af12",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v": "7d4b1441d06b0f2b9662befa675a0484d77149e04eb42a5f1fa2d4cfded7b2ce",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v": "4a183a476baef9abb68d82808d24d8f2907ed7b6cdebff8d03002f45b12e7833",
+    "rtl/synth/records/20261027-sky130-hd/npu_top_synth.v": "e43b49aadb1c7240f41045cda864d1cb3d5fc621ff7e4047adb654f413de2317"
+  },
+  "sources": [
+    "rtl/synth/records/20261027-sky130-hd/npu_top_synth.v",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v",
+    "../../../../../.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v",
+    "../../../../../../../tmp/i104/macro.v"
+  ],
+  "sources_dirty": false,
+  "sources_last_commit": "409b2aea3b7ceba39e13d87c18e04440a872107e",
+  "test_module": "test_bitexact",
+  "testcase": "test_workload_mm_smoke",
+  "tests": 11,
+  "toplevel": "npu_top",
+  "utc": "2026-11-11T07:51:28.870377+00:00"
+}

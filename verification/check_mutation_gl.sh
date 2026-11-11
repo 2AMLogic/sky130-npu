@@ -6,7 +6,7 @@
 #
 # Copies the recorded synthesized netlist to a temp dir, inverts the output of
 # the requantizer's out_word[0] flop there, runs the mm-smoke bit-exact test
-# against the copy (pre-layout, functional cells, SRAM stand-in; see
+# against the copy (pre-layout, functional cells, pinned OpenRAM macro Verilog; see
 # verification/README.md "Gate-level run"), and exits 0 ONLY if that test failed
 # on a mismatch with expected_out.hex. The recorded netlist is never touched and
 # the run writes its record to a temp ledger.
@@ -23,6 +23,7 @@ REPO="$(dirname "${HERE}")"
 NETLIST="${1:-${REPO}/rtl/synth/records/20261027-sky130-hd/npu_top_synth.v}"
 LIB="${PDK_VERILOG_DIR:-${HOME}/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog}"
 PY="${PYTHON:-python3}"
+MACRO_V="${REPO}/rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v"
 [ -x "${REPO}/.venv/bin/python" ] && PY="${REPO}/.venv/bin/python"
 
 TMP="$(mktemp -d)"
@@ -45,11 +46,16 @@ src = (src[:semi] + "\n  wire _mut_q_;" + src[semi:end]
 open(sys.argv[2], "w").write(src)
 PY
 echo "mutation: requant out_word[0] flop output inverted"
+# The pinned macro model prints a line per access (VERBOSE=1); Icarus -P cannot
+# reach a nested module's parameter, so silence it in a throwaway copy.
+sed 's/parameter VERBOSE = 1 ;/parameter VERBOSE = 0 ;/' "${MACRO_V}" >"${TMP}/macro.v"
+grep -q 'parameter VERBOSE = 0 ;' "${TMP}/macro.v" \
+  || { echo "FAIL: could not set VERBOSE=0 in the macro model" >&2; exit 1; }
 
 TESTCASE=test_workload_mm_smoke "${PY}" "${HERE}/runner.py" \
   --toplevel npu_top \
   --sources "${TMP}/mutant.v" "${LIB}/primitives.v" "${LIB}/sky130_fd_sc_hd.v" \
-            "${HERE}/models/sky130_sram_4kbyte_standin.v" \
+            "${TMP}/macro.v" \
   --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8 \
   --records-dir "${TMP}/records" --build-dir "${TMP}/build" >"${TMP}/run.log" 2>&1
 rc=$?
