@@ -8,8 +8,9 @@ the four levers in `20261107-*` / `20261111-*` all failed to route.
 - Macro LEF: `rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.lef`
   (hash pinned in `reuse.lock.json`). `SIZE 699.89 BY 677.565` um; the one `OBS`
   block covers met1, met2, met3, met4.
-- Pin edges: first RECT of each signal pin in that LEF (R0 orientation, macro
-  origin at 0,0; the power pins `vccd1`/`vssd1` are excluded).
+- Pin edges: every RECT of every signal pin in that LEF, classified per bit by
+  which macro edge it touches (R0 orientation, macro origin at 0,0; the power
+  pins `vccd1`/`vssd1` are excluded).
 - Port use: `rtl/pdk/sky130/npu_sram_bank.v` lines 65-68 and `rtl/npu_banks.v`
   (`rw_rdata` and the port-1 read both feed the array).
 
@@ -17,26 +18,34 @@ the four levers in `20261107-*` / `20261111-*` all failed to route.
 
 | Pin | Layer | Edge |
 |---|---|---|
-| clk0, csb0, web0, addr0 | met3 | west (x = 0) |
-| wmask0, din0, dout0, addr0 (second shape) | met4 | south (y = 0) |
-| csb1, addr1 | met3 | east (x = 699.89) |
-| clk1, dout1, addr1 (second shape) | met4 | north (y = 677.565) |
+| clk0, csb0, web0 | met3 | west (x = 0) |
+| addr0[2:9] | met3 | west (x = 0) |
+| addr0[0:1], wmask0[0:3], din0[0:31], dout0[0:31] | met4 | south (y = 0) |
+| csb1 | met3 | east (x = 699.89) |
+| addr1[2:6] | met3 | east (x = 699.89) |
+| clk1, dout1[0:31], addr1[0:1] | met4 | north (y = 677.565) |
+| addr1[7:9] | met4 | **south** (y = 0) |
 
-Port 0 (RW) sits on the west and south edges; port 1 (read) on the east and
-north edges. A macro with logic on one side can have at most one port's edge
-facing it.
+Port 0 data pins (`din0`, `dout0`, `wmask0`) are on the south edge; port 1's
+data output (`dout1`) is on the north edge. Address and control pins are split
+per bit: `addr0` is west (bits 2-9) and south (bits 0-1); `addr1` is east
+(bits 2-6), north (bits 0-1) and south (bits 7-9), so three `addr1` bits share
+an edge with port 0's data pins. A macro with logic on one side can have at
+most one of the two data edges facing it.
 
 ## Consequence for this design
 
 Both ports carry operand or result traffic (`dout0` is the RW read data, `dout1`
 the second read port, spec section 9). So for every placement, at least one
-port's data pins face away from the logic or a neighbouring macro, and its
-wires must go around a 700 x 678 um obstruction (met1-met4 blocked) on met5
-only. This matches the hotspots in `20261107-route-congestion/NOTES.md`
+port's data pins face away from the logic or a neighbouring macro. Inferred from
+pin geometry, not measured: those wires have to route around the 700 x 678 um
+footprint (met1-met4 blocked by the OBS), or cross over it on met5 only. This
+is consistent with the hotspots in `20261107-route-congestion/NOTES.md`
 (`rw_addr`, `dout0/1`, `rw_wdata` at macro pin edges). Re-orienting a macro
-(R0/MY/MX/R180) moves which edges face the logic but does not change that
-port 0 and port 1 are on opposite edge pairs. `20261111-orient-my-a` (4666 vs
-4464, unverified reading) is consistent with that.
+(R0/MY/MX/R180) moves which edges face the logic but does not change that the
+port 0 data pins (`din0`, `dout0`) and the port 1 data pins (`dout1`) are on
+opposite edges. `20261111-orient-my-a` (4666 vs 4464, unverified reading) is
+consistent with that.
 
 ## Die and SRAM fraction (final request, `layout/par-request.json`)
 
