@@ -5,6 +5,8 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-11
 
+- **PR #114**: build: bump klt pin to 0.9.1 and unify on flow/toolchain.json
+- **Issue #113** (closed): Bump the klayout-tools pin from 0.8.0 to the fleet version
 - **PR #110**: layout: record macro pin-edge geometry as structural cause of routing congestion
 - **PR #108**: layout: floorplan re-run on klt 0.9.1 with sourced counts; density worse, halo blocked by klt
 - **PR #106**: layout: record four floorplan attempts, none routes (congestion counts not re-derived)
