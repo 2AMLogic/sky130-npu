@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "error": {
+    "command": "place-and-route",
+    "message": "openroad 'route' stage failed: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. -- openroad invocation: {\"directory\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/6b1821f73d4840da8879ed58662fc466\", \"scope\": \"repo\"}, \"invocation_id\": \"6b1821f73d4840da8879ed58662fc466\", \"metadata_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/6b1821f73d4840da8879ed58662fc466/invocation.json\", \"scope\": \"repo\"}, \"metrics_path\": {\"path\": \"layout/build/.klt/place-and-route/npu_top_route_metrics.json\", \"scope\": \"repo\"}, \"outcome\": \"exited\", \"retention_errors\": [], \"returncode\": 1, \"script_name\": \"pnr_npu_top_route.tcl\", \"script_path\": {\"path\": \"layout/build/.klt/place-and-route/pnr_npu_top_route.tcl\", \"scope\": \"repo\"}, \"script_sha256\": \"8a823fc8a1b8b755e36d9ad0a9d31ab46fc0376b28fcab2a9e01401c99554ed1\", \"stderr_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/6b1821f73d4840da8879ed58662fc466/stderr.log\", \"scope\": \"repo\"}, \"stdout_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/6b1821f73d4840da8879ed58662fc466/stdout.log\", \"scope\": \"repo\"}}"
+  }
+}

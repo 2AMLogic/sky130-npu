@@ -7,7 +7,8 @@ Request: `par-request.json` (this directory), die 2700 x 1410 um, four macros
 (abstract LEF; GDS merge not reached). Floorplan, macro placement (A0/A1 west,
 B0/B1 north), tapcells, PDN, global placement, CTS all completed (~12 min).
 
-Two attempts, both `GRT-0116`:
+Two attempts, both `GRT-0116`. The counts below are console readings whose logs
+were not committed (not re-derived); only `GRT-0116` is sourced by `par.err`:
 
 | Attempt | Die (um) | Total GRT congestion cells | met1 / met2 usage |
 |---|---|---|---|
