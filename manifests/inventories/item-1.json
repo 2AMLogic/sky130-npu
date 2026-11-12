@@ -11,12 +11,12 @@
     "rtl/npu_array.v",
     "rtl/npu_pe.v",
     "rtl/npu_requant.v",
-    "rtl/pdk/sky130/npu_sram_bank_bb.v",
+    "rtl/pdk/sky130/npu_sram_bank.v",
     "rtl/synth/synth-request.json"
   ],
   "derived": [
     {
-      "path": "rtl/synth/records/20261027-sky130-hd/npu_top_synth.v",
+      "path": "rtl/synth/records/20261111-sky130-hd/npu_top_synth.v",
       "generator": "klt synthesize --pdk sky130A --format json rtl/synth/synth-request.json",
       "check": {
         "argv": [
@@ -25,7 +25,7 @@
           "--pdk",
           "sky130A",
           "--check",
-          "rtl/synth/records/20261027-sky130-hd/synth-report.json",
+          "rtl/synth/records/20261111-sky130-hd/synth-report.json",
           "rtl/synth/synth-request.json"
         ]
       }

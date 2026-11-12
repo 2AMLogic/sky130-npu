@@ -30,21 +30,108 @@
       "reason": null,
       "graded_by_build": true,
       "citation": {
-        "file": "manifests/attestations/item-1.json",
+        "file": "manifests/attestations/item-1-klt091.json",
         "command": null,
         "kind": "generic",
         "check_status": "pass",
-        "content_hash": "sha256:35a836807396822ab2401249bb75d7e23cdede956c8445bc4f210c69a2fcbb42",
+        "content_hash": "sha256:e8083f2a9084ccd66584f3c2ef91b1ed69303c0c7e407258e999ae344d10f69c",
         "input_verified": true,
         "exit_status": 0,
         "artifact_binding": {
           "t1_item": 1,
-          "path": {
-            "path": "manifests/inventories/item-1.json",
-            "scope": "repo"
-          },
-          "content_hash": "sha256:35a836807396822ab2401249bb75d7e23cdede956c8445bc4f210c69a2fcbb42",
+          "path": null,
+          "content_hash": "sha256:e8083f2a9084ccd66584f3c2ef91b1ed69303c0c7e407258e999ae344d10f69c",
           "input_verified": true,
+          "members": [
+            {
+              "path": {
+                "path": "manifests/inventories/item-1.json",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:6f824613b42df2cbc4e6c100f69c94fe1eb70c3b3b381fb5440082552bad0033",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_array.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:15c92e6fe78c8b80a59089cd2f9273207e7ee30d85461af3751ccf641875ce20",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_banks.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:aabd40e1c4974db5fc1adddedbd8710af6c78bc17119af0f690ce42a845bf864",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_ctrl.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:27f7b5b92edc1c3be95c7d00e377270edc42776cb9db7852d88404bd7b984c6d",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_host.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:ae5cf6522a91c1b4ec650e708570a6a1eaae083a9fdf06048856cec0f69cf24e",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_pe.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:1ea252c7c3060d5b2e5fecb41b5f668afc4f09982065e45e8832551276551bf5",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_requant.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:e0b0b881ce2961e6c1b53f7c59313bd25ffbd9f51b107955a0a8488a8ad393be",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/npu_top.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:a34f636ad59911bd1f54e5ca449118aa215f732cff1f4ec8c295cc39ebf00841",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/pdk/sky130/npu_sram_bank.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:1541ca6f5e4f353664aba13b5608a62b680b80f67483dd31d54caa4bd281d17e",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/synth/records/20261111-sky130-hd/npu_top_synth.v",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:0eef5aff70680d5da761fdf0adf85eef81d7e7970ae14761209ad53e88a04fef",
+              "status": "verified"
+            },
+            {
+              "path": {
+                "path": "rtl/synth/synth-request.json",
+                "scope": "repo"
+              },
+              "content_hash": "sha256:fd5cc0dcf4dd0e9da7dcc5a20d95f039d41344d977cf95f9a5651a8fe8a83597",
+              "status": "verified"
+            }
+          ],
           "summary": "T1 item 1 (Design sources): 11/11 attestation checks passed (klt signoff --attest)",
           "source": "manifests/inventories/item-1.json",
           "attestation": {

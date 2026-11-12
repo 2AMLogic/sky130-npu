@@ -31,6 +31,7 @@ class RelocatedLayout(unittest.TestCase):
             shutil.copy(f, self.common)
         for f in (REPO / "rtl" / "pdk" / "sky130").glob("*.v"):
             shutil.copy(f, self.seam)
+        shutil.copytree(REPO / "rtl" / "pdk" / "sky130" / "macro", self.seam / "macro")
 
     def run_check(self, rtl, pdk):
         env = {k: v for k, v in os.environ.items()
@@ -42,7 +43,7 @@ class RelocatedLayout(unittest.TestCase):
     def test_relocated_absolute(self):
         r = self.run_check(self.common, self.seam)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-        self.assertIn("synthesis view (npu_sram_bank_bb.v) elaborates", r.stdout)
+        self.assertIn("synthesis view (-DNPU_SRAM_MACRO over the macro) elaborates", r.stdout)
 
     def test_relocated_relative_resolves_against_repo_root(self):
         rel = Path(os.path.relpath(self.common, REPO)), Path(os.path.relpath(self.seam, REPO))
