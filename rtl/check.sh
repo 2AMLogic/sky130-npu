@@ -52,9 +52,13 @@ for n in "${GOOD[@]}"; do
 done
 
 # The macro view carries the 1024-word macro only, which is the ARRAY_N=8 bank.
+# Icarus elaborates the macro's behavioral model; Yosys reads it with -lib (ports
+# only, body ignored), as a blackbox: the distro Yosys in CI aborts in
+# kernel/fmt.cc on the model's $display calls, and the synthesis flow treats the
+# macro as a blackbox anyway.
 for n in 8; do
   if iverilog -g2012 -Wall -DNPU_SRAM_MACRO -P"${TOP}.ARRAY_N=${n}" -s "${TOP}" -o /dev/null "${SRC[@]}" "${MACRO_V}" \
-     && yosys -q -p "read_verilog -sv -defer -DNPU_SRAM_MACRO ${SRC[*]} ${MACRO_V}; chparam -set ARRAY_N ${n} ${TOP}; hierarchy -check -top ${TOP}"; then
+     && yosys -q -p "read_verilog -sv -lib ${MACRO_V}; read_verilog -sv -defer -DNPU_SRAM_MACRO ${SRC[*]}; chparam -set ARRAY_N ${n} ${TOP}; hierarchy -check -top ${TOP}"; then
     say "PASS  ARRAY_N=${n}: synthesis view (-DNPU_SRAM_MACRO over the macro) elaborates"
   else
     say "FAIL  ARRAY_N=${n}: synthesis view (-DNPU_SRAM_MACRO over the macro) expected to elaborate"; FAIL=1
