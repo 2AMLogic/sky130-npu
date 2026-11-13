@@ -78,3 +78,9 @@ it, which Icarus rejects ("Scope index expression is not constant"). Yosys
 `hierarchy -check` passes on the wrapper at 512 (with that file) and at 1024
 (with a blackbox for the not-yet-generated macro). Not checked: the 1024 x 32
 macro itself, its timing, power pins (`USE_POWER_PINS`), or P&R.
+
+`tb_macro_wrapper.v` itself was removed on 2026-11-13 under the operator ruling
+on issue #117 — it was print-only at 512 words and is superseded by the
+gate-level bit-exact run in `verification/README.md` — while the record above
+stands as written; the last commit that contained it is `8924057`
+(`git show 8924057:rtl/pdk/sky130/tb_macro_wrapper.v`).
