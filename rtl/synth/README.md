@@ -8,7 +8,7 @@ Synthesis of the NPU at the target size (`ARRAY_N = 8`, the default).
 | `synth.sh` | Generic Yosys `synth` (no cell library): `./synth.sh 8 core` or `full` |
 | `current-netlist.sh` | prints the path of `npu_top_synth.v` in the record `synth-request.json` writes to (`.outputs.dir`). The single owner of "which recorded netlist is current": `layout/run.sh`, `verification/check_mutation_gl.sh` and the gate-level command in `verification/README.md` all ask it instead of naming a record id, so a new record moves every consumer at once. `--relative` prints the repo-relative path |
 | `records/20261020-yosys-generic/` | `stat` output of three runs, append-only |
-| `records/20261027-sky130-hd/` | first `klt synthesize` run (klt 0.8.1.dev55), from the former hand-written blackbox file `npu_sram_bank_bb.v` (since removed). Append-only, superseded by the next row and no longer consumed by anything (#121) |
+| `records/20261027-sky130-hd/` | first `klt synthesize` run (klt 0.8.1.dev55), from the former hand-written blackbox file `npu_sram_bank_bb.v` (since removed). Append-only, superseded by the next row. No runner or request reads it any more (#121); it is cited only by records and by `manifests/attestations/item-1.json`, which has not been regenerated since the next row was added (#132) |
 | `records/20261111-sky130-hd/` | the `klt synthesize` run of the current `synth-request.json`: gate-level netlist `npu_top_synth.v`, envelope `synth-report.json`, generated macro blackbox, scripts and logs, `tool-versions.txt`. Append-only |
 
 ## Recorded sky130 netlist (`records/20261111-sky130-hd/`)
