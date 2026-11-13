@@ -351,7 +351,7 @@
       "reason": null,
       "graded_by_build": true,
       "citation": {
-        "file": "manifests/attestations/item-10-klt091.json",
+        "file": "manifests/attestations/item-10-klt091-20261113.json",
         "command": null,
         "kind": "generic",
         "check_status": "pass",
