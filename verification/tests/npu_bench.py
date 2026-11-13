@@ -19,7 +19,7 @@ from verification.golden import pack_a, pack_b  # noqa: E402
 WORKLOADS = Path(__file__).resolve().parents[1] / "workloads"
 
 # Register byte offsets (spec section 6).
-ID, SPEC, CAP, CTRL, STATUS, K = 0x00, 0x04, 0x08, 0x0C, 0x10, 0x14
+ID, CAP, CTRL, STATUS, K = 0x00, 0x08, 0x0C, 0x10, 0x14
 BANKS, A_OFF, B_OFF, OUT_OFF = 0x18, 0x1C, 0x20, 0x24
 REQ_MULT, REQ_CTRL, PERF_CYCLES = 0x28, 0x2C, 0x30
 BIAS_BASE = 0x100
@@ -41,7 +41,7 @@ def to_s8(v):
     return v - 256 if v >= 128 else v
 
 
-def read_matrix(name, workload, rows, cols, digits=2):
+def read_matrix(name, workload, rows, cols):
     """Load ``a.hex`` / ``b.hex`` / ``expected_out.hex`` as a rows x cols list."""
     vals = [
         int(x, 16)
@@ -53,9 +53,7 @@ def read_matrix(name, workload, rows, cols, digits=2):
 
 
 def load_workload(wid):
-    import json as _json
-
-    p = _json.loads((WORKLOADS / wid / "params.json").read_text())
+    p = json.loads((WORKLOADS / wid / "params.json").read_text())
     m, k, n = p["M"], p["K"], p["N"]
     a = read_matrix("a.hex", wid, m, k)
     b = read_matrix("b.hex", wid, k, n)
@@ -74,7 +72,6 @@ class Bench:
     def __init__(self, dut):
         self.dut = dut
         self.n = array_n()
-        self.cycles = 0  # PERF_CYCLES summed over every tile run
 
     # ------------------------------------------------------------------ bus
     async def start_clock(self):
@@ -207,9 +204,7 @@ class Bench:
         if not st & ST_DONE or st & ST_ERR:
             raise AssertionError(f"tile did not complete cleanly: STATUS={st:#x}")
         await self.write(STATUS, ST_DONE)
-        cyc = await self.read(PERF_CYCLES)
-        self.cycles += cyc
-        return cyc
+        return await self.read(PERF_CYCLES)
 
     async def run_gemm(self, a, b, bias, mult, shift, relu):
         """Whole GEMM, tiled to ARRAY_N; returns (out M x N int8, summed cycles).

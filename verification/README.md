@@ -41,7 +41,7 @@ exported to the test as environment variables.
 | `runner.py` | cocotb runner, Icarus, parameter-driven; writes the ledger record |
 | `requirements.txt` | pinned cocotb |
 | `tests/npu_bench.py` | Wishbone master, bank load/store, tiling, utilization accounting (touches only `npu_top` ports) |
-| `tests/test_bitexact.py` | the four reference workloads, requantization edge vectors, K extremes, back-to-back, reset mid-run, `ERR_CODE` 1..5, constrained random |
+| `tests/test_bitexact.py` | the four reference workloads, requantization edge vectors, K extremes, back-to-back, reset mid-run, `ERR_CODE` 1..5, constrained random, bus error on a denied or unmapped access, `CTRL.SOFT_RESET`, the `irq` / `IRQ_EN` gate |
 | `check_mutation.sh` | corrupts one RTL output bit in a temp copy and passes only if the suite fails |
 | `check_mutation_gl.sh` | the same negative control on a copy of the synthesized netlist (gate-level run) |
 | `golden/` | bit-exact integer golden model and workload generator (spec sections 3, 4, 8) |
@@ -54,7 +54,10 @@ exported to the test as environment variables.
 Every output byte is compared with `==` to `expected_out.hex` and to a live
 `golden.gemm_int8` call; there is no tolerance. Each tile is loaded through the
 Wishbone bank windows, run, and read back (serialized load-then-compute, valid
-at every K up to 256; host/compute overlap is not exercised). The random run
+at every K up to 256). The section 5.3 access rules are exercised while a tile
+runs (a denied access answers `ERR` and leaves the bank unwritten, a permitted
+one completes), but no test fills a next tile while one computes, so
+host/compute overlap itself is still not exercised. The random run
 takes its seed from `NPU_SEED` (drawn fresh if unset), prints it, and the
 runner stores it in the record. Per-workload `U_array` (spec section 8), the
 summed `PERF_CYCLES`, `ARRAY_N`, and the RTL commit go into the record,
