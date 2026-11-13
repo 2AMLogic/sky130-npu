@@ -12,36 +12,48 @@ and nothing from it may be cited in a block manifest.
 |---|---|
 | `pdk.json` | `open_pdks` commit (full SHA), variant `sky130A`, library `sky130_fd_sc_hd`, smoke corner |
 | `toolchain.json` | klayout-tools PyPI release, tag and tag commit, Yosys, OpenROAD, Icarus versions |
+| `runner-lib.sh` | the preamble every flow runner sources: record id, the pinned `klt`, both pin checks, host-path scrub |
 | `smoke/` | fixture RTL, request JSONs, ERC stackup spec, `run.sh` |
 | `smoke/records/<id>/` | envelopes from one run. Append-only: `run.sh` refuses an existing id |
 
 `toolchain.json` is the single place the klt pin lives. Anything else that
 needs a klt pin (for example the signoff workflow in #5) should read it from
-here rather than carry a second copy.
+here rather than carry a second copy. For a shell runner that means sourcing
+`runner-lib.sh`: it is the only code that reads either pin file, and it runs
+`klt` through `uvx --from` the pinned release, so a runner needs `uvx` on PATH
+and never a host `klt` install. `flow/smoke/run.sh` and `layout/run.sh` both
+source it, and a new signoff runner should too rather than copy the preamble.
 
 ## Cold start
 
-From a clean clone, with the pinned PDK and tools installed:
+From a clean clone, `run.sh` needs no host `klt`: it runs the pinned release
+through `uvx` itself (`runner-lib.sh`). So `uvx`, `jq`, `yosys`, `openroad` and
+`iverilog` on PATH, plus the pinned PDK, are the whole requirement:
 
 ```bash
-# 1. klt at the pinned release (a throwaway tool env, not a host-wide install)
-uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" klt --version
-#    -> must report klt 0.9.1
-# 2. the PDK: open_pdks commit from flow/pdk.json (klt resolves ~/.ciel, then ~/.volare)
-klt pdk find --pdk sky130A --format json | jq -r .version
-#    -> must report open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7
-# 3. yosys, openroad, iverilog on PATH, at the versions in flow/toolchain.json
-# 4. run it
+# 1. run it -- uvx fetches the pinned klt into a throwaway env on first use
 ./flow/smoke/run.sh                      # scratch under flow/build/smoke/ (gitignored)
 ./flow/smoke/run.sh --record <id>        # also copy requests + envelopes to flow/smoke/records/<id>/
 ```
 
-`run.sh` checks the `klt` build and the resolved PDK against the two JSON
-files and exits `2` before running anything if either differs. After the
-steps it exits non-zero if any gate failed; every step still runs so the
-record shows all of them. If `PDK_ROOT` is unset and several PDK roots are
-installed, set it to the root that holds the pinned commit. The script exports
-`PDK=sky130A` because `klt lvs` has no `--pdk` flag (klayout-tools#3852).
+To check the two pins by hand before running anything:
+
+```bash
+# klt at the pinned release (a throwaway tool env, not a host-wide install)
+uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" klt --version
+#    -> must report klt 0.9.1
+# the PDK: open_pdks commit from flow/pdk.json (klt resolves ~/.ciel, then ~/.volare)
+uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" \
+  klt pdk find --pdk sky130A --format json | jq -r .version
+#    -> must report open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7
+```
+
+`run.sh` makes both of those checks itself and exits `2` before running
+anything if either differs. After the steps it exits non-zero if any gate
+failed; every step still runs so the record shows all of them. If `PDK_ROOT` is
+unset and several PDK roots are installed, set it to the root that holds the
+pinned commit. The script exports `PDK=sky130A` because `klt lvs` has no
+`--pdk` flag (klayout-tools#3852).
 
 It runs single-unit, one local corner (`tt_025C_1v80`). It is not a corner
 grid and does not use the batch fleet. The clock period (20 ns) is arbitrary:
@@ -125,10 +137,10 @@ pinned PDK, `sha256:8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee3148
 ## Records contain no host paths
 
 `klt place-and-route` and `klt lvs` write some output paths absolute
-(klayout-tools#3798, #3820). When recording, `run.sh` replaces this checkout's
-root with `<repo>` and the PDK root with `<pdk-root>` with `sed`, then runs
-`klt env-provenance lint-envelope` over the result. Nothing else in an
-envelope is edited.
+(klayout-tools#3798, #3820). When recording, `runner-lib.sh`'s `scrub` replaces
+this checkout's root with `<repo>` and the PDK root with `<pdk-root>` with
+`sed`, then `run.sh` runs `klt env-provenance lint-envelope` over the result.
+Nothing else in an envelope is edited.
 
 ## Tool gaps filed
 

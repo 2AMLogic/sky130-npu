@@ -10,9 +10,9 @@
 # fails.
 #
 # klt is pinned to one PyPI release by flow/toolchain.json, the repo's single
-# klt pin (the same two fields layout/run.sh and flow/smoke/run.sh read). Its
-# bundled T1 checklist fixes the item skeleton and text, so a floating install
-# would churn the committed report. Bump the pin in flow/toolchain.json
+# klt pin (the same two fields flow/runner-lib.sh reads for the shell runners).
+# Its bundled T1 checklist fixes the item skeleton and text, so a floating
+# install would churn the committed report. Bump the pin in flow/toolchain.json
 # together with a regenerated report (see manifests/README.md).
 
 name: signoff
