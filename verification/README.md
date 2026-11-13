@@ -112,13 +112,23 @@ What this is, and is not:
   both PDK model files, the macro model copy).
 - Wall time on one core is about 75 minutes for the whole suite (about 630 simulated ns per second), plus a few minutes of simulator teardown before the record is written.
 
-Latest run: `records/20261113T121658Z-cc76fbc8/` — 11/11 pass on
+Latest run: `records/20261113T155441Z-2441991e/` — 14/14 pass on
 `rtl/synth/records/20261111-sky130-hd/npu_top_synth.v` (sha256 `0eef5aff…`, in
 the record's `source_sha256`), the record `synth-request.json` points at and
-`manifests/inventories/item-1.json` cites. `check_mutation_gl.sh` passed on the
-same netlist in the same session. Earlier gate-level records
-(`20261106T200613Z-ea80e04d`, `20261111T075128Z-4613a4c7`) hash the superseded
-20261027 netlist and are evidence for that one, not for this one.
+`manifests/inventories/item-1.json` cites. Unfiltered (`testcase: null`,
+`sources_dirty: false`), so the 14 is the whole current suite: this is the first
+gate-level evidence on this netlist for `test_bus_error_denied_and_unmapped`,
+`test_soft_reset_mid_run` and `test_irq_level_and_gate`. Wall time about 43
+minutes on one core for this run (2602 s of simulator time, about 1140 simulated
+ns per second), so the ~75 min / ~630 ns per second above is an earlier
+measurement and the figure is host-dependent.
+
+`records/20261113T121658Z-cc76fbc8/` is the earlier 11/11 run on the same
+netlist, taken before those three tests existed; `check_mutation_gl.sh` passed
+on this netlist in that session and was not re-run for the 14-test run. Earlier
+gate-level records (`20261106T200613Z-ea80e04d`, `20261111T075128Z-4613a4c7`)
+hash the superseded 20261027 netlist and are evidence for that one, not for
+this one.
 
 ## PDK-independent files (stamped into `asap7-npu`)
 
