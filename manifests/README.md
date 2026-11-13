@@ -19,7 +19,7 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   LICENSE, both workflows, plus the golden-model tests) and the envelope
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
-  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113.json` (earlier attestations stay as evidence; write a new file),
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113-2.json` (earlier attestations stay as evidence; write a new file),
   then point the manifest's item-10 citation at that new file and re-render
   the report. The cited `content_hash` is the inventory's sha256 (below), so
   it changes only when the inventory itself does, not when an inventoried file
