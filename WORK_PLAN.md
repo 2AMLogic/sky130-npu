@@ -56,7 +56,7 @@ Issues carrying `loom:curated`.
 
 ## Proposed (Architect / Hermit)
 
-_None._
+- **#117**: Remove tb_macro_wrapper.v: print-only 512-word testbench superseded by gate-level run *(hermit)*
 
 ## Epics
 
@@ -74,6 +74,6 @@ _None._
 | PRs awaiting review | 1 |
 | Approved PRs awaiting merge | 0 |
 | Curated | 3 |
-| Architect / Hermit proposals | 0 |
+| Architect / Hermit proposals | 1 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
