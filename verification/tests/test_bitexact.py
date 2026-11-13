@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 import cocotb
-from cocotb.triggers import ClockCycles
+from cocotb.triggers import ClockCycles, FallingEdge
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -330,3 +330,245 @@ async def test_bank_window_does_not_alias_bias(dut):
                 f"bank {bank} off {off:#x}: wrote {val:#010x}, read {got:#010x}")
             got = [await bench.read(nb.BIAS_BASE + 4 * j) for j in range(n)]
             assert got == bias, f"bank {bank} write at offset {off:#x} changed BIAS: {got}"
+
+
+# --------------------------------------------------------- host-visible behaviours
+# The three tests below cover spec section 5.3 (bus error on a denied or
+# unmapped access), CTRL.SOFT_RESET and the irq / IRQ_EN gate of section 6.
+# They use nb.write_err / nb.read_err, which expect ERR rather than raising on it.
+
+
+async def load_tile(bench, rng, k, mult, shift, relu=0):
+    """Store one random A/B tile plus bias and configure it; return the inputs.
+
+    Leaves the block configured and idle, so the caller issues its own CTRL
+    write (``bench.start()`` or a raw value when other CTRL bits matter).
+    Returns ``(a, b, bias, lay)`` with ``lay`` the bank plan actually used.
+    """
+    n = bench.n
+    from verification.golden import pack_a, pack_b
+    a = [[rng.randint(-128, 127) for _ in range(k)] for _ in range(n)]
+    b = [[rng.randint(-128, 127) for _ in range(n)] for _ in range(k)]
+    bias = [rng.randint(-1000, 1000) for _ in range(n)]
+    await bench.store_bytes(0, 0, pack_a(a, n))
+    await bench.store_bytes(1, 0, pack_b(b, n))
+    await bench.set_bias(bias)
+    lay = bench.layout(k)
+    await bench.configure(k, mult=mult, shift=shift, relu=relu, **lay)
+    return a, b, bias, lay
+
+
+async def check_tile(bench, lay, a, b, bias, mult, shift, relu, what):
+    """Read the result tile back from its bank and compare it to the golden model."""
+    n = bench.n
+    raw = await bench.load_bytes(lay["out_bank"], lay["out_off"], n * n)
+    got = [[nb.to_s8(raw[r * n + c]) for c in range(n)] for r in range(n)]
+    _, want = gemm_int8(a, b, bias, mult, shift, relu)
+    check(got, want, what)
+
+
+async def assert_busy(bench, what):
+    """Guard a BUSY-only expectation: the denial rules only apply while BUSY."""
+    st = await bench.read(nb.STATUS)
+    assert st & nb.ST_BUSY, f"{what}: the tile already finished (STATUS={st:#x})"
+
+
+@cocotb.test()
+async def test_bus_error_denied_and_unmapped(dut):
+    """Wishbone ERR on a denied bank access and on an unmapped address (spec 5.3, 6).
+
+    While BUSY the active operand banks answer ERR. At ARRAY_N=8 that is the
+    whole bank, because both macro ports serve the array; at ARRAY_N=4 it is
+    only the active A, B and result ranges, because the array reads through the
+    R port alone and the host fills the next tile through the RW port. Every
+    denied write carries a sentinel, so the bit-exact result of the tile that
+    was running proves the denial also kept the bank unwritten.
+    """
+    bench = await setup(dut)
+    n = bench.n
+    nbanks = 4 if n == 8 else 2
+    rng = random.Random(SEED ^ 0xE44B)
+    k, mult, shift = 256, 3, 9
+    sentinel = 0x5A5A5A5A
+
+    a, b, bias, lay = await load_tile(bench, rng, k, mult, shift)
+    await bench.start()
+    await ClockCycles(dut.clk, 4)  # BUSY is not visible in the first cycles
+    await assert_busy(bench, "after START")
+
+    # Unmapped: a bank index past the last bank is outside the address map.
+    unmapped = nb.BANK_BASE * (nbanks + 1)
+    assert await bench.write_err(unmapped, sentinel), \
+        f"write to unmapped {unmapped:#06x} was not answered with ERR"
+    assert await bench.read_err(unmapped), \
+        f"read of unmapped {unmapped:#06x} was not answered with ERR"
+
+    if n == 4:
+        # An offset past the end of a bank is unmapped too. Only checkable at
+        # the fallback: at ARRAY_N=8 a bank window is its full 4 KB, so the
+        # next offset is already the next bank's window.
+        past = bench.bank_addr(0, 2048)
+        assert await bench.write_err(past, sentinel), \
+            f"write past the end of bank 0 ({past:#06x}) was not ERR"
+        assert await bench.read_err(past), \
+            f"read past the end of bank 0 ({past:#06x}) was not ERR"
+
+    if n == 8:
+        # Both ports of an active operand bank serve the array: the whole bank
+        # is denied, inside the operand range and outside it alike.
+        for bank, role in ((lay["a_bank"], "A"), (lay["b_bank"], "B")):
+            for off in (0, (k - 1) * n, 4092):
+                await assert_busy(bench, f"before active {role} bank off {off:#x}")
+                adr = bench.bank_addr(bank, off)
+                assert await bench.write_err(adr, sentinel), \
+                    f"write to the active {role} bank at {off:#x} was not ERR"
+                assert await bench.read_err(adr), \
+                    f"read of the active {role} bank at {off:#x} was not ERR"
+        # "All other banks are host-accessible": that is the ping-pong. The
+        # result bank is one of them; the host access waits for the RW port
+        # when a result write wants it in the same cycle (spec 5.3).
+        idle = next(bk for bk in range(nbanks)
+                    if bk not in (lay["a_bank"], lay["b_bank"], lay["out_bank"]))
+        for bank, off, what in ((idle, 0x40, "idle bank"),
+                                (lay["out_bank"], 0x800, "result bank past the tile")):
+            await assert_busy(bench, f"before {what}")
+            adr = bench.bank_addr(bank, off)
+            val = 0xC0FFEE00 | bank
+            await bench.write(adr, val)          # raises BusError on ERR
+            got = await bench.read(adr)
+            assert got == val, f"{what}: wrote {val:#010x}, read {got:#010x}"
+    else:
+        # ARRAY_N = 4: range-based. Denied inside the active A, B and result
+        # ranges; reachable everywhere else in the same banks.
+        ranges = (
+            (lay["a_bank"], lay["a_off"], lay["a_off"] + k * n, "A"),
+            (lay["b_bank"], lay["b_off"], lay["b_off"] + k * n, "B"),
+            (lay["out_bank"], lay["out_off"], lay["out_off"] + n * n, "result"),
+        )
+        for bank, lo, hi, role in ranges:
+            for off, edge in ((lo, "first word"), (hi - 4, "last word")):
+                await assert_busy(bench, f"before the {role} range {edge}")
+                adr = bench.bank_addr(bank, off)
+                assert await bench.write_err(adr, sentinel), \
+                    f"write to the active {role} range {edge} ({off:#x}) was not ERR"
+                assert await bench.read_err(adr), \
+                    f"read of the active {role} range {edge} ({off:#x}) was not ERR"
+        for bank, off, what in (
+                (lay["out_bank"], lay["out_off"] + n * n, "just past the result range"),
+                (lay["b_bank"], lay["b_off"] + k * n, "just past the B range"),
+                (lay["a_bank"], 2044, "top of the A bank")):
+            await assert_busy(bench, f"before {what}")
+            adr = bench.bank_addr(bank, off)
+            val = 0xC0FFEE00 | (off & 0xFF)
+            await bench.write(adr, val)          # raises BusError on ERR
+            got = await bench.read(adr)
+            assert got == val, f"{what}: wrote {val:#010x}, read {got:#010x}"
+
+    st = await bench.wait_done()
+    assert st & nb.ST_DONE and not st & nb.ST_ERR, \
+        f"tile run through the denied accesses: STATUS={st:#x}"
+    await bench.write(nb.STATUS, nb.ST_DONE)
+    await check_tile(bench, lay, a, b, bias, mult, shift, 0,
+                     "tile run through denied bank accesses")
+
+
+@cocotb.test()
+async def test_soft_reset_mid_run(dut):
+    """CTRL.SOFT_RESET while BUSY: idle and STATUS 0, no DONE for the aborted tile.
+
+    The companion of ``test_reset_mid_run``, which uses the ``rst`` pin. The
+    aborted tile must not raise DONE or ERR afterwards, and the block must go
+    on to run a bit-exact tile.
+    """
+    bench = await setup(dut)
+    rng = random.Random(SEED ^ 0x50F7)
+    k, mult, shift = 128, 5, 8
+
+    a, b, bias, _ = await load_tile(bench, rng, k, mult, shift)
+    await bench.start()
+    await ClockCycles(dut.clk, 20)
+    assert await bench.read(nb.STATUS) & nb.ST_BUSY, "expected BUSY before SOFT_RESET"
+
+    await bench.write(nb.CTRL, nb.CTRL_SOFT_RESET)
+    st = await bench.read(nb.STATUS)
+    assert st == 0, f"STATUS after SOFT_RESET {st:#x}, want 0"
+
+    # The aborted tile must not report DONE later: wait out the rest of a run.
+    await ClockCycles(dut.clk, 4 * k)
+    st = await bench.read(nb.STATUS)
+    assert st == 0, f"aborted tile reported STATUS={st:#x} after SOFT_RESET"
+
+    await gemm_vs_golden(bench, a, b, bias, mult, shift, 0,
+                         "tile after SOFT_RESET mid-run")
+
+
+@cocotb.test()
+async def test_irq_level_and_gate(dut):
+    """One level irq, DONE or ERR, gated by CTRL.IRQ_EN (spec 6).
+
+    IRQ_EN is a plain RW bit of CTRL, so every CTRL write carries it and a
+    START that means to keep the gate open is written as START | IRQ_EN.
+    ``irq`` is a gate over STATUS, not a latch: it follows DONE / ERR while
+    IRQ_EN is set and drops when either the status bit or the gate goes away.
+    """
+    bench = await setup(dut)
+    rng = random.Random(SEED ^ 0x1E90)
+    k, mult, shift = 64, 3, 9
+
+    async def irq():
+        await FallingEdge(dut.clk)   # outputs settled, as in Bench._xfer
+        return int(dut.irq.value)
+
+    assert await irq() == 0, "irq high out of reset"
+
+    # Gate closed: a plain START writes IRQ_EN as 0, so DONE must not raise irq.
+    a, b, bias, lay = await load_tile(bench, rng, k, mult, shift)
+    await bench.start()
+    st = await bench.wait_done()
+    assert st & nb.ST_DONE and not st & nb.ST_ERR, f"first tile: STATUS={st:#x}"
+    assert await irq() == 0, "irq high on DONE with IRQ_EN clear"
+    await bench.write(nb.STATUS, nb.ST_DONE)
+
+    # Gate open: low while BUSY, high on DONE, low again after the RW1C clear.
+    await bench.configure(k, mult=mult, shift=shift, relu=0, **lay)
+    await bench.write(nb.CTRL, nb.CTRL_START | nb.CTRL_IRQ_EN)
+    await ClockCycles(dut.clk, 4)
+    assert await bench.read(nb.STATUS) & nb.ST_BUSY, "expected BUSY after START"
+    assert await irq() == 0, "irq high while BUSY with neither DONE nor ERR"
+    st = await bench.wait_done()
+    assert st & nb.ST_DONE and not st & nb.ST_ERR, f"gated tile: STATUS={st:#x}"
+    assert await irq() == 1, "irq low on DONE with IRQ_EN set"
+    await bench.write(nb.STATUS, nb.ST_DONE)
+    assert await irq() == 0, "irq still high after DONE was cleared (RW1C)"
+
+    # A rejected START raises irq through ERR (ERR_CODE 5, START while BUSY).
+    await bench.configure(k, mult=mult, shift=shift, relu=0, **lay)
+    await bench.write(nb.CTRL, nb.CTRL_START | nb.CTRL_IRQ_EN)
+    await ClockCycles(dut.clk, 4)
+    assert await bench.read(nb.STATUS) & nb.ST_BUSY, "expected BUSY after START"
+    await bench.write(nb.CTRL, nb.CTRL_START | nb.CTRL_IRQ_EN)   # rejected
+    st = await bench.read(nb.STATUS)
+    assert st & nb.ST_ERR and (st >> 8) & 0xF == 5, \
+        f"START while BUSY: STATUS={st:#x}"
+    assert await irq() == 1, "irq low on a rejected START with IRQ_EN set"
+    await bench.write(nb.STATUS, nb.ST_ERR)
+    st = await bench.read(nb.STATUS)
+    assert st & nb.ST_BUSY and not st & (nb.ST_DONE | nb.ST_ERR), \
+        f"expected a clean BUSY after the RW1C clear: STATUS={st:#x}"
+    assert await irq() == 0, "irq still high after ERR was cleared (RW1C)"
+
+    # DONE pending: irq follows IRQ_EN alone, and STATUS is untouched by it.
+    st = await bench.wait_done()
+    assert st & nb.ST_DONE, f"tile after the rejected START: STATUS={st:#x}"
+    assert await irq() == 1, "irq low on DONE with IRQ_EN set"
+    await bench.write(nb.CTRL, 0)                       # IRQ_EN cleared
+    assert await irq() == 0, "irq high with IRQ_EN cleared and DONE pending"
+    st = await bench.read(nb.STATUS)
+    assert st & nb.ST_DONE, f"closing the gate changed STATUS: {st:#x}"
+    await bench.write(nb.CTRL, nb.CTRL_IRQ_EN)          # IRQ_EN set again
+    assert await irq() == 1, "irq low with IRQ_EN set again and DONE pending"
+    await bench.write(nb.STATUS, nb.ST_DONE)
+    assert await irq() == 0, "irq still high after DONE was cleared"
+
+    await check_tile(bench, lay, a, b, bias, mult, shift, 0,
+                     "tile run through the irq checks")
