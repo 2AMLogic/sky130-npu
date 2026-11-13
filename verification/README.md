@@ -66,18 +66,22 @@ Both sizes run every workload; wall time on one core is about 30 s (N=8) and
 
 ## Gate-level run (pre-layout, functional, macro Verilog model)
 
-Runs the same `test_bitexact` suite, unchanged, on the recorded synthesized
-netlist `rtl/synth/records/20261027-sky130-hd/npu_top_synth.v` (decision 0005
-hold registers included) at `ARRAY_N = 8`:
+Runs the same `test_bitexact` suite, unchanged, on the **current** recorded
+synthesized netlist (decision 0005 hold registers included) at `ARRAY_N = 8`.
+Which record that is comes from `rtl/synth/current-netlist.sh`, which reads
+`.outputs.dir` out of `rtl/synth/synth-request.json` — so no record id is
+written down here, and a new synthesis record moves this command, `layout/run.sh`
+and `check_mutation_gl.sh` together:
 
 ```sh
 PDKV=~/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog    # pinned in flow/pdk.json
 MACRO=rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v
+NETLIST=$(rtl/synth/current-netlist.sh)   # rtl/synth/records/<current>/npu_top_synth.v
 # VERBOSE=0: the model prints a line per access, which floods the ~75 min log;
 # Icarus -P cannot reach a nested module's parameter, so silence a copy
 sed 's/parameter VERBOSE = 1 ;/parameter VERBOSE = 0 ;/' $MACRO > /tmp/macro_quiet.v
 .venv/bin/python verification/runner.py --toplevel npu_top \
-    --sources rtl/synth/records/20261027-sky130-hd/npu_top_synth.v \
+    --sources "$NETLIST" \
               $PDKV/primitives.v $PDKV/sky130_fd_sc_hd.v \
               /tmp/macro_quiet.v \
     --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8

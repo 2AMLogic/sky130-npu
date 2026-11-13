@@ -11,7 +11,8 @@
 # install), openroad, jq and sky130A at the open_pdks commit in flow/pdk.json
 # (PDK_ROOT). Inputs are staged into scratch as inputs/ so the committed
 # par-request.json runs byte-for-byte unchanged:
-#   inputs/npu_top_synth.v  <- rtl/synth/records/20261027-sky130-hd/
+#   inputs/npu_top_synth.v  <- the current synthesis record, resolved by
+#                              rtl/synth/current-netlist.sh (never a record id here)
 #   inputs/macro.lef        <- rtl/pdk/sky130/macro/.../*.lef (abstract, used for placement/routing)
 #   inputs/macro.gds        <- the same directory's .gds.gz, gunzipped (merged into the stream)
 # Single unit: one P&R run, local. No corner grid.
@@ -23,7 +24,6 @@ REPO_ROOT="$(cd "${HERE}/.." && pwd)"
 OUT="${HERE}/build"
 MACRO_DIR="${REPO_ROOT}/rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8"
 MACRO=sky130_sram_4kbyte_1rw1r_32x1024_8
-NETLIST_SRC="${REPO_ROOT}/rtl/synth/records/20261027-sky130-hd/npu_top_synth.v"
 
 RECORD_ID=""
 if [ "${1:-}" = "--record" ]; then
@@ -35,6 +35,13 @@ fi
 for tool in uvx openroad jq gzip sha256sum; do
   command -v "${tool}" >/dev/null || { echo "error: ${tool} not on PATH" >&2; exit 2; }
 done
+
+# Which netlist: rtl/synth/current-netlist.sh resolves the current synthesis
+# record from rtl/synth/synth-request.json, so a new record moves this runner
+# (and the gate-level consumers) at once instead of leaving a stale record id
+# behind here. Needs jq, hence after the tool check.
+NETLIST_SRC="$("${REPO_ROOT}/rtl/synth/current-netlist.sh")" || exit 2
+NETLIST_REL="$("${REPO_ROOT}/rtl/synth/current-netlist.sh" --relative)" || exit 2
 
 # The pinned klt, via uvx (the host klt is not the pin and must not be changed).
 # The single klt pin is flow/toolchain.json (layout needs klt >= 0.9.0 for
@@ -76,6 +83,9 @@ PDK_ROOT_RESOLVED="$(klt pdk find --pdk "${PDK_VARIANT}" --format json | jq -r '
   echo "openroad $(openroad -version)"
   echo "klt ${KLT_VERSION}"
   echo "open_pdks ${PDK_WANT}"
+  # Which synthesis record this run routed: a routed result is only as good as
+  # the netlist behind it, so the record says which one that was.
+  echo "netlist ${NETLIST_REL} sha256:$(sha256sum "${NETLIST_SRC}" | cut -d' ' -f1)"
 } > tool-versions.txt
 [ -f "${GDS}" ] && echo "routed gds sha256:$(sha256sum "${GDS}" | cut -d' ' -f1)" | tee -a tool-versions.txt
 
