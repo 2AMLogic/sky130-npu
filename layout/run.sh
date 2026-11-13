@@ -12,7 +12,8 @@
 # (PDK_ROOT). The pin checks and the record preamble are shared with the other
 # flow runners in flow/runner-lib.sh. Inputs are staged into scratch as
 # inputs/ so the committed par-request.json runs byte-for-byte unchanged:
-#   inputs/npu_top_synth.v  <- rtl/synth/records/20261027-sky130-hd/
+#   inputs/npu_top_synth.v  <- the current synthesis record, resolved by
+#                              rtl/synth/current-netlist.sh (never a record id here)
 #   inputs/macro.lef        <- rtl/pdk/sky130/macro/.../*.lef (abstract, used for placement/routing)
 #   inputs/macro.gds        <- the same directory's .gds.gz, gunzipped (merged into the stream)
 # Single unit: one P&R run, local. No corner grid.
@@ -26,10 +27,18 @@ REPO_ROOT="$(cd "${HERE}/.." && pwd)"
 OUT="${HERE}/build"
 MACRO_DIR="${REPO_ROOT}/rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8"
 MACRO=sky130_sram_4kbyte_1rw1r_32x1024_8
-NETLIST_SRC="${REPO_ROOT}/rtl/synth/records/20261027-sky130-hd/npu_top_synth.v"
 
 runner_parse_record "${HERE}/records" "$@"
 runner_require_tools openroad gzip sha256sum
+
+# Which netlist: rtl/synth/current-netlist.sh resolves the current synthesis
+# record from rtl/synth/synth-request.json, so a new record moves this runner
+# (and the gate-level consumers) at once instead of leaving a stale record id
+# behind here. jq is checked by runner_require_tools above, so the ordering
+# this resolve relies on still holds.
+NETLIST_SRC="$("${REPO_ROOT}/rtl/synth/current-netlist.sh")" || exit 2
+NETLIST_REL="$("${REPO_ROOT}/rtl/synth/current-netlist.sh" --relative)" || exit 2
+
 # The single klt pin is flow/toolchain.json (layout needs klt >= 0.9.0 for
 # macros[].halo and request.placement_density).
 runner_check_pins
@@ -54,6 +63,9 @@ VLOG="$(jq -r '.verilog_path // empty' par.json 2>/dev/null)"
   echo "openroad $(openroad -version)"
   echo "klt ${KLT_VERSION}"
   echo "open_pdks ${PDK_WANT}"
+  # Which synthesis record this run routed: a routed result is only as good as
+  # the netlist behind it, so the record says which one that was.
+  echo "netlist ${NETLIST_REL} sha256:$(sha256sum "${NETLIST_SRC}" | cut -d' ' -f1)"
 } > tool-versions.txt
 [ -f "${GDS}" ] && echo "routed gds sha256:$(sha256sum "${GDS}" | cut -d' ' -f1)" | tee -a tool-versions.txt
 

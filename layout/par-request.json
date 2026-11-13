@@ -11,10 +11,10 @@
     "site": "unithd"
   },
   "macros": [
-    { "instance": "u_banks/g_bank\\[0\\].u_bank/u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 11,   "y_um": 12,   "orientation": "R0" },
-    { "instance": "u_banks/g_bank\\[1\\].u_bank/u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 11,   "y_um": 705,  "orientation": "R0" },
-    { "instance": "u_banks/g_bank\\[2\\].u_bank/u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 760,  "y_um": 712,  "orientation": "R0" },
-    { "instance": "u_banks/g_bank\\[3\\].u_bank/u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 1560, "y_um": 712,  "orientation": "R0" }
+    { "instance": "u_banks/g_bank\\[0\\].u_bank/genblk1.g_macro.u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 11,   "y_um": 12,   "orientation": "R0" },
+    { "instance": "u_banks/g_bank\\[1\\].u_bank/genblk1.g_macro.u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 11,   "y_um": 705,  "orientation": "R0" },
+    { "instance": "u_banks/g_bank\\[2\\].u_bank/genblk1.g_macro.u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 760,  "y_um": 712,  "orientation": "R0" },
+    { "instance": "u_banks/g_bank\\[3\\].u_bank/genblk1.g_macro.u_macro", "lef": "inputs/macro.lef", "gds": "inputs/macro.gds", "x_um": 1560, "y_um": 712,  "orientation": "R0" }
   ],
   "io": { "layer_h": "met3", "layer_v": "met2" },
   "power": { "preset": "sky130hd" },

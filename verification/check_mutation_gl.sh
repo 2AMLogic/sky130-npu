@@ -4,6 +4,10 @@
 #
 #   ./verification/check_mutation_gl.sh [NETLIST]
 #
+# NETLIST defaults to the current synthesis record, resolved by
+# rtl/synth/current-netlist.sh from rtl/synth/synth-request.json -- no record
+# id is spelled out here, so a new synthesis record moves this control with it.
+#
 # Copies the recorded synthesized netlist to a temp dir, inverts the output of
 # the requantizer's out_word[0] flop there, runs the mm-smoke bit-exact test
 # against the copy (pre-layout, functional cells, pinned OpenRAM macro Verilog; see
@@ -20,7 +24,11 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(dirname "${HERE}")"
-NETLIST="${1:-${REPO}/rtl/synth/records/20261027-sky130-hd/npu_top_synth.v}"
+if [ "$#" -ge 1 ]; then
+  NETLIST="$1"
+else
+  NETLIST="$("${REPO}/rtl/synth/current-netlist.sh")" || exit 2
+fi
 LIB="${PDK_VERILOG_DIR:-${HOME}/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog}"
 PY="${PYTHON:-python3}"
 MACRO_V="${REPO}/rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v"
