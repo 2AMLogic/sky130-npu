@@ -5,6 +5,10 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-13
 
+- **PR #140**: chore: point the record-log negation at records/ and drop the dead sim rules
+- **Issue #136** (closed): Remove dead sim/ and flow/*/reports rules from .gitignore: the record-log negation matches no path, so record logs are silently untracked
+- **PR #139**: test(gl): record a 14/14 gate-level run on the 20261111 netlist
+- **Issue #134** (closed): Gate-level record on the 20261111 netlist predates the bus-error, SOFT_RESET and irq tests
 - **PR #137**: docs(manifests): make the re-attestation -o examples placeholders
 - **Issue #135** (closed): docs(signoff): item-9 re-attestation example in manifests/README.md names a superseded envelope
 - **PR #130**: refactor(flow): source one shared runner preamble instead of two copies
