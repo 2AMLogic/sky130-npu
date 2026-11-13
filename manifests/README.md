@@ -5,7 +5,7 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
   `kind: digital`. Item 6 is discharged by a recorded `not_applicable`
-  statement (below). Items 1, 9 and 10 cite `attestations/item-1-klt091.json`, `item-9.json` and
+  statement (below). Items 1, 9 and 10 cite `attestations/item-1-klt091.json`, `item-9-klt091.json` and
   `item-10.json`; every other item is still uncited and grades
   `unmet`, so `tier` is `null`.
 - **`spec-rows.json`**: the ratified target spec for item 6, one `id` per row
@@ -28,9 +28,16 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   "Cold start" (runner at `ARRAY_N=8`, then the mutation check) with records
   and build output in a temp dir, and the pins (open_pdks `f6eeac7`, Icarus
   13.0, cocotb 2.0.1). Any later item that adds a bench (items 3 to 7 flow
-  benches) must add it to `inventories/item-9.json` and re-attest with
-  `klt signoff --attest 9 --inventory manifests/inventories/item-9.json -o manifests/attestations/item-9.json`,
-  then update the cited `content_hash` and re-render the report.
+  benches) must add it to `inventories/item-9.json`, and **any edit to a file
+  the inventory already lists** (a testbench, the runner, the verification
+  workflow) makes the committed attestation stale too — in both cases re-attest
+  with
+  `klt signoff --attest 9 --inventory manifests/inventories/item-9.json -o manifests/attestations/item-9-klt091.json`
+  (earlier attestations stay as evidence; write a new file), then point the
+  manifest's item-9 citation at it, update the cited `content_hash` if the
+  inventory itself changed, and re-render the report. CI does not re-attest
+  item 9 (the `cold_start` needs Icarus and a real run), so a stale member
+  surfaces as a changed item-9 row in the report diff instead.
 - **Item 1** (design sources) is attested from `inventories/item-1.json`: the
   RTL, the synthesis request and the `klt synthesize` netlist in
   `rtl/synth/records/20261111-sky130-hd/` (SRAM macro as a black box generated from its LEF; see
