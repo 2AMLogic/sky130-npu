@@ -10,6 +10,19 @@ refers to the old one.
 `test_module`, `cocotb`, `simulator` (the `iverilog -V` version string),
 `passed`, `tests`, `failures`.
 
+`tests` counts the cases that **executed**. A `--testcase` / `TESTCASE` filter
+leaves the unselected tests in cocotb's results XML as `<testcase>` elements
+with a `<skipped>` child; those are excluded, so a filtered run records what it
+ran and not the size of the suite. `failures` likewise counts only executed
+cases, and `passed` is `tests > 0 and failures == 0`, so a filter matching
+nothing records `tests: 0`, `passed: false` rather than a vacuous pass.
+
+Records written before that fix (issue #128) count skipped cases as run. One
+such record is in this ledger: `20261111T075128Z-4613a4c7` reports `tests: 11`
+with `testcase: "test_workload_mm_smoke"` — 11 was the suite size, and that run
+executed 1 test. The ledger is append-only, so that record is left as written;
+this note is the correction.
+
 Added with the bit-exact suite (earlier records simply lack them): `seed`
 (random-test seed), `testcase` (the single test function run, or `null`),
 `rtl_commit` (`git rev-parse HEAD` at run time), `sources_last_commit` (last
