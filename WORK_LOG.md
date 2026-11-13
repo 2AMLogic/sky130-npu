@@ -3,6 +3,12 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-12
+
+- **PR #118**: Bump Repo Skills 0.25.10 -> 0.26.1
+- **PR #116**: refactor(rtl): remove hand-synced SRAM blackbox, use synthesize defines
+- **Issue #101** (closed): Remove npu_sram_bank_bb.v: hand-synced copy of the macro wrapper, blocked on klt pin bump
+
 ### 2026-11-11
 
 - **PR #114**: build: bump klt pin to 0.9.1 and unify on flow/toolchain.json
