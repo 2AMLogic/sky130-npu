@@ -5,11 +5,10 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
   `kind: digital`. Item 6 is discharged by a recorded `not_applicable`
-  statement (below). Items 1, 9 and 10 cite `attestations/item-1-klt091.json`,
-  `item-9-klt091-20261113T125301Z.json` and
-  `item-10-klt091-20261113T132647Z.json`; every
-  other item is still uncited and grades
-  `unmet`, so `tier` is `null`.
+  statement (below). Items 1, 9 and 10 are cited; the manifest's own
+  `evidence` block names the envelope each one binds to, and is the only place
+  that list is kept (a copy here goes stale on every re-attestation). Every
+  other item is still uncited and grades `unmet`, so `tier` is `null`.
 - **`spec-rows.json`**: the ratified target spec for item 6, one `id` per row
   of `spec/npu.md` section 1 (a slug of the Parameter column, since the table
   has no id column).
@@ -21,8 +20,11 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   LICENSE, both workflows, plus the golden-model tests) and the envelope
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
-  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113T132647Z.json` (earlier attestations stay as evidence; write a new file),
-  then point the manifest's item-10 citation **and the `--check` path in
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt<pin>-<UTC timestamp>.json`
+  — the `-o` path above is an illustrative placeholder, not a path to write:
+  choose a new, not-yet-used filename by the rule in **Attestation filenames**
+  below, never one that already exists (earlier attestations stay as evidence).
+  Then point the manifest's item-10 citation **and the `--check` path in
   `.github/workflows/signoff.yml`** at that new file, and re-render
   the report. The cited `content_hash` is the inventory's sha256 (below), so
   it changes only when the inventory itself does, not when an inventoried file
@@ -37,17 +39,23 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   the inventory already lists** (a testbench, the runner, the verification
   workflow) makes the committed attestation stale too — in both cases re-attest
   with
-  `klt signoff --attest 9 --inventory manifests/inventories/item-9.json -o manifests/attestations/item-9-klt091-20261113.json`
-  (earlier attestations stay as evidence; write a new file), then point the
+  `klt signoff --attest 9 --inventory manifests/inventories/item-9.json -o manifests/attestations/item-9-klt<pin>-<UTC timestamp>.json`
+  — again an illustrative placeholder, chosen by the same rule in
+  **Attestation filenames** below and never an existing file (earlier
+  attestations stay as evidence). Then point the
   manifest's item-9 citation at that new file and re-render the report — the
   cited `content_hash` follows the same inventory-sha256 rule as item 10
   above. CI does not re-attest item 9 (the `cold_start` needs Icarus and a
   real run), so a stale member surfaces only as a changed item-9 row in the
   report diff.
-- **Attestation filenames.** `item-<n>-klt<pin>-<date>.json`, where a second
-  re-attestation on a date already taken extends `<date>` to a full UTC
-  timestamp (`YYYYmmddTHHMMSSZ`) rather than overwriting the file that is
-  already recorded evidence. Nothing parses these names; the manifest's
+- **Attestation filenames.** `item-<n>-klt<pin>-<date>.json`, where `<pin>`
+  is the klt pin from `flow/toolchain.json` with the dots dropped (`0.9.1` ->
+  `klt091`), and a second re-attestation on a date already taken extends
+  `<date>` to a full UTC timestamp (`YYYYmmddTHHMMSSZ`) rather than
+  overwriting the file that is already recorded evidence. The command examples
+  above spell their `-o` argument `<pin>`/`<UTC timestamp>` for this reason:
+  substitute a filename no file in `attestations/` already has. Nothing parses
+  these names; the manifest's
   `evidence` block and, for item 10, the `--check` path in
   `.github/workflows/signoff.yml` are what bind a report to an envelope, so
   both move together with the citation.
