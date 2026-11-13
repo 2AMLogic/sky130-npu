@@ -6,7 +6,8 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
   `kind: digital`. Item 6 is discharged by a recorded `not_applicable`
   statement (below). Items 1, 9 and 10 cite `attestations/item-1-klt091.json`,
-  `item-9-klt091-20261113.json` and `item-10-klt091-20261113-2.json`; every
+  `item-9-klt091-20261113T125301Z.json` and
+  `item-10-klt091-20261113T132647Z.json`; every
   other item is still uncited and grades
   `unmet`, so `tier` is `null`.
 - **`spec-rows.json`**: the ratified target spec for item 6, one `id` per row
@@ -20,8 +21,9 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   LICENSE, both workflows, plus the golden-model tests) and the envelope
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
-  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113-2.json` (earlier attestations stay as evidence; write a new file),
-  then point the manifest's item-10 citation at that new file and re-render
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113T132647Z.json` (earlier attestations stay as evidence; write a new file),
+  then point the manifest's item-10 citation **and the `--check` path in
+  `.github/workflows/signoff.yml`** at that new file, and re-render
   the report. The cited `content_hash` is the inventory's sha256 (below), so
   it changes only when the inventory itself does, not when an inventoried file
   is edited. CI runs the same command with `--check`.
@@ -42,6 +44,13 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   above. CI does not re-attest item 9 (the `cold_start` needs Icarus and a
   real run), so a stale member surfaces only as a changed item-9 row in the
   report diff.
+- **Attestation filenames.** `item-<n>-klt<pin>-<date>.json`, where a second
+  re-attestation on a date already taken extends `<date>` to a full UTC
+  timestamp (`YYYYmmddTHHMMSSZ`) rather than overwriting the file that is
+  already recorded evidence. Nothing parses these names; the manifest's
+  `evidence` block and, for item 10, the `--check` path in
+  `.github/workflows/signoff.yml` are what bind a report to an envelope, so
+  both move together with the citation.
 - **Item 1** (design sources) is attested from `inventories/item-1.json`: the
   RTL, the synthesis request and the `klt synthesize` netlist in
   `rtl/synth/records/20261111-sky130-hd/` (SRAM macro as a black box generated from its LEF; see
