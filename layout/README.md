@@ -30,4 +30,9 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   at the logic. Also
   gives the die/SRAM fraction (macros 1.9 mm^2, 48 % of the 3.95 mm^2 die).
 
+- `records/20261111-sandwich/`: the one settled attempt (decision block of #43):
+  logic band between a bottom macro row (MX) and a top row (R0), die 1520 x 1950
+  um (macros 64 % of the die). **Not routed**: `GRT-0116`, 33110 congestion cells
+  (met2 23282, met1 6871, met4 1780). No routed GDS; item 2 stays unmet.
+
 Liberty for the macros is TT-only analytical (`reuse.lock.json`).
