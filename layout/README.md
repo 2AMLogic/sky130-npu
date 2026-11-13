@@ -9,12 +9,14 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   the four paths here end in `genblk1.g_macro.u_macro`, the macro instance name in
   the current (20261111) netlist. A mismatch is loud, not silent — OpenROAD stops
   the floorplan stage with `[ERROR MPL-0020] Couldn't find a macro named ...`.
-- `run.sh`: cold-start runner (pinned klt via `uvx`, PDK pin check, inputs staged
-  into `layout/build/`). The netlist it stages is whichever record
-  `rtl/synth/synth-request.json` points at, resolved by `rtl/synth/current-netlist.sh`
-  — no record id is written down here. `./layout/run.sh --record ID` copies the
-  result to `records/ID/` (append-only; failed runs are recorded too), and that
-  record's `tool-versions.txt` names the netlist it routed and its sha256.
+- `run.sh`: cold-start runner (inputs staged into `layout/build/`). The record
+  id, the pinned klt via `uvx`, both pin checks and the host-path scrub come
+  from `flow/runner-lib.sh`, shared with the other flow runners. The netlist it
+  stages is whichever record `rtl/synth/synth-request.json` points at, resolved
+  by `rtl/synth/current-netlist.sh` — no record id is written down here.
+  `./layout/run.sh --record ID` copies the result to `records/ID/` (append-only;
+  failed runs are recorded too), and that record's `tool-versions.txt` names the
+  netlist it routed and its sha256.
 - `records/20261107-route-congestion/`: first attempt. **Not routed**: reaches
   CTS, global routing fails with `GRT-0116`. No routed GDS is committed and
   T1 item 2 is not cited. See that directory's `NOTES.md`.
@@ -22,8 +24,8 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   wider channel). None routes; lowest unverified reading is 3229 global-routing
   congestion cells (counts not re-derived, logs not committed) (`20261111-wider-channel`, which `par-request.json` now holds).
   Halo and placement density cannot be set through the klt 0.8.0 request.
-- klt pin: `layout/run.sh` reads `flow/toolchain.json` (the single pin, 0.9.1;
-  halo and `placement_density` exist from 0.9.0).
+- klt pin: `flow/runner-lib.sh` reads `flow/toolchain.json` (the single pin,
+  0.9.1; halo and `placement_density` exist from 0.9.0).
 - `records/20261111-klt091-*`: the same floorplan under klt 0.9.1, with
   **sourced** counts (OpenROAD logs and route metrics committed). Baseline 3229
   congestion cells; `placement_density` 0.45 gives 4383 and 0.75 gives 6096

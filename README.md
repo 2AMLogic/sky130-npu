@@ -116,8 +116,9 @@ A stamped port with a different layout sets `NPU_RTL_DIR` and `NPU_PDK_DIR`
 ```
 
 **Flow smoke** (the whole `klt` digital flow on a throwaway counter at
-`tt_025C_1v80`; needs `klt`, Yosys, OpenROAD and the PDK pinned above; this is
-toolchain evidence, not block evidence; see [flow/README.md](flow/README.md)):
+`tt_025C_1v80`; needs `uvx` (it runs the pinned `klt` itself), Yosys, OpenROAD
+and the PDK pinned above; this is toolchain evidence, not block evidence; see
+[flow/README.md](flow/README.md)):
 
 ```sh
 ./flow/smoke/run.sh

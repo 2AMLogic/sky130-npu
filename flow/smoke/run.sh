@@ -13,6 +13,11 @@
 # when an earlier gate fails, so the record shows all of it; the exit status
 # is non-zero if any gate did not pass.
 #
+# Cold start: needs only the pinned klt (run through uvx, never a host
+# install), yosys, openroad, iverilog, jq and sky130A at the open_pdks commit
+# in flow/pdk.json (PDK_ROOT). The pin checks and the record preamble are
+# shared with the other flow runners in flow/runner-lib.sh.
+#
 # This is toolchain evidence, not block evidence: nothing from it is cited in
 # a block manifest. Single-unit runs only -- no corner grid, no Monte Carlo.
 
@@ -20,35 +25,17 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${HERE}/../.." && pwd)"
+. "${REPO_ROOT}/flow/runner-lib.sh"
+
 OUT="${REPO_ROOT}/flow/build/smoke"
 TOP=counter
 CELL_LIB=sky130_fd_sc_hd
 CORNER=tt_025C_1v80
 CLOCK_PERIOD_NS=20.0
 
-RECORD_ID=""
-if [ "${1:-}" = "--record" ]; then
-  RECORD_ID="${2:?usage: run.sh --record ID}"
-  [[ "${RECORD_ID}" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*$ ]] || { echo "bad record id" >&2; exit 2; }
-  [ ! -e "${HERE}/records/${RECORD_ID}" ] || { echo "record ${RECORD_ID} exists; records are append-only" >&2; exit 2; }
-fi
-
-for tool in klt yosys openroad jq; do
-  command -v "${tool}" >/dev/null || { echo "error: ${tool} not on PATH" >&2; exit 2; }
-done
-
-# Pin check: the klt on PATH must be the release flow/toolchain.json names.
-PIN_VERSION="$(jq -r '.klayout_tools.reported_version' "${REPO_ROOT}/flow/toolchain.json")"
-KLT_VERSION="$(klt --version)"
-[ "${KLT_VERSION}" = "klt ${PIN_VERSION}" ] || {
-  echo "error: klt '${KLT_VERSION}' is not the pinned release (klt ${PIN_VERSION}); see flow/toolchain.json" >&2; exit 2; }
-
-# Pin check: the PDK klt resolves must be the open_pdks commit in flow/pdk.json.
-PDK_WANT="$(jq -r '.open_pdks.commit' "${REPO_ROOT}/flow/pdk.json")"
-PDK_VARIANT="$(jq -r '.variant' "${REPO_ROOT}/flow/pdk.json")"
-PDK_GOT="$(klt pdk find --pdk "${PDK_VARIANT}" --format json | jq -r '.version')"
-[ "${PDK_GOT}" = "open_pdks ${PDK_WANT}" ] || {
-  echo "error: klt resolved '${PDK_GOT}', flow/pdk.json pins open_pdks ${PDK_WANT}; set PDK_ROOT" >&2; exit 2; }
+runner_parse_record "${HERE}/records" "$@"
+runner_require_tools yosys openroad
+runner_check_pins
 
 # klt lvs has no --pdk flag; $PDK is the only way to pick the variant when the
 # search roots hold several families (gf180mcuA wins otherwise).
@@ -58,9 +45,6 @@ rm -rf "${OUT}"
 mkdir -p "${OUT}"
 cp "${HERE}/counter.v" "${HERE}/synth-request.json" "${HERE}/erc-spec.json" "${OUT}/"
 cd "${OUT}"
-
-FAIL=0
-fail() { echo "FAIL: $*" >&2; FAIL=1; }
 
 echo "== klt synthesize =="
 klt synthesize synth-request.json --pdk "${PDK_VARIANT}" --format json > synth.json 2> synth.err
@@ -134,7 +118,6 @@ JSON
   jq -e '.provenance.deck.name' sta.json >/dev/null 2>&1 || fail "sta"
 fi
 
-PDK_ROOT_RESOLVED="$(klt pdk find --pdk "${PDK_VARIANT}" --format json | jq -r '.root')"
 LIB="${PDK_ROOT_RESOLVED}/${PDK_VARIANT}/libs.ref/${CELL_LIB}/lib/${CELL_LIB}__${CORNER}.lib"
 LIB_SHA="$(sha256sum "${LIB}" | cut -d' ' -f1)"
 [ "sha256:${LIB_SHA}" = "$(jq -r '.provenance.deck.content_hash' sta.json 2>/dev/null)" ] || fail "sta liberty hash does not match ${CELL_LIB}__${CORNER}.lib"
@@ -157,13 +140,12 @@ jq -r '"sta:    \(.provenance.deck.name) geometry=\(.geometry_source)"' sta.json
 if [ -n "${RECORD_ID}" ]; then
   DEST="${HERE}/records/${RECORD_ID}"
   mkdir -p "${DEST}"
-  # Envelopes are copied verbatim except that this checkout's root and the PDK
-  # root are replaced by <repo> / <pdk-root> (klt writes some output paths
-  # absolute), so the record carries no host path (`klt env-provenance
-  # lint-envelope` is run over the result below).
+  # Envelopes are copied verbatim except for scrub()'s host-path replacement,
+  # so the record carries no host path (`klt env-provenance lint-envelope` is
+  # run over the result below).
   for f in synth.json par.json drc.json lvs.json erc.json sta.json extract.json \
            par-request.json lvs-request.json sta-request.json tool-versions.txt; do
-    sed -e "s#${REPO_ROOT}#<repo>#g" -e "s#${PDK_ROOT_RESOLVED}#<pdk-root>#g" "$f" > "${DEST}/$f"
+    scrub "$f" > "${DEST}/$f"
   done
   klt env-provenance lint-envelope "${DEST}"/*.json || FAIL=1
   echo "recorded -> flow/smoke/records/${RECORD_ID}/"

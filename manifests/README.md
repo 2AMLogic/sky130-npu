@@ -6,7 +6,8 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
 - **`sky130-npu.json`**: the block manifest. `block: sky130-npu`,
   `kind: digital`. Item 6 is discharged by a recorded `not_applicable`
   statement (below). Items 1, 9 and 10 cite `attestations/item-1-klt091.json`,
-  `item-9-klt091-20261113.json` and `item-10-klt091-20261113.json`; every
+  `item-9-klt091-20261113T125301Z.json` and
+  `item-10-klt091-20261113T132647Z.json`; every
   other item is still uncited and grades
   `unmet`, so `tier` is `null`.
 - **`spec-rows.json`**: the ratified target spec for item 6, one `id` per row
@@ -20,7 +21,7 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   LICENSE, both workflows, plus the golden-model tests) and the envelope
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
-  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113.json` (earlier attestations stay as evidence; write a new file),
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113T132647Z.json` (earlier attestations stay as evidence; write a new file),
   then point the manifest's item-10 citation **and the `--check` path in
   `.github/workflows/signoff.yml`** at that new file, and re-render
   the report. The cited `content_hash` is the inventory's sha256 (below), so
