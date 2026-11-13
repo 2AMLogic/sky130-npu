@@ -3,6 +3,24 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-13
+
+- **PR #137**: docs(manifests): make the re-attestation -o examples placeholders
+- **Issue #135** (closed): docs(signoff): item-9 re-attestation example in manifests/README.md names a superseded envelope
+- **PR #130**: refactor(flow): source one shared runner preamble instead of two copies
+- **Issue #127** (closed): Deduplicate the pin-check and record preamble copied between flow/smoke/run.sh and layout/run.sh (the copies have drifted)
+- **PR #131**: fix(verification): exclude skipped cases from the recorded test count
+- **Issue #128** (closed): runner.py records tests=14 for a --testcase-filtered run that ran 3
+- **PR #129**: test(verification): cover bus-error, SOFT_RESET and irq; drop dead bench items
+- **Issue #124** (closed): Use or remove the uncalled Wishbone-ERR, SOFT_RESET and IRQ_EN helpers in npu_bench.py
+- **PR #133**: layout,verify: resolve the netlist from synth-request.json and record the gate-level run on it
+- **Issue #121** (closed): Stop consuming the superseded 20261027 netlist: layout and gate-level runs bypass the attested 20261111 record
+- **Issue #132** (closed): manifests/attestations/item-1.json is stale: it attests the superseded 20261027 netlist, not the 20261111 one its own inventory names
+- **PR #126**: ci(signoff): read the klt pin from flow/toolchain.json
+- **Issue #125** (closed): Remove the second klt pin: signoff.yml carries a hand-synced KLT_VERSION copy of flow/toolchain.json
+- **PR #123**: chore(rtl): delete print-only tb_macro_wrapper.v, keep its recorded result
+- **Issue #117** (closed): Remove tb_macro_wrapper.v: print-only 512-word testbench superseded by gate-level run
+
 ### 2026-11-12
 
 - **PR #118**: Bump Repo Skills 0.25.10 -> 0.26.1

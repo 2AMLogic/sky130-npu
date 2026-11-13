@@ -38,7 +38,7 @@ _None._
 
 PRs waiting on Judge (`loom:review-requested`).
 
-- **#111**: layout: record sandwich floorplan attempt (not routed, GRT-0116)
+_None._
 
 ## Approved (Awaiting Merge)
 
@@ -56,7 +56,7 @@ Issues carrying `loom:curated`.
 
 ## Proposed (Architect / Hermit)
 
-- **#117**: Remove tb_macro_wrapper.v: print-only 512-word testbench superseded by gate-level run *(hermit)*
+- **#136**: Remove dead sim/ and flow/*/reports rules from .gitignore: the record-log negation matches no path, so record logs are silently untracked *(hermit)*
 
 ## Epics
 
@@ -71,7 +71,7 @@ _None._
 | Important | 1 |
 | Ready (`loom:issue`) | 0 |
 | In Progress (`loom:building`) | 0 |
-| PRs awaiting review | 1 |
+| PRs awaiting review | 0 |
 | Approved PRs awaiting merge | 0 |
 | Curated | 3 |
 | Architect / Hermit proposals | 1 |
