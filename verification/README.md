@@ -66,18 +66,22 @@ Both sizes run every workload; wall time on one core is about 30 s (N=8) and
 
 ## Gate-level run (pre-layout, functional, macro Verilog model)
 
-Runs the same `test_bitexact` suite, unchanged, on the recorded synthesized
-netlist `rtl/synth/records/20261027-sky130-hd/npu_top_synth.v` (decision 0005
-hold registers included) at `ARRAY_N = 8`:
+Runs the same `test_bitexact` suite, unchanged, on the **current** recorded
+synthesized netlist (decision 0005 hold registers included) at `ARRAY_N = 8`.
+Which record that is comes from `rtl/synth/current-netlist.sh`, which reads
+`.outputs.dir` out of `rtl/synth/synth-request.json` — so no record id is
+written down here, and a new synthesis record moves this command, `layout/run.sh`
+and `check_mutation_gl.sh` together:
 
 ```sh
 PDKV=~/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog    # pinned in flow/pdk.json
 MACRO=rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v
+NETLIST=$(rtl/synth/current-netlist.sh)   # rtl/synth/records/<current>/npu_top_synth.v
 # VERBOSE=0: the model prints a line per access, which floods the ~75 min log;
 # Icarus -P cannot reach a nested module's parameter, so silence a copy
 sed 's/parameter VERBOSE = 1 ;/parameter VERBOSE = 0 ;/' $MACRO > /tmp/macro_quiet.v
 .venv/bin/python verification/runner.py --toplevel npu_top \
-    --sources rtl/synth/records/20261027-sky130-hd/npu_top_synth.v \
+    --sources "$NETLIST" \
               $PDKV/primitives.v $PDKV/sky130_fd_sc_hd.v \
               /tmp/macro_quiet.v \
     --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8
@@ -104,6 +108,14 @@ What this is, and is not:
 - The record carries `defines`, `baked_parameters` and `source_sha256` (netlist,
   both PDK model files, the macro model copy).
 - Wall time on one core is about 75 minutes for the whole suite (about 630 simulated ns per second), plus a few minutes of simulator teardown before the record is written.
+
+Latest run: `records/20261113T121658Z-cc76fbc8/` — 11/11 pass on
+`rtl/synth/records/20261111-sky130-hd/npu_top_synth.v` (sha256 `0eef5aff…`, in
+the record's `source_sha256`), the record `synth-request.json` points at and
+`manifests/inventories/item-1.json` cites. `check_mutation_gl.sh` passed on the
+same netlist in the same session. Earlier gate-level records
+(`20261106T200613Z-ea80e04d`, `20261111T075128Z-4613a4c7`) hash the superseded
+20261027 netlist and are evidence for that one, not for this one.
 
 ## PDK-independent files (stamped into `asap7-npu`)
 

@@ -6,8 +6,9 @@ Synthesis of the NPU at the target size (`ARRAY_N = 8`, the default).
 |---|---|
 | `synth-request.json` | `klt synthesize` request for the target size (`ARRAY_N = 8`, set in `parameters`), mapped to `sky130_fd_sc_hd` at `tt_025C_1v80`. It sets `defines.NPU_SRAM_MACRO` so `npu_sram_bank.v` selects its macro wrapper, and declares the 1024 x 32 macro in `macros` (LEF only, no `lib`), so klt generates the `(* blackbox *)` declaration from the LEF pin list. Needs klt 0.9.1 or newer (`request.defines`). Run with `--pdk sky130A`. |
 | `synth.sh` | Generic Yosys `synth` (no cell library): `./synth.sh 8 core` or `full` |
+| `current-netlist.sh` | prints the path of `npu_top_synth.v` in the record `synth-request.json` writes to (`.outputs.dir`). The single owner of "which recorded netlist is current": `layout/run.sh`, `verification/check_mutation_gl.sh` and the gate-level command in `verification/README.md` all ask it instead of naming a record id, so a new record moves every consumer at once. `--relative` prints the repo-relative path |
 | `records/20261020-yosys-generic/` | `stat` output of three runs, append-only |
-| `records/20261027-sky130-hd/` | first `klt synthesize` run (klt 0.8.1.dev55), from the former hand-written blackbox file `npu_sram_bank_bb.v` (since removed). Append-only, superseded by the next row |
+| `records/20261027-sky130-hd/` | first `klt synthesize` run (klt 0.8.1.dev55), from the former hand-written blackbox file `npu_sram_bank_bb.v` (since removed). Append-only, superseded by the next row. No runner or request reads it any more (#121); it is cited only by records and by `manifests/attestations/item-1.json`, the superseded item-1 attestation, itself kept as append-only evidence (the manifest cites `manifests/attestations/item-1-klt091.json`, which attests the next row) |
 | `records/20261111-sky130-hd/` | the `klt synthesize` run of the current `synth-request.json`: gate-level netlist `npu_top_synth.v`, envelope `synth-report.json`, generated macro blackbox, scripts and logs, `tool-versions.txt`. Append-only |
 
 ## Recorded sky130 netlist (`records/20261111-sky130-hd/`)
@@ -37,6 +38,13 @@ The 20261111 run reproduces the 20261027 run's `instance_count` (70 823), `area_
 `sequential_area_um2`, per-cell-type counts and `blackbox_modules` exactly; only the
 blackbox's origin differs (generated from the LEF, with `vccd1`/`vssd1` power pins, instead
 of a hand-written declaration). The envelope also gains `defines` and `macros`.
+
+The two netlists are **not** interchangeable downstream, though: the macro
+instance inside `npu_sram_bank` is named `u_macro` in the 20261027 netlist and
+`\genblk1.g_macro.u_macro` in this one, so the hierarchical paths in
+`layout/par-request.json` (`macros[].instance`) differ. Pointing P&R at the
+wrong one is not silent — OpenROAD stops with `[ERROR MPL-0020] Couldn't find a
+macro named ...`.
 
 ## Recorded estimate (`records/20261020-yosys-generic/`)
 
