@@ -19,9 +19,11 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   LICENSE, both workflows, plus the golden-model tests) and the envelope
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
-  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091.json` (earlier attestations stay as evidence; write a new file),
-  then update the cited `content_hash` in the manifest and re-render the
-  report. CI runs the same command with `--check`.
+  `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113.json` (earlier attestations stay as evidence; write a new file),
+  then point the manifest's item-10 citation at that new file and re-render
+  the report. The cited `content_hash` is the inventory's sha256 (below), so
+  it changes only when the inventory itself does, not when an inventoried file
+  is edited. CI runs the same command with `--check`.
   The item-9 inventory lists the testbenches (bit-exact, golden-model,
   mutation check, runner, verification workflow), a
   `cold_start` that builds a fresh venv and runs `verification/README.md`
@@ -64,12 +66,12 @@ that does not match the spec rows is rejected by the grader.
 
 ## Regenerate
 
-Use the klt release pinned in `KLT_VERSION` in `.github/workflows/signoff.yml`
-(kept equal to `flow/toolchain.json`), in a throwaway environment rather than
-a host-wide install:
+Use the klt release pinned in `flow/toolchain.json` (the repo's single klt
+pin, which `.github/workflows/signoff.yml` reads too), in a throwaway
+environment rather than a host-wide install:
 
 ```
-uvx --from "klayout-tools==<KLT_VERSION>" \
+uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" \
   klt signoff --manifest manifests/sky130-npu.json --format json \
   > manifests/sky130-npu.signoff.json
 ```
@@ -83,6 +85,7 @@ report.
 
 ## Bumping the klt pin
 
-A change to `KLT_VERSION` lands together with a regenerated
+The pin lives only in `flow/toolchain.json`; nothing here carries a second
+copy. A change to it lands together with a regenerated
 `sky130-npu.signoff.json` in the same PR, because the pinned klt's bundled
 checklist text is part of the report.
