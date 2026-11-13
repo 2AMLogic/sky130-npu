@@ -21,7 +21,8 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   `klt signoff --attest 10` produced from it. Regenerate after any edit to an
   inventoried file, with the pinned klt as below:
   `klt signoff --attest 10 --inventory manifests/inventories/item-10.json -o manifests/attestations/item-10-klt091-20261113.json` (earlier attestations stay as evidence; write a new file),
-  then point the manifest's item-10 citation at that new file and re-render
+  then point the manifest's item-10 citation **and the `--check` path in
+  `.github/workflows/signoff.yml`** at that new file, and re-render
   the report. The cited `content_hash` is the inventory's sha256 (below), so
   it changes only when the inventory itself does, not when an inventoried file
   is edited. CI runs the same command with `--check`.
@@ -42,6 +43,13 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   above. CI does not re-attest item 9 (the `cold_start` needs Icarus and a
   real run), so a stale member surfaces only as a changed item-9 row in the
   report diff.
+- **Attestation filenames.** `item-<n>-klt<pin>-<date>.json`, where a second
+  re-attestation on a date already taken extends `<date>` to a full UTC
+  timestamp (`YYYYmmddTHHMMSSZ`) rather than overwriting the file that is
+  already recorded evidence. Nothing parses these names; the manifest's
+  `evidence` block and, for item 10, the `--check` path in
+  `.github/workflows/signoff.yml` are what bind a report to an envelope, so
+  both move together with the citation.
 - **Item 1** (design sources) is attested from `inventories/item-1.json`: the
   RTL, the synthesis request and the `klt synthesize` netlist in
   `rtl/synth/records/20261111-sky130-hd/` (SRAM macro as a black box generated from its LEF; see

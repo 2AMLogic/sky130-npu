@@ -72,5 +72,5 @@ jobs:
         run: |
           klt signoff --attest 10 \
             --inventory manifests/inventories/item-10.json \
-            --check manifests/attestations/item-10-klt091-20261113.json \
+            --check manifests/attestations/item-10-klt091-20261113T125301Z.json \
             --format json
