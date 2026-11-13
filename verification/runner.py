@@ -133,8 +133,16 @@ def icarus_version():
 
 
 def count_results(xml_path):
+    """Executed cases and failures among them.
+
+    A ``--testcase`` filter leaves the unselected tests in the XML as
+    ``<testcase>`` elements with a ``<skipped>`` child; they never ran, so
+    they are not counted (see verification/records/README.md).
+    """
     tests = failures = 0
     for case in ET.parse(xml_path).getroot().iter("testcase"):
+        if case.find("skipped") is not None:
+            continue
         tests += 1
         if case.find("failure") is not None or case.find("error") is not None:
             failures += 1
