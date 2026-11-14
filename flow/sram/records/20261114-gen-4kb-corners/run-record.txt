@@ -1,0 +1,18 @@
+date_utc: 2026-11-14T06:18:58Z
+openram_commit: 2f7b3866418ac1ce17ad959207a1489033d8c577
+openram_version: 1.2.50
+sram_cells_commit: fc63b12883b4bf458ee8c756ba64c37063e1ffb9
+python: Python 3.12.3
+config: flow/sram/gen_4kb_1rw1r_32x1024_corners.py
+output_name: sky130_sram_4kbyte_1rw1r_32x1024_8
+exit_code: 0
+wall_seconds: 1727
+bitcell_creation_passed: yes
+characterize_corners: [('TT', 1.8, 25), ('SS', 1.6, 100), ('FF', 1.95, -40)]
+outputs_sha256:
+  afe27398b9ad57a2372e2034eba25fdf4c8d121e7aff8b138adb535e4669987c  sky130_sram_4kbyte_1rw1r_32x1024_8.lef
+  741b7377820a0aa7d66a05dc17e557d5dd5fa9911ccb8e399ea10d1187c12fe1  sky130_sram_4kbyte_1rw1r_32x1024_8.gds
+  214e22b8ff07268f00fce58a628033e776a27fad2e332be68bb95252c6218c17  sky130_sram_4kbyte_1rw1r_32x1024_8.v
+  ea2e8df2bf739d7d5667ba53b1f919d4e68aedb62318cc82214f3addd0cc4c96  sky130_sram_4kbyte_1rw1r_32x1024_8_FF_1p95V_-40C.lib
+  bf00e158cf3e07cddd41b7af69f613dd84ac23fb32d29b627ce43e429c173d86  sky130_sram_4kbyte_1rw1r_32x1024_8_SS_1p6V_100C.lib
+  6331177b66740e12cf677351ee8d767c0027f9ffc6ad73fb306907b7b4819364  sky130_sram_4kbyte_1rw1r_32x1024_8_TT_1p8V_25C.lib
