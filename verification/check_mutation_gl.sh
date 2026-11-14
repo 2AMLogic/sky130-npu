@@ -64,7 +64,7 @@ TESTCASE=test_workload_mm_smoke "${PY}" "${HERE}/runner.py" \
   --toplevel npu_top \
   --sources "${TMP}/mutant.v" "${LIB}/primitives.v" "${LIB}/sky130_fd_sc_hd.v" \
             "${TMP}/macro.v" \
-  --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8 \
+  --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8 --netlist \
   --records-dir "${TMP}/records" --build-dir "${TMP}/build" >"${TMP}/run.log" 2>&1
 rc=$?
 tail -n 12 "${TMP}/run.log"

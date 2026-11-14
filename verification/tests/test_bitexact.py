@@ -6,7 +6,8 @@ live ``golden.gemm_int8`` call (the live call guards the vectors themselves).
 Utilization is recorded per workload, labelled ``simulated``.
 
 Env: ``ARRAY_N`` (4 or 8, set by the runner), ``NPU_SEED`` (random-test seed,
-printed and recorded), ``NPU_RANDOM_RUNS`` (random GEMM count, default 8).
+printed and recorded), ``NPU_RANDOM_RUNS`` (random GEMM count, default 8),
+``NPU_NETLIST`` (``1`` on a netlist run: the RTL-only seam check below skips).
 """
 
 import os
@@ -25,6 +26,12 @@ from verification.golden import gemm_int8, requantize  # noqa: E402
 
 SEED = int(os.environ.get("NPU_SEED", random.SystemRandom().getrandbits(32)))
 RANDOM_RUNS = int(os.environ.get("NPU_RANDOM_RUNS", "8"))
+# The gate-level run synthesizes the hierarchy away: there is no ``u_ctrl``
+# instance to read a localparam from. The runner flags those runs with
+# ``NPU_NETLIST=1``, and the seam check below -- which needs exactly that
+# read -- skips itself there (cocotb records the skip in the results XML and
+# the ledger excludes skipped cases, so a gate-level run counts 14, not 15).
+GATE_LEVEL = os.environ.get("NPU_NETLIST") == "1"
 print(f"NPU_SEED={SEED}")
 nb.record_result("seed", SEED)
 
@@ -581,7 +588,8 @@ async def test_irq_level_and_gate(dut):
 # below does (issue #149).
 
 
-@cocotb.test()
+# RTL-only: the netlist has no u_ctrl.REQ_LAT to read (see GATE_LEVEL above).
+@cocotb.test(skip=GATE_LEVEL)
 async def test_requant_latency_matches_req_lat(dut):
     """npu_ctrl's REQ_LAT equals npu_requant's measured in_vld -> out_vld delay.
 
@@ -593,7 +601,9 @@ async def test_requant_latency_matches_req_lat(dut):
     before the final ``out_word`` reaches its bank.
 
     A requantizer that gains or loses a register stage fails the first
-    assertion; a REQ_LAT shortened below the real latency fails the second.
+    assertion, and so does a REQ_LAT shortened below the real latency: either
+    perturbation breaks ``measured == req_lat``. The ``done_set`` check is the
+    second, kept because it is the consequence that makes the match matter.
     """
     bench = await setup(dut)
     n = bench.n

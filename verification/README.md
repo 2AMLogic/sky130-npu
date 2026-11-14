@@ -29,7 +29,8 @@ stamped copy:
 ```
 
 The defaults are `npu_top`, the `rtl/check.sh` source list, `ARRAY_N=8` and
-`test_bitexact`. (`HDL_TOPLEVEL`, `HDL_SOURCES`, `HDL_PARAMS`, `TEST_MODULE`,
+`test_bitexact`. (`HDL_TOPLEVEL`, `HDL_SOURCES`, `HDL_PARAMS`, `HDL_NETLIST`
+(netlist sources), `TEST_MODULE`,
 `TEST_DIR`, `RECORDS_DIR`, `BUILD_DIR`, `TESTCASE` (one test function),
 `NPU_SEED` (random-test seed) are the env equivalents.) Parameters are also
 exported to the test as environment variables.
@@ -41,7 +42,7 @@ exported to the test as environment variables.
 | `runner.py` | cocotb runner, Icarus, parameter-driven; writes the ledger record |
 | `requirements.txt` | pinned cocotb |
 | `tests/npu_bench.py` | Wishbone master, bank load/store, tiling, utilization accounting (touches only `npu_top` ports) |
-| `tests/test_bitexact.py` | the four reference workloads, requantization edge vectors, K extremes, back-to-back, reset mid-run, `ERR_CODE` 1..5, constrained random, bus error on a denied or unmapped access, `CTRL.SOFT_RESET`, the `irq` / `IRQ_EN` gate |
+| `tests/test_bitexact.py` | the four reference workloads, requantization edge vectors, K extremes, back-to-back, reset mid-run, `ERR_CODE` 1..5, constrained random, bus error on a denied or unmapped access, `CTRL.SOFT_RESET`, the `irq` / `IRQ_EN` gate, the `npu_ctrl`/requantizer latency seam (RTL-only, skips at gate level) |
 | `check_mutation.sh` | corrupts one RTL output bit in a temp copy and passes only if the suite fails |
 | `check_mutation_gl.sh` | the same negative control on a copy of the synthesized netlist (gate-level run) |
 | `golden/` | bit-exact integer golden model and workload generator (spec sections 3, 4, 8) |
@@ -87,7 +88,8 @@ sed 's/parameter VERBOSE = 1 ;/parameter VERBOSE = 0 ;/' $MACRO > /tmp/macro_qui
     --sources "$NETLIST" \
               $PDKV/primitives.v $PDKV/sky130_fd_sc_hd.v \
               /tmp/macro_quiet.v \
-    --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8
+    --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8 \
+    --netlist
 ./verification/check_mutation_gl.sh      # negative control: must exit 0
 ```
 
@@ -105,6 +107,12 @@ What this is, and is not:
   period or the macro's access time.
 - `--baked-param` exports `ARRAY_N` to the tests and the record without passing
   `-P` to Icarus: the netlist has no parameters left.
+- `--netlist` exports `NPU_NETLIST=1` to the tests and records `netlist_sources`,
+  because the seam check `test_requant_latency_matches_req_lat` reads
+  `u_ctrl`'s `REQ_LAT` localparam, which the netlist does not carry: it skips
+  itself on this run (a `<skipped>` case in the results XML, which the ledger
+  does not count), so a gate-level run is 14 pass + 1 skip, not 15/15. The RTL
+  run keeps it and its assertions unchanged.
 - Do not add the macro's Verilog (`rtl/pdk/sky130/macro/*/*.v`) to this source list; it declares
   the same macro module as the netlist's black box. The netlist already contains the bank
   wrapper.
@@ -119,10 +127,13 @@ the record's `source_sha256`). `synth-request.json` and
 `records/20261114-sky130-hd/` (#149), whose `npu_top_synth.v` is byte-identical
 (same `0eef5aff…`), so this run is still gate-level evidence for the current
 netlist — it was taken against the old path, and was not re-run.
-Unfiltered (`testcase: null`, `sources_dirty: false`), so the 14 is the whole
-current suite: this is the first gate-level evidence on this netlist for
-`test_bus_error_denied_and_unmapped`, `test_soft_reset_mid_run` and
-`test_irq_level_and_gate`. Wall time about 43
+Unfiltered (`testcase: null`, `sources_dirty: false`), so the 14 was the whole
+suite as it stood when the run was taken: this is the first gate-level evidence
+on this netlist for `test_bus_error_denied_and_unmapped`,
+`test_soft_reset_mid_run` and `test_irq_level_and_gate`. #149's seam check
+post-dates it and skips at gate level (a post-#149 gate-level run is 14 pass
++ 1 skip, not 15/15), so the evidence here is not stale — but the seam check
+itself has never had a gate-level run, by design. Wall time about 43
 minutes on one core for this run (2602 s of simulator time, about 1140 simulated
 ns per second), so the ~75 min / ~630 ns per second above is an earlier
 measurement and the figure is host-dependent.
