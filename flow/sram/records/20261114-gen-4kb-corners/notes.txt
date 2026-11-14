@@ -32,10 +32,13 @@ does not perturb the nominal view. LEF and GDS hashes differ from the 2026-11-07
 run, as the existing views_note already records for those two views.
 
 
-2. THE NUMBERS MOVE, SO THESE ARE NOT RENAMED TT COPIES
--------------------------------------------------------
+2. THE DELAY NUMBERS MOVE, SO THESE ARE NOT WHOLESALE RENAMED TT COPIES
+------------------------------------------------------------------------
 Compared against the committed TT view: operating_conditions, the cell_rise
-delay table, the transition table, min_period and dynamic power all differ.
+delay table, the transition table, min_period, min_pulse_width and dynamic
+power all differ. The per-pin setup/hold constraint tables do NOT -- they are
+bit-identical in all three views. Both halves are inventoried in section 4;
+the table below gives the representative numbers.
 
   quantity                TT 1.8V 25C   SS 1.60V 100C    FF 1.95V -40C
   cell_rise table (ns)    0.336 0.365   33.473 36.373    0.15 0.163
@@ -44,13 +47,21 @@ delay table, the transition table, min_period and dynamic power all differ.
                           0.016         1.617            0.007
   min_period (ns)         1.779         177.497          0.796
   implied max clock       562 MHz       5.63 MHz         1256 MHz
+  min_pulse_width (ns)    0.8895        88.7485          0.398
   dynamic power (mW)      2.0197e+11    1.7996e+09       4.8880e+11
   cell_leakage_power(mW)  0.035146      0.035146         0.035146  <- IDENTICAL
   max_transition (ns)     0.5           0.5              0.5       <- default
+  setup_rising, each of   0.103         0.103            0.103     <- IDENTICAL
+    the 7 input pins (ns)
+  hold_rising, each of   -0.056        -0.056           -0.056     <- IDENTICAL
+    the 7 input pins (ns)
 
 So criterion 2's branch applies, not criterion 3, and the renamed-copy trap the
-issue warns about did not occur. Both files are committed beside the TT view and
-pinned in reuse.lock.json with corner, delay model, origin and sha256.
+issue warns about did not occur for the view as a whole. It is the delay,
+transition and clock-constraint tables that establish this; the per-pin
+setup/hold constraint tables, taken on their own, ARE renamed TT copies
+(section 4). Both files are committed beside the TT view and pinned in
+reuse.lock.json with corner, delay model, origin and sha256.
 
 
 3. BUT THE SLOW CORNER IS NUMERICALLY DEGENERATE: a pole 0.94 C away
@@ -91,12 +102,47 @@ The fast corner's 0.448x is numerically plausible, but it comes from the same
 three-factor fudge and the same analytical model.
 
 
-4. LEAKAGE AND POWER DO NOT TRACK THE CORNER AT ALL
-----------------------------------------------------
+4. WHAT DOES NOT TRACK THE CORNER: LEAKAGE, max_transition, AND EVERY
+   PER-PIN SETUP/HOLD CONSTRAINT
+----------------------------------------------------------------------
 cell_leakage_power is bit-identical (0.035146 mW) in all three views. Leakage is
 the single most temperature-sensitive quantity in a real library; a hot slow
 corner with exactly the nominal leakage is not a leakage view. max_transition is
 likewise the 0.5 default at every corner, not a derived limit.
+
+The same is true of every input timing CONSTRAINT, which matters more, because
+those are the load-bearing numbers of a hold view. Pairing all 44 values(...)
+timing tables in each view by pin + timing_type + table name, and diffing the
+three views against each other:
+
+  28 of 44 tables are BIT-IDENTICAL at TT, SS 1.60V/100C and FF 1.95V/-40C
+    7 constrained input pins x {setup_rising, hold_rising}
+                             x {rise_constraint, fall_constraint}
+    pins: din0[31:0], addr0[9:0], wmask0[3:0], csb0, web0, addr1[9:0], csb1
+    setup_rising :  0.103 ns   hold_rising : -0.056 ns
+    every one of the nine grid points, in all three views
+
+  16 of 44 tables MOVE
+    dout0[31:0], dout1[31:0] x {cell_rise, cell_fall,
+                                rise_transition, fall_transition}   (8 tables)
+    clk0, clk1 x {min_pulse_width, minimum_period}
+               x {rise_constraint, fall_constraint}                 (8 tables)
+
+So the ONLY constraints that move with the corner are clk0/clk1's
+min_pulse_width and minimum_period -- which are clock-waveform limits derived
+from the delay factor, not per-pin setup or hold checks. Not one of the 28
+per-pin setup/hold tables was derated at all; they are TT's numbers verbatim,
+wearing an SS or FF label.
+
+Consequence, stated for whoever reads these views next: NEITHER NEW VIEW
+SUPPLIES ANY CORNER-SPECIFIC SETUP OR HOLD INFORMATION. This bites the fast
+view hardest. ff_n40C_1v95 is the HOLD signoff corner (gap G2), and a hold
+view's load-bearing numbers are exactly those per-pin hold constraints. The
+slow view's degeneracy is self-announcing -- 177.497 ns is absurd on sight --
+but -0.056 ns hold under an FF label looks entirely reasonable and is not. A
+later STA step that reads the FF view, decides the delay tables are too
+approximate to trust but the constraints look fine, and reports hold closed at
+ff_n40C_1v95, would be reporting TT hold constraints. Both lock caveats say so.
 
 Dynamic power moves the wrong way: it is 112x LOWER at the slow-hot corner than
 at TT, because the model divides power by the delay factor (calc_dynamic_power,
@@ -148,6 +194,15 @@ because the PVT points were chosen to match. Note 1.60 V appears in the file
 name as 1p6V (Python formats 1.60 as 1.6), and the fast-corner file name
 contains a literal "-40", so its path must be quoted in shell handling.
 
+One header detail that may surprise a reader of section 3: all three views carry
+process : 1.0 and nom_process : 1.0 in operating_conditions, so an STA tool sees
+three OCs differing only in V and T. OpenRAM never writes the process letter
+into the header, even though section 3 shows that letter (1.1 / 1.0 / 0.9) does
+enter the delay product. The tables are ALREADY scaled by that factor, so this
+is the harmless arrangement rather than a defect: a process value other than 1.0
+in the header would double-count the same derate under a tool's k-factor
+derating.
+
 Also worth stating: 1.60 V, 1.95 V and -40 C are all OUTSIDE the sky130 tech's
 own corner lists (supply_voltages [1.7, 1.8, 1.9], temperatures [0, 25, 100]).
 The points are reachable only because use_specified_corners bypasses those
@@ -187,9 +242,13 @@ item under the repo's friction protocol.
       --record <new-id>
 
 --config / --out-stem / --macro-config were added to setup.sh by this issue so a
-named config can be run and recorded without a second near-duplicate runner; the
-probe path is unchanged in behaviour. The record directory is append-only, so a
-re-run needs a fresh id.
+named config can be run and recorded without a second near-duplicate runner. The
+probe path keeps its behaviour with one cosmetic exception: its scratch output
+directory is now $SCRATCH/run-out rather than $SCRATCH/probe-out, shared with
+the --config path. That directory is outside the repo, rm -rf'd at the start of
+each run and named only by historical *.log.tail evidence, so nothing reads the
+old name -- but a reused SRAM_SCRATCH keeps a stale probe-out/ until it is
+cleaned. The record directory is append-only, so a re-run needs a fresh id.
 
 The exact overrides to the pinned config are the four the TT run already used
 (use_nix, check_lvsdrc, output_path, output_name) plus exactly one addition:
@@ -201,6 +260,9 @@ use_specified_corners set it is not consulted for the corner list, and leaving i
 True keeps set_default_corner() on its single-element path so the unconditional
 min()/max() calls at lib.py:94-99 stay well defined.
 
-The numeric comparison in section 2 was made by extracting operating_conditions,
-every values(...) table, cell_leakage_power and max_transition from each .lib and
-diffing those sets against the committed TT view.
+The numeric comparison in sections 2 and 4 was made by extracting
+operating_conditions, every values(...) table, cell_leakage_power and
+max_transition from each .lib and diffing those sets against the committed TT
+view. The values(...) tables were keyed by pin + timing_type + table name so the
+three views pair up table by table; that pairing is what yields the 28-identical
+/ 16-moving split reported in section 4, over 44 timing tables per view.
