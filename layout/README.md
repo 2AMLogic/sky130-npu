@@ -17,6 +17,21 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   `./layout/run.sh --record ID` copies the result to `records/ID/` (append-only;
   failed runs are recorded too), and that record's `tool-versions.txt` names the
   netlist it routed and its sha256.
+- `sta/`: standalone **pre-route** STA reads of the committed netlist
+  (netlist mode, no DEF — `geometry_source: "netlist_estimate"`). `sta/run.sh`
+  runs the pinned `klt sta` plus a direct OpenROAD `report_checks` probe for
+  the worst paths through a macro pin (`klt sta` itself cannot select paths
+  through an internal pin — only top-level ports; gap filed at
+  klayout-tools#5754). Informational readings, never closure: ideal clock, no
+  wire-load model, tt only, analytical macro delay model; post-route
+  multi-corner STA is #46.
+  - `sta/records/20261114-pre-route-tt-20ns/`: first read, tt, 20 ns.
+    Headline: 20 ns does **not** close (worst slack -0.984 ns, 1984 setup
+    violations, hold clean) but the binding path is control-to-array — zero
+    macro pins in the violator set. Macro read access time 0.335 ns; worst
+    macro-pin slack +16.21 ns in / +8.77 ns out; `dout` launches on `clk0`'s
+    **falling edge**, so the wide read buses have a half-cycle (10 ns)
+    budget. See that directory's `NOTES.md`.
 - `records/20261107-route-congestion/`: first attempt. **Not routed**: reaches
   CTS, global routing fails with `GRT-0116`. No routed GDS is committed and
   T1 item 2 is not cited. See that directory's `NOTES.md`.

@@ -68,6 +68,70 @@ macro. No throughput figure is quoted from them (that needs the clock corner).
 Both sizes run every workload; wall time on one core is about 30 s (N=8) and
 55 s (N=4) for the whole suite.
 
+## `klt functional-verification` envelope (pre-layout RTL)
+
+The same `test_bitexact` suite driven by `klt functional-verification` instead
+of `runner.py`, on the **RTL** sources (`rtl/npu_top.v` and below, behavioral
+`npu_sram_bank`) — not the synthesized netlist. It produces a
+`functional-verification.json` envelope, the machine-checkable evidence kind
+`klt signoff` grades for T1 item 5's functional half. This is a different
+artifact from the `runner.py` ledger `record.json` described above, and from
+the gate-level run in the next section; the three are not interchangeable.
+
+Current envelope: `records/20261114-functional-verification-n8/functional-verification.json`
+— `status: pass`, 14/14 at `ARRAY_N = 8`, 0 failed, 0 skipped, cocotb 2.1.0,
+Icarus 13.0. Produced from the committed
+`tests/functional-verification-request.json` by the `flow/toolchain.json` pin
+(`klayout-tools==0.9.1`):
+
+```sh
+# the [functional-verification] extra is required: a bare --from has no cocotb.
+# -o MUST point outside the checkout; the default outdir is
+# .klt/functional-verification/ next to the request file, and .klt is not ignored.
+uvx --from "klayout-tools[functional-verification]==0.9.1" \
+    klt functional-verification \
+    verification/tests/functional-verification-request.json \
+    --format json -o /tmp/fv151 > /tmp/fv151/envelope.json
+```
+
+`ARRAY_N` has to be set **twice** in the request, because the two halves of the
+run read it from different places:
+
+- `parameters` elaborates the RTL. cocotb's Icarus backend turns it into
+  `-Pnpu_top.ARRAY_N=8`, so this is what sizes the DUT.
+- `env` (present at the 0.9.1 pin) is what the testbench reads:
+  `npu_bench.array_n()` takes
+  `ARRAY_N` from `os.environ`, and `parameters` is not exported there. Without
+  it the bench silently falls back to its own default of 8 — the same value, so
+  the suite still passes, but by coincidence rather than instruction.
+
+Setting both is also what makes the envelope self-describing: `environment.env`
+echoes `{"ARRAY_N": "8"}`, so the record states the size it covers. Nothing
+echoes `parameters`, so `env` is the only field that does
+([klayout-tools#5697](https://github.com/2AMLogic/klayout-tools/issues/5697)).
+A mismatch between the two is caught rather than silently mis-verified:
+`test_bitexact.check_cap_regs` asserts the DUT's `CAP.ARRAY_N` equals the
+bench's N.
+
+Two things the envelope does **not** give you:
+
+- **The hashed artifacts are not retained.** At `schema_version: 2` the
+  `environment.results_xml` / `test_log` / `build_log` fields are
+  `{path, scope, sha256}` objects, and because `-o` must point outside the
+  checkout they record `scope: "external"`, `path: null` — a sha256 with nothing
+  to check it against. The random test's `NPU_SEED` is printed only into that
+  unretained log; for this run it was `2344049752`. (`environment.random_seed: 1`
+  is the *cocotb* seed from `options.random_seed`, a different thing.)
+- **No timing claim**, like everything else in this directory. It is a
+  zero-delay RTL run.
+
+`records/20261027-functional-verification-n8/` is the superseded 11-test
+envelope, taken before `test_bus_error_denied_and_unmapped`,
+`test_soft_reset_mid_run` and `test_irq_level_and_gate` existed. It is
+`schema_version: 1`, where the log fields are bare absolute-path strings; the
+ledger is append-only, so it stays as written and this section is the pointer to
+the current one.
+
 ## Gate-level run (pre-layout, functional, macro Verilog model)
 
 Runs the same `test_bitexact` suite, unchanged, on the **current** recorded
@@ -147,11 +211,29 @@ this one.
 
 ## PDK-independent files (stamped into `asap7-npu`)
 
-All of them except `check_mutation_gl.sh`: `runner.py`, `check_mutation.sh`, `requirements.txt`, `tests/`
-(`npu_bench.py`, `test_bitexact.py`, `test_golden.py`), `golden/`, `workloads/`,
-`records/README.md` and this README, plus `.github/workflows/verification.yml`.
-Nothing here references sky130 or any PDK except the default seam value
-(`rtl/pdk/sky130`).
+Everything tracked under `verification/` except `check_mutation_gl.sh`, plus
+`.github/workflows/verification.yml`. Of `records/`, the `README.md` is stamped
+but not the record directories — they are this repo's evidence for its own runs,
+not port artifacts. `check_mutation_gl.sh` is the one file-level exception: it is
+PDK-specific by construction, reading the sky130 synthesis record and the
+`sky130_fd_sc_hd` Verilog. Stated as a rule and not a list, the set stays correct
+as files are added; `git ls-files verification` should leave nothing it does not
+account for.
+
+No stamped script or data file references sky130 or any PDK except the default
+seam value (`rtl/pdk/sky130`). `tests/functional-verification-request.json` is
+stamped under that allowance rather than as a second exception: its `sources`
+array writes the default value out (`../../rtl/pdk/sky130/npu_sram_bank.v`)
+because a static JSON request has nothing to read `NPU_PDK_DIR` with, so a port
+edits that one path — the seam value, not PDK-specific content. In the rest of
+them the value is read from the variable (`runner.py`, `check_mutation.sh`) or is
+the directory copied from (`tests/test_relocated_layout.py`).
+
+Prose is outside that claim. This README is itself stamped, but its "Gate-level
+run" section is sky130-specific: the `sky130_fd_sc_hd` cell library under
+`~/.ciel/sky130A`, the pinned OpenRAM macro and the `20261111-sky130-hd`
+synthesis record are not reachable by editing a seam value. A port rewrites that
+section for its own PDK rather than repointing paths in it.
 
 ## Pointing the harness at another layout
 
