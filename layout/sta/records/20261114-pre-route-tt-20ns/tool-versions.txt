@@ -1,0 +1,7 @@
+openroad 26Q3-1510-g6cb3f2b704 
+klt klt 0.9.1
+open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7
+netlist rtl/synth/records/20261111-sky130-hd/npu_top_synth.v sha256:0eef5aff70680d5da761fdf0adf85eef81d7e7970ae14761209ad53e88a04fef
+macro-lib rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8_TT_1p8V_25C.lib sha256:6331177b66740e12cf677351ee8d767c0027f9ffc6ad73fb306907b7b4819364
+macro-lef rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.lef sha256:ff569537793e7618b05bf02bac6705607ea173ba532d071308c50f1c84b39997
+std-cell-deck libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib (PDK-root-relative) sha256:8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135

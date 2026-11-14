@@ -6,7 +6,14 @@ PDK — an INT8 multiply-accumulate array fed by banked SRAM — designed by AI
 agents driving [klayout-tools](https://github.com/2AMLogic/klayout-tools) and
 the open-source cocotb + Icarus, Yosys and OpenROAD flow.
 
-**Status: specification ratified.** No RTL or golden model yet.
+**Status: bit-exact at gate level; place-and-route does not close.** The
+golden model, the RTL and the cocotb suite are committed, and the synthesized
+`sky130_fd_sc_hd` gate-level netlist passes the full 14-test bit-exact suite at
+`ARRAY_N = 8` ([verification/README.md](verification/README.md)). Place-and-route
+is the open front: no routed GDS exists, because global routing fails `GRT-0116`
+on every floorplan tried so far ([layout/README.md](layout/README.md)). `klt
+signoff` grades 3 of the 11 T1 evidence items `met` and 1 `not_applicable`
+([manifests/README.md](manifests/README.md)).
 
 **Built agent-native.** Every specification, decision record, testbench, and
 line of documentation here is produced by AI agents working from a ratified
@@ -64,7 +71,10 @@ a stated workload.
 Maturity ladder: spec ratified → golden model and RTL bit-exact on the
 reference workloads → synthesized with timing met → placed and routed with
 the SRAM banks, DRC/LVS-clean → post-route multi-corner STA closed →
-shuttle seat → measured silicon. **Current position: spec ratified; golden model, harness and RTL not started.**
+shuttle seat → measured silicon. **Current position: bit-exact at RTL and at
+gate level on the synthesized sky130 netlist. Synthesis claims no timing (there
+is no macro Liberty view behind it), and place-and-route does not route yet, so
+no DRC, LVS or post-route STA result exists.**
 
 ## Repo layout
 
@@ -72,7 +82,8 @@ shuttle seat → measured silicon. **Current position: spec ratified; golden mod
 spec/          ratified spec + decision records
 rtl/           MAC array, controller, SRAM bank interface
 verification/  golden model, cocotb testbenches, workload runs
-layout/        GDS + DRC/LVS reports + STA reports (klayout-tools driven)
+layout/        place-and-route records + DRC/LVS/STA reports (klayout-tools driven)
+manifests/     klt signoff manifest, attestations, inventories (the graded gap to T1)
 measurements/  silicon characterization (empty until tape-out)
 flow/          pinned PDK + toolchain and the klt flow smoke run (see [flow/README.md](flow/README.md))
 ```
@@ -114,6 +125,17 @@ A stamped port with a different layout sets `NPU_RTL_DIR` and `NPU_PDK_DIR`
 ```sh
 ./rtl/synth/synth.sh 8 core
 ```
+
+The sky130-mapped netlist that the gate-level and place-and-route steps actually
+consume is a committed `klt synthesize` record, not this estimate; see
+[rtl/synth/README.md](rtl/synth/README.md) for the request, the recorded run and
+its freshness check.
+
+**Gate-level bit-exact run** (the same `test_bitexact` suite, unchanged, on the
+current recorded sky130 netlist with the pinned OpenRAM macro model — pre-layout
+and functional, no SDF; about 45 min on one core). The command, the netlist
+resolution and the limits on what the run proves are in
+[verification/README.md](verification/README.md).
 
 **Flow smoke** (the whole `klt` digital flow on a throwaway counter at
 `tt_025C_1v80`; needs `uvx` (it runs the pinned `klt` itself), Yosys, OpenROAD

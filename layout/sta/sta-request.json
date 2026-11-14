@@ -1,0 +1,10 @@
+{
+  "schema": "klt.sta.request/1",
+  "verilog": "inputs/npu_top_synth.v",
+  "hdl_toplevel": "npu_top",
+  "pdk": { "cell_library": "sky130_fd_sc_hd", "corner": "tt_025C_1v80" },
+  "macros": [
+    { "lef": "inputs/macro.lef", "lib": { "tt_025C_1v80": "inputs/macro_tt.lib" } }
+  ],
+  "constraints": { "clock_port": "clk", "clock_period_ns": 20.0 }
+}
