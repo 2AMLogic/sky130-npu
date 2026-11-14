@@ -24,11 +24,12 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   — the `-o` path above is an illustrative placeholder, not a path to write:
   choose a new, not-yet-used filename by the rule in **Attestation filenames**
   below, never one that already exists (earlier attestations stay as evidence).
-  Then point the manifest's item-10 citation **and the `--check` path in
-  `.github/workflows/signoff.yml`** at that new file, and re-render
+  Then point the manifest's item-10 citation at that new file and re-render
   the report. The cited `content_hash` is the inventory's sha256 (below), so
   it changes only when the inventory itself does, not when an inventoried file
-  is edited. CI runs the same command with `--check`.
+  is edited. CI reads the cited path back out of the manifest
+  (`.evidence["10"].file`) and runs the same command with `--check`, so the
+  citation moves in one place only.
   The item-9 inventory lists the testbenches (bit-exact, golden-model,
   mutation check, runner, verification workflow), a
   `cold_start` that builds a fresh venv and runs `verification/README.md`
@@ -55,10 +56,8 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   overwriting the file that is already recorded evidence. The command examples
   above spell their `-o` argument `<pin>`/`<UTC timestamp>` for this reason:
   substitute a filename no file in `attestations/` already has. Nothing parses
-  these names; the manifest's
-  `evidence` block and, for item 10, the `--check` path in
-  `.github/workflows/signoff.yml` are what bind a report to an envelope, so
-  both move together with the citation.
+  these names; the manifest's `evidence` block is what binds a report to an
+  envelope, and is the only place one is named.
 - **Item 1** (design sources) is attested from `inventories/item-1.json`: the
   RTL, the synthesis request and the `klt synthesize` netlist in
   `rtl/synth/records/20261111-sky130-hd/` (SRAM macro as a black box generated from its LEF; see
