@@ -12,6 +12,15 @@
 #   SRAM_SCRATCH=/path flow/sram/setup.sh  # reuse a scratch dir (idempotent, re-verifies)
 #   SETUP_PRINT_PINS=1 flow/sram/setup.sh  # print computed hashes instead of failing (pin bump)
 #
+# Instead of the probe, run a named config from this directory (issue #153):
+#   flow/sram/setup.sh --config flow/sram/gen_4kb_1rw1r_32x1024_corners.py \
+#     --out-stem sky130_sram_4kbyte_1rw1r_32x1024_8 \
+#     --macro-config sky130_sram_4kbyte_1rw1r_32x1024_8.py --record <id>
+# --out-stem is the config's output_name (the record hashes that stem's
+# outputs); --macro-config names a config under the pinned sky130_sram_macros
+# configs/ directory and is exported as SRAM_MACRO_CONFIG for configs that
+# exec a pinned VLSIDA config. Still one local OpenRAM job.
+#
 # The probe is a 16 x 32 1rw1r macro with characterization and DRC/LVS off.
 # It proves the environment, it is not a design macro. A run is a single local
 # OpenRAM job, never a grid.
@@ -23,15 +32,30 @@ LOCK="$REPO/reuse.lock.json"
 
 ENV_ONLY=0
 RECORD_ID=""
+RUN_CONFIG=""
+OUT_STEM=""
+MACRO_CONFIG=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --env-only) ENV_ONLY=1 ;;
     --record) RECORD_ID="${2:?--record needs an id}"; shift ;;
-    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
+    --config) RUN_CONFIG="${2:?--config needs a path}"; shift ;;
+    --out-stem) OUT_STEM="${2:?--out-stem needs output_name from the config}"; shift ;;
+    --macro-config) MACRO_CONFIG="${2:?--macro-config needs a configs/ file name}"; shift ;;
+    -h|--help) sed -n '2,26p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
   shift
 done
+
+if [ -n "$RUN_CONFIG" ]; then
+  [ -f "$RUN_CONFIG" ] || { echo "--config not found: $RUN_CONFIG" >&2; exit 2; }
+  [ -n "$OUT_STEM" ] || { echo "--config needs --out-stem (output_name from the config)" >&2; exit 2; }
+  # The compiler runs with cwd = scratch, so a relative --config would not resolve.
+  RUN_CONFIG="$(cd "$(dirname "$RUN_CONFIG")" && pwd)/$(basename "$RUN_CONFIG")"
+elif [ -n "$OUT_STEM" ] || [ -n "$MACRO_CONFIG" ]; then
+  echo "--out-stem / --macro-config only apply with --config" >&2; exit 2
+fi
 
 for t in git python3 curl sha256sum; do
   command -v "$t" >/dev/null || { echo "missing required tool: $t" >&2; exit 2; }
@@ -175,19 +199,30 @@ echo "  export PYTHONPATH=$OR/compiler   # python: $VENV/bin/python"
 echo "  macro configs: $MC/configs (pinned)"
 [ "$ENV_ONLY" = 1 ] && exit 0
 
-# --- Probe run: one local job, small config ------------------------------------
-OUT="$SCRATCH/probe-out"
+# --- Run: one local job -------------------------------------------------------
+# The probe by default; --config runs a named config from this directory with
+# the same pinned environment. Either way it is one local OpenRAM job.
+if [ -n "$RUN_CONFIG" ]; then
+  CONFIG="$RUN_CONFIG"; STEM="$OUT_STEM"; LOGSTEM="$(basename "${RUN_CONFIG%.py}")"
+else
+  CONFIG="$HERE/probe_16x32_1rw1r.py"; STEM="probe_sram_32x16_1rw1r"; LOGSTEM="probe"
+fi
+OUT="$SCRATCH/run-out"
 rm -rf "$OUT"; mkdir -p "$OUT"
 export SRAM_COMMON_PY="$COMMON" SRAM_OUT_DIR="$OUT"
-LOG="$SCRATCH/probe.log"
+[ -z "$MACRO_CONFIG" ] || {
+  export SRAM_MACRO_CONFIG="$MC/configs/$MACRO_CONFIG"
+  [ -f "$SRAM_MACRO_CONFIG" ] || { echo "--macro-config not in the pinned configs/: $MACRO_CONFIG" >&2; exit 2; }
+}
+LOG="$SCRATCH/$LOGSTEM.log"
 START="$(date +%s)"
 set +e
-( cd "$SCRATCH" && "$VENV/bin/python" "$OR/sram_compiler.py" -v "$HERE/probe_16x32_1rw1r.py" ) >"$LOG" 2>&1
+( cd "$SCRATCH" && "$VENV/bin/python" "$OR/sram_compiler.py" -v "$CONFIG" ) >"$LOG" 2>&1
 RC=$?
 set -e
 WALL=$(( $(date +%s) - START ))
-echo "probe exit=$RC wall=${WALL}s log=$LOG"
-OUTSTEM="$OUT/probe_sram_32x16_1rw1r"
+echo "$LOGSTEM exit=$RC wall=${WALL}s log=$LOG"
+OUTSTEM="$OUT/$STEM"
 
 if [ "$RC" -ne 0 ]; then
   echo "OpenRAM refused. Last lines:" >&2
@@ -204,18 +239,27 @@ if [ -n "$RECORD_ID" ]; then
     echo "openram_version: $(cat "$OR/VERSION")"
     echo "sram_cells_commit: $(git -C "$BD" rev-parse HEAD)"
     echo "python: $("$VENV/bin/python" --version 2>&1)"
-    echo "probe_config: flow/sram/probe_16x32_1rw1r.py (check_lvsdrc=False, analytical_delay=True)"
+    echo "config: flow/sram/$(basename "$CONFIG")"
+    echo "output_name: $STEM"
     echo "exit_code: $RC"
     echo "wall_seconds: $WALL"
     echo "bitcell_creation_passed: $(! grep -q 'Custom cell pin names do not match' "$LOG" && [ "$RC" -eq 0 ] && echo yes || echo no)"
+    # Which corner tuples the toolchain actually accepted (empty if it never got there).
+    echo "characterize_corners: $(sed -n 's/.*characterize_corners\]: Characterizing corners: //p' "$LOG" | tail -1)"
     echo "outputs_sha256:"
     for ext in lef gds v; do
       f="$OUTSTEM.$ext"
-      if [ -s "$f" ]; then echo "  $(sha256sum "$f" | cut -d' ' -f1)  probe_sram_32x16_1rw1r.$ext"; else echo "  MISSING  probe_sram_32x16_1rw1r.$ext"; fi
+      if [ -s "$f" ]; then echo "  $(sha256sum "$f" | cut -d' ' -f1)  $STEM.$ext"; else echo "  MISSING  $STEM.$ext"; fi
+    done
+    # Liberty views, one line each. The fast-corner name contains a literal
+    # "-40", so every path here stays quoted.
+    for f in "$OUTSTEM"*.lib; do
+      [ -s "$f" ] || continue
+      echo "  $(sha256sum "$f" | cut -d' ' -f1)  $(basename "$f")"
     done
   } >"$REC/run-record.txt"
   # Log with host paths replaced, so the record holds no host path.
-  sed -e "s#$SCRATCH#<scratch>#g" -e "s#$REPO#<repo>#g" -e 's#/tmp/openram_[A-Za-z0-9_]*#<openram-tmp>#g' "$LOG" | tail -n 400 >"$REC/probe.log.tail"
+  sed -e "s#$SCRATCH#<scratch>#g" -e "s#$REPO#<repo>#g" -e 's#/tmp/openram_[A-Za-z0-9_]*#<openram-tmp>#g' "$LOG" | tail -n 400 >"$REC/$LOGSTEM.log.tail"
   echo "record: $REC"
 fi
 exit "$RC"

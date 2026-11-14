@@ -1,0 +1,400 @@
+ 111      414.1300      147.7300      m4      m2  gnd                   (414.1300,257.1450)
+ 112      414.1300      149.3100      m4      m2  gnd                   (414.1300,257.1450)
+ 113      414.1300      150.4950      m4      m2  gnd                   (414.1300,257.1450)
+ 114      414.1300      151.6800      m4      m2  gnd                   (414.1300,257.1450)
+ 115      414.1300      153.2600      m4      m2  gnd                   (414.1300,257.1450)
+ 116      414.1300      154.4450      m4      m2  gnd                   (414.1300,257.1450)
+ 117      414.1300      155.6300      m4      m2  gnd                   (414.1300,257.1450)
+ 118      414.1300      157.2100      m4      m2  gnd                   (414.1300,257.1450)
+ 119      414.1300      158.3950      m4      m2  gnd                   (414.1300,257.1450)
+ 120      414.1300      159.5800      m4      m2  gnd                   (414.1300,257.1450)
+ 121      414.1300      161.1600      m4      m2  gnd                   (414.1300,257.1450)
+ 122      414.1300      162.3450      m4      m2  gnd                   (414.1300,257.1450)
+ 123      414.1300      163.5300      m4      m2  gnd                   (414.1300,257.1450)
+ 124      414.1300      165.1100      m4      m2  gnd                   (414.1300,257.1450)
+ 125      414.1300      166.2950      m4      m2  gnd                   (414.1300,257.1450)
+ 126      414.1300      167.4800      m4      m2  gnd                   (414.1300,257.1450)
+ 127      414.1300      169.0600      m4      m2  gnd                   (414.1300,257.1450)
+ 128      414.1300      170.2450      m4      m2  gnd                   (414.1300,257.1450)
+ 129      414.1300      171.4300      m4      m2  gnd                   (414.1300,257.1450)
+ 130      414.1300      173.0100      m4      m2  gnd                   (414.1300,257.1450)
+ 131      414.1300      174.1950      m4      m2  gnd                   (414.1300,257.1450)
+ 132      414.1300      175.3800      m4      m2  gnd                   (414.1300,257.1450)
+ 133      414.1300      176.9600      m4      m2  gnd                   (414.1300,257.1450)
+ 134      414.1300      178.1450      m4      m2  gnd                   (414.1300,257.1450)
+ 135      414.1300      179.3300      m4      m2  gnd                   (414.1300,257.1450)
+ 136      414.1300      180.9100      m4      m2  gnd                   (414.1300,257.1450)
+ 137      414.1300      182.0950      m4      m2  gnd                   (414.1300,257.1450)
+ 138      414.1300      183.2800      m4      m2  gnd                   (414.1300,257.1450)
+ 139      414.1300      184.8600      m4      m2  gnd                   (414.1300,257.1450)
+ 140      414.1300      186.0450      m4      m2  gnd                   (414.1300,257.1450)
+ 141      414.1300      187.2300      m4      m2  gnd                   (414.1300,257.1450)
+ 142      414.1300      188.8100      m4      m2  gnd                   (414.1300,257.1450)
+ 143      414.1300      189.9950      m4      m2  gnd                   (414.1300,257.1450)
+ 144      414.1300      191.1800      m4      m2  gnd                   (414.1300,257.1450)
+ 145      414.1300      192.7600      m4      m2  gnd                   (414.1300,257.1450)
+ 146      414.1300      193.9450      m4      m2  gnd                   (414.1300,257.1450)
+ 147      414.1300      195.1300      m4      m2  gnd                   (414.1300,257.1450)
+ 148      414.1300      196.7100      m4      m2  gnd                   (414.1300,257.1450)
+ 149      414.1300      197.8950      m4      m2  gnd                   (414.1300,257.1450)
+ 150      414.1300      199.0800      m4      m2  gnd                   (414.1300,257.1450)
+ 151      414.1300      200.6600      m4      m2  gnd                   (414.1300,257.1450)
+ 152      414.1300      201.8450      m4      m2  gnd                   (414.1300,257.1450)
+ 153      414.1300      203.0300      m4      m2  gnd                   (414.1300,257.1450)
+ 154      414.1300      204.6100      m4      m2  gnd                   (414.1300,257.1450)
+ 155      414.1300      205.7950      m4      m2  gnd                   (414.1300,257.1450)
+ 156      414.1300      206.9800      m4      m2  gnd                   (414.1300,257.1450)
+ 157      414.1300      208.5600      m4      m2  gnd                   (414.1300,257.1450)
+ 158      414.1300      209.7450      m4      m2  gnd                   (414.1300,257.1450)
+ 159      414.1300      210.9300      m4      m2  gnd                   (414.1300,257.1450)
+ 160      414.1300      212.5100      m4      m2  gnd                   (414.1300,257.1450)
+ 161      414.1300      213.6950      m4      m2  gnd                   (414.1300,257.1450)
+ 162      414.1300      214.8800      m4      m2  gnd                   (414.1300,257.1450)
+ 163      414.1300      216.4600      m4      m2  gnd                   (414.1300,257.1450)
+ 164      414.1300      217.6450      m4      m2  gnd                   (414.1300,257.1450)
+ 165      414.1300      218.8300      m4      m2  gnd                   (414.1300,257.1450)
+ 166      414.1300      220.4100      m4      m2  gnd                   (414.1300,257.1450)
+ 167      414.1300      221.5950      m4      m2  gnd                   (414.1300,257.1450)
+ 168      414.1300      222.7800      m4      m2  gnd                   (414.1300,257.1450)
+ 169      414.1300      224.3600      m4      m2  gnd                   (414.1300,257.1450)
+ 170      414.1300      225.5450      m4      m2  gnd                   (414.1300,257.1450)
+ 171      414.1300      226.7300      m4      m2  gnd                   (414.1300,257.1450)
+ 172      414.1300      228.3100      m4      m2  gnd                   (414.1300,257.1450)
+ 173      414.1300      229.4950      m4      m2  gnd                   (414.1300,257.1450)
+ 174      414.1300      230.6800      m4      m2  gnd                   (414.1300,257.1450)
+ 175      414.1300      232.2600      m4      m2  gnd                   (414.1300,257.1450)
+ 176      414.1300      233.4450      m4      m2  gnd                   (414.1300,257.1450)
+ 177      414.1300      234.6300      m4      m2  gnd                   (414.1300,257.1450)
+ 178      414.1300      236.2100      m4      m2  gnd                   (414.1300,257.1450)
+ 179      414.1300      237.3950      m4      m2  gnd                   (414.1300,257.1450)
+ 180      414.1300      238.5800      m4      m2  gnd                   (414.1300,257.1450)
+ 181      414.1300      240.1600      m4      m2  gnd                   (414.1300,257.1450)
+ 182      414.1300      241.3450      m4      m2  gnd                   (414.1300,257.1450)
+ 183      414.1300      242.5300      m4      m2  gnd                   (414.1300,257.1450)
+ 184      414.1300      244.1100      m4      m2  gnd                   (414.1300,257.1450)
+ 185      414.1300      245.2950      m4      m2  gnd                   (414.1300,257.1450)
+ 186      414.1300      246.4800      m4      m2  gnd                   (414.1300,257.1450)
+ 187      414.1300      248.0600      m4      m2  gnd                   (414.1300,257.1450)
+ 188      414.1300      249.2450      m4      m2  gnd                   (414.1300,257.1450)
+ 189      414.1300      250.4300      m4      m2  gnd                   (414.1300,257.1450)
+ 190      414.1300      252.0100      m4      m2  gnd                   (414.1300,257.1450)
+ 191      414.1300      253.1950      m4      m2  gnd                   (414.1300,257.1450)
+ 192      414.1300      254.3800      m4      m2  gnd                   (414.1300,257.1450)
+ 193      414.1300      255.9600      m4      m2  gnd                   (414.1300,257.1450)
+ 194      414.1300      257.1450      m4      m2  gnd                   (414.1300,257.1450)
+ 195      414.1300      258.3300      m4      m2  gnd                   (414.1300,257.1450)
+ 196      414.1300      259.9100      m4      m2  gnd                   (414.1300,257.1450)
+ 197      414.1300      261.0950      m4      m2  gnd                   (414.1300,257.1450)
+ 198      414.1300      262.2800      m4      m2  gnd                   (414.1300,257.1450)
+ 199      414.1300      263.8600      m4      m2  gnd                   (414.1300,257.1450)
+ 200      414.1300      265.0450      m4      m2  gnd                   (414.1300,257.1450)
+ 201      414.1300      266.2300      m4      m2  gnd                   (414.1300,257.1450)
+ 202      414.1300      267.8100      m4      m2  gnd                   (414.1300,257.1450)
+ 203      414.1300      268.9950      m4      m2  gnd                   (414.1300,257.1450)
+ 204      414.1300      270.1800      m4      m2  gnd                   (414.1300,257.1450)
+ 205      414.1300      271.7600      m4      m2  gnd                   (414.1300,257.1450)
+ 206      414.1300      272.9450      m4      m2  gnd                   (414.1300,257.1450)
+ 207      414.1300      274.1300      m4      m2  gnd                   (414.1300,257.1450)
+ 208      414.1300      275.7100      m4      m2  gnd                   (414.1300,257.1450)
+ 209      414.1300      276.8950      m4      m2  gnd                   (414.1300,257.1450)
+ 210      414.1300      278.0800      m4      m2  gnd                   (414.1300,257.1450)
+ 211      414.1300      279.6600      m4      m2  gnd                   (414.1300,257.1450)
+ 212      414.1300      280.8450      m4      m2  gnd                   (414.1300,257.1450)
+ 213      414.1300      282.0300      m4      m2  gnd                   (414.1300,257.1450)
+ 214      414.1300      283.6100      m4      m2  gnd                   (414.1300,257.1450)
+ 215      414.1300      284.7950      m4      m2  gnd                   (414.1300,257.1450)
+ 216      414.1300      285.9800      m4      m2  gnd                   (414.1300,257.1450)
+ 217      414.1300      287.5600      m4      m2  gnd                   (414.1300,257.1450)
+ 218      414.1300      288.7450      m4      m2  gnd                   (414.1300,257.1450)
+ 219      414.1300      289.9300      m4      m2  gnd                   (414.1300,257.1450)
+ 220      414.1300      291.5100      m4      m2  gnd                   (414.1300,257.1450)
+ 221      414.1300      292.6950      m4      m2  gnd                   (414.1300,257.1450)
+ 222      414.1300      293.8800      m4      m2  gnd                   (414.1300,257.1450)
+ 223      414.1300      295.4600      m4      m2  gnd                   (414.1300,257.1450)
+ 224      414.1300      296.6450      m4      m2  gnd                   (414.1300,257.1450)
+ 225      414.1300      297.8300      m4      m2  gnd                   (414.1300,257.1450)
+ 226      414.1300      299.4100      m4      m2  gnd                   (414.1300,257.1450)
+ 227      414.1300      300.5950      m4      m2  gnd                   (414.1300,257.1450)
+ 228      414.1300      301.7800      m4      m2  gnd                   (414.1300,257.1450)
+ 229      414.1300      303.3600      m4      m2  gnd                   (414.1300,257.1450)
+ 230      414.1300      304.5450      m4      m2  gnd                   (414.1300,257.1450)
+ 231      414.1300      305.7300      m4      m2  gnd                   (414.1300,257.1450)
+ 232      414.1300      307.3100      m4      m2  gnd                   (414.1300,257.1450)
+ 233      414.1300      308.4950      m4      m2  gnd                   (414.1300,257.1450)
+ 234      414.1300      309.6800      m4      m2  gnd                   (414.1300,257.1450)
+ 235      414.1300      311.2600      m4      m2  gnd                   (414.1300,257.1450)
+ 236      414.1300      312.4450      m4      m2  gnd                   (414.1300,257.1450)
+ 237      414.1300      313.6300      m4      m2  gnd                   (414.1300,257.1450)
+ 238      414.1300      315.2100      m4      m2  gnd                   (414.1300,257.1450)
+ 239      414.1300      316.3950      m4      m2  gnd                   (414.1300,257.1450)
+ 240      414.1300      317.5800      m4      m2  gnd                   (414.1300,257.1450)
+ 241      414.1300      319.1600      m4      m2  gnd                   (414.1300,257.1450)
+ 242      414.1300      320.3450      m4      m2  gnd                   (414.1300,257.1450)
+ 243      414.1300      321.5300      m4      m2  gnd                   (414.1300,257.1450)
+ 244      414.1300      323.1100      m4      m2  gnd                   (414.1300,257.1450)
+ 245      414.1300      324.2950      m4      m2  gnd                   (414.1300,257.1450)
+ 246      414.1300      325.4800      m4      m2  gnd                   (414.1300,257.1450)
+ 247      414.1300      327.0600      m4      m2  gnd                   (414.1300,257.1450)
+ 248      414.1300      328.2450      m4      m2  gnd                   (414.1300,257.1450)
+ 249      414.1300      329.4300      m4      m2  gnd                   (414.1300,257.1450)
+ 250      414.1300      331.0100      m4      m2  gnd                   (414.1300,257.1450)
+ 251      414.1300      332.1950      m4      m2  gnd                   (414.1300,257.1450)
+ 252      414.1300      333.3800      m4      m2  gnd                   (414.1300,257.1450)
+ 253      414.1300      334.9600      m4      m2  gnd                   (414.1300,257.1450)
+ 254      414.1300      336.1450      m4      m2  gnd                   (414.1300,257.1450)
+ 255      414.1300      337.3300      m4      m2  gnd                   (414.1300,257.1450)
+ 256      414.1300      338.9100      m4      m2  gnd                   (414.1300,257.1450)
+ 257      414.1300      340.0950      m4      m2  gnd                   (414.1300,257.1450)
+ 258      414.1300      341.2800      m4      m2  gnd                   (414.1300,257.1450)
+ 259      414.1300      342.8600      m4      m2  gnd                   (414.1300,257.1450)
+ 260      414.1300      344.0450      m4      m2  gnd                   (414.1300,257.1450)
+ 261      414.1300      345.2300      m4      m2  gnd                   (414.1300,257.1450)
+ 262      414.1300      346.8100      m4      m2  gnd                   (414.1300,257.1450)
+ 263      414.1300      347.9950      m4      m2  gnd                   (414.1300,257.1450)
+ 264      414.1300      349.1800      m4      m2  gnd                   (414.1300,257.1450)
+ 265      414.1300      350.7600      m4      m2  gnd                   (414.1300,257.1450)
+ 266      414.1300      351.9450      m4      m2  gnd                   (414.1300,257.1450)
+ 267      414.1300      353.1300      m4      m2  gnd                   (414.1300,257.1450)
+ 268      414.1300      354.7100      m4      m2  gnd                   (414.1300,257.1450)
+ 269      414.1300      355.8950      m4      m2  gnd                   (414.1300,257.1450)
+ 270      414.1300      357.0800      m4      m2  gnd                   (414.1300,257.1450)
+ 271      414.1300      358.6600      m4      m2  gnd                   (414.1300,257.1450)
+ 272      414.1300      359.8450      m4      m2  gnd                   (414.1300,257.1450)
+ 273      414.1300      361.0300      m4      m2  gnd                   (414.1300,257.1450)
+ 274      414.1300      362.6100      m4      m2  gnd                   (414.1300,257.1450)
+ 275      414.1300      363.7950      m4      m2  gnd                   (414.1300,257.1450)
+ 276      414.1300      364.9800      m4      m2  gnd                   (414.1300,257.1450)
+ 277      414.1300      366.5600      m4      m2  gnd                   (414.1300,257.1450)
+ 278      414.1300      367.7450      m4      m2  gnd                   (414.1300,257.1450)
+ 279      414.1300      368.9300      m4      m2  gnd                   (414.1300,257.1450)
+ 280      414.1300      370.5100      m4      m2  gnd                   (414.1300,257.1450)
+ 281      414.1300      371.6950      m4      m2  gnd                   (414.1300,257.1450)
+ 282      414.1300      372.8800      m4      m2  gnd                   (414.1300,257.1450)
+ 283      414.1300      374.4600      m4      m2  gnd                   (414.1300,257.1450)
+ 284      414.1300      375.6450      m4      m2  gnd                   (414.1300,257.1450)
+ 285      414.1300      376.8300      m4      m2  gnd                   (414.1300,257.1450)
+ 286      414.1300      378.4100      m4      m2  gnd                   (414.1300,257.1450)
+ 287      414.1300      379.5950      m4      m2  gnd                   (414.1300,257.1450)
+ 288      414.1300      380.7800      m4      m2  gnd                   (414.1300,257.1450)
+ 289      414.1300      382.3600      m4      m2  gnd                   (414.1300,257.1450)
+ 290      414.1300      383.5450      m4      m2  gnd                   (414.1300,257.1450)
+ 291      414.1300      384.7300      m4      m2  gnd                   (414.1300,257.1450)
+ 292      414.1300      386.3100      m4      m2  gnd                   (414.1300,257.1450)
+ 293      414.1300      387.4950      m4      m2  gnd                   (414.1300,257.1450)
+ 294      414.1300      388.6800      m4      m2  gnd                   (414.1300,257.1450)
+ 295      414.1300      390.2600      m4      m2  gnd                   (414.1300,257.1450)
+ 296      414.1300      391.4450      m4      m2  gnd                   (414.1300,257.1450)
+ 297      414.1300      392.6300      m4      m2  gnd                   (414.1300,257.1450)
+ 298      414.1300      394.2100      m4      m2  gnd                   (414.1300,257.1450)
+ 299      414.1300      395.3950      m4      m2  gnd                   (414.1300,257.1450)
+ 300      414.1300      396.5800      m4      m2  gnd                   (414.1300,257.1450)
+ 301      414.1300      398.1600      m4      m2  gnd                   (414.1300,257.1450)
+ 302      414.1300      399.3450      m4      m2  gnd                   (414.1300,257.1450)
+ 303      414.1300      400.5300      m4      m2  gnd                   (414.1300,257.1450)
+ 304      414.1300      402.1100      m4      m2  gnd                   (414.1300,257.1450)
+ 305      414.1300      403.2950      m4      m2  gnd                   (414.1300,257.1450)
+ 306      414.1300      404.4800      m4      m2  gnd                   (414.1300,257.1450)
+ 307      414.1300      406.0600      m4      m2  gnd                   (414.1300,257.1450)
+ 308      414.1300      407.2450      m4      m2  gnd                   (414.1300,257.1450)
+ 309      414.1300      408.4300      m4      m2  gnd                   (414.1300,257.1450)
+ 310      414.1300      410.0100      m4      m2  gnd                   (414.1300,257.1450)
+ 311      414.1300      411.1950      m4      m2  gnd                   (414.1300,257.1450)
+ 312      414.1300      412.3800      m4      m2  gnd                   (414.1300,257.1450)
+ 313      414.1300      413.9600      m4      m2  gnd                   (414.1300,257.1450)
+ 314      414.1300      415.1450      m4      m2  gnd                   (414.1300,257.1450)
+ 315      414.1300      416.3300      m4      m2  gnd                   (414.1300,257.1450)
+ 316      414.1300      417.9100      m4      m2  gnd                   (414.1300,257.1450)
+ 317      414.1300      419.0950      m4      m2  gnd                   (414.1300,257.1450)
+ 318      414.1300      420.2800      m4      m2  gnd                   (414.1300,257.1450)
+ 319      414.1300      421.8600      m4      m2  gnd                   (414.1300,257.1450)
+ 320      414.1300      423.0450      m4      m2  gnd                   (414.1300,257.1450)
+ 321      414.1300      424.2300      m4      m2  gnd                   (414.1300,257.1450)
+ 322      414.1300      425.8100      m4      m2  gnd                   (414.1300,257.1450)
+ 323      414.1300      426.9950      m4      m2  gnd                   (414.1300,257.1450)
+ 324      414.1300      428.1800      m4      m2  gnd                   (414.1300,257.1450)
+ 325      414.1300      429.7600      m4      m2  gnd                   (414.1300,257.1450)
+ 326      414.1300      430.9450      m4      m2  gnd                   (414.1300,257.1450)
+ 327      414.1300      432.1300      m4      m2  gnd                   (414.1300,257.1450)
+ 328      414.1300      433.7100      m4      m2  gnd                   (414.1300,257.1450)
+ 329      414.1300      434.8950      m4      m2  gnd                   (414.1300,257.1450)
+ 330      414.1300      436.0800      m4      m2  gnd                   (414.1300,257.1450)
+ 331      414.1300      437.6600      m4      m2  gnd                   (414.1300,257.1450)
+ 332      414.1300      438.8450      m4      m2  gnd                   (414.1300,257.1450)
+ 333      414.1300      440.0300      m4      m2  gnd                   (414.1300,257.1450)
+ 334      414.1300      441.6100      m4      m2  gnd                   (414.1300,257.1450)
+ 335      414.1300      442.7950      m4      m2  gnd                   (414.1300,257.1450)
+ 336      414.1300      443.9800      m4      m2  gnd                   (414.1300,257.1450)
+ 337      414.1300      445.5600      m4      m2  gnd                   (414.1300,257.1450)
+ 338      414.1300      446.7450      m4      m2  gnd                   (414.1300,257.1450)
+ 339      414.1300      447.9300      m4      m2  gnd                   (414.1300,257.1450)
+ 340      414.1300      449.5100      m4      m2  gnd                   (414.1300,257.1450)
+ 341      414.1300      450.6950      m4      m2  gnd                   (414.1300,257.1450)
+ 342      414.1300      451.8800      m4      m2  gnd                   (414.1300,257.1450)
+ 343      414.1300      453.4600      m4      m2  gnd                   (414.1300,257.1450)
+ 344      414.1300      454.6450      m4      m2  gnd                   (414.1300,257.1450)
+ 345      414.1300      455.8300      m4      m2  gnd                   (414.1300,257.1450)
+ 346      414.1300      457.4100      m4      m2  gnd                   (414.1300,257.1450)
+ 347      414.1300      458.5950      m4      m2  gnd                   (414.1300,257.1450)
+ 348      414.1300      459.7800      m4      m2  gnd                   (414.1300,257.1450)
+ 349      414.1300      461.3600      m4      m2  gnd                   (414.1300,257.1450)
+ 350      414.1300      462.5450      m4      m2  gnd                   (414.1300,257.1450)
+ 351      414.1300      463.7300      m4      m2  gnd                   (414.1300,257.1450)
+ 352      414.1300      465.3100      m4      m2  gnd                   (414.1300,257.1450)
+ 353      414.1300      466.4950      m4      m2  gnd                   (414.1300,257.1450)
+ 354      414.1300      467.6800      m4      m2  gnd                   (414.1300,257.1450)
+ 355      414.1300      469.2600      m4      m2  gnd                   (414.1300,257.1450)
+ 356      414.1300      470.4450      m4      m2  gnd                   (414.1300,257.1450)
+ 357      414.1300      471.6300      m4      m2  gnd                   (414.1300,257.1450)
+ 358      414.1300      473.2100      m4      m2  gnd                   (414.1300,257.1450)
+ 359      414.1300      474.3950      m4      m2  gnd                   (414.1300,257.1450)
+ 360      414.1300      475.5800      m4      m2  gnd                   (414.1300,257.1450)
+ 361      414.1300      477.1600      m4      m2  gnd                   (414.1300,257.1450)
+ 362      414.1300      478.3450      m4      m2  gnd                   (414.1300,257.1450)
+ 363      414.1300      479.5300      m4      m2  gnd                   (414.1300,257.1450)
+ 364      414.1300      481.1100      m4      m2  gnd                   (414.1300,257.1450)
+ 365      414.1300      482.2950      m4      m2  gnd                   (414.1300,257.1450)
+ 366      414.1300      483.4800      m4      m2  gnd                   (414.1300,257.1450)
+ 367      414.1300      485.0600      m4      m2  gnd                   (414.1300,257.1450)
+ 368      414.1300      486.2450      m4      m2  gnd                   (414.1300,257.1450)
+ 369      414.1300      487.4300      m4      m2  gnd                   (414.1300,257.1450)
+ 370      414.1300      489.0100      m4      m2  gnd                   (414.1300,257.1450)
+ 371      414.1300      490.1950      m4      m2  gnd                   (414.1300,257.1450)
+ 372      414.1300      491.3800      m4      m2  gnd                   (414.1300,257.1450)
+ 373      414.1300      492.9600      m4      m2  gnd                   (414.1300,257.1450)
+ 374      414.1300      494.1450      m4      m2  gnd                   (414.1300,257.1450)
+ 375      414.1300      495.3300      m4      m2  gnd                   (414.1300,257.1450)
+ 376      414.1300      496.9100      m4      m2  gnd                   (414.1300,257.1450)
+ 377      414.1300      498.0950      m4      m2  gnd                   (414.1300,257.1450)
+ 378      414.1300      499.2800      m4      m2  gnd                   (414.1300,257.1450)
+ 379      414.1300      500.8600      m4      m2  gnd                   (414.1300,257.1450)
+ 380      414.1300      502.0450      m4      m2  gnd                   (414.1300,257.1450)
+ 381      414.1300      503.2300      m4      m2  gnd                   (414.1300,257.1450)
+ 382      414.1300      504.8100      m4      m2  gnd                   (414.1300,257.1450)
+ 383      414.1300      505.9950      m4      m2  gnd                   (414.1300,257.1450)
+ 384      414.1300      507.1800      m4      m2  gnd                   (414.1300,257.1450)
+ 385      414.1300      508.7600      m4      m2  gnd                   (414.1300,257.1450)
+ 386      414.1300      509.9450      m4      m2  gnd                   (414.1300,257.1450)
+ 387      414.1300      511.1300      m4      m2  gnd                   (414.1300,257.1450)
+ 388      414.1300      511.6800      m4      m2  rbl_wl_1_0            (414.1300,257.1450)
+----------------------------------------------------------------------------------------
+[openram.modules.and2_dec/__init__]: Creating and2_dec and2_dec
+[openram.modules.and3_dec/__init__]: Creating and3_dec and3_dec
+[openram.modules.and4_dec/__init__]: Creating and4_dec and4_dec
+[openram.modules.wordline_driver_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_wordline_driver_array
+[openram.modules.wordline_driver/__init__]: Creating wordline_driver wordline_driver
+[openram.modules.and2_dec/__init__]: Creating and2_dec and2_dec_0
+[openram.modules.precharge_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_precharge_array
+[openram.modules.sense_amp_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_sense_amp_array
+[openram.modules.column_mux_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_column_mux_array
+[openram.modules.write_driver_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_write_driver_array
+[openram.modules.write_mask_and_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_write_mask_and_array
+[openram.modules.pand2/__init__]: Creating pand2 pand2
+[openram.modules.pdriver/__init__]: creating pdriver pdriver
+[openram.modules.precharge_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_precharge_array_0
+[openram.modules.column_mux_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_column_mux_array_0
+[openram.modules.pand2/__init__]: Creating pand2 pand2_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_0
+[openram.modules.dff_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_row_addr_dff rows=8 cols=1
+[openram.modules.dff_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_col_addr_dff rows=1 cols=2
+[openram.modules.dff_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_data_dff rows=1 cols=32
+[openram.modules.dff_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_wmask_dff rows=1 cols=4
+[openram.modules.control_logic_base/__init__]: Creating control_logic_rw
+[openram.modules.dff_buf/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_dff_buf
+[openram.modules.dff_buf_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_dff_buf_array
+[openram.modules.dff_buf/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_dff_buf_0
+[openram.modules.pand2/__init__]: Creating pand2 pand2_1
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_1
+[openram.modules.pbuf/__init__]: creating pbuf with size of 128
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_2
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_3
+[openram.modules.pand3/__init__]: Creating pand3 pand3
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_4
+[openram.modules.pand3/__init__]: Creating pand3 pand3_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_5
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_6
+[openram.modules.delay_chain/__init__]: creating delay chain [4, 4, 4, 4, 4, 4, 4, 4, 4]
+[openram.modules.control_logic_base/__init__]: Creating control_logic_r
+[openram.modules.dff_buf_array/__init__]: Creating sky130_sram_4kbyte_1rw1r_32x1024_8_dff_buf_array_0
+[openram.modules.pdriver/__init__]: creating pdriver pdriver_7
+** Submodules: 22.8 seconds
+** Placement: 0.0 seconds
+[openram.base.hierarchy_layout/get_bbox]: Size: 684.9300000000001 x 662.605 with perimeter margin 0
+[openram.router.router_tech/__init__]: Minimum track width: 0.680
+[openram.router.router_tech/__init__]: Minimum track space: 0.300
+[openram.router.router_tech/__init__]: Minimum track wire width: 0.380
+[openram.router.signal_escape_router/route]: Running signal escape router...
+[openram.router.router_tech/__init__]: Minimum track width: 0.680
+[openram.router.router_tech/__init__]: Minimum track space: 0.300
+[openram.router.router_tech/__init__]: Minimum track wire width: 0.380
+[openram.router.supply_router/route]: Running router for vdd and gnd...
+** Routing: 1678.7 seconds
+** Verification: 0.0 seconds
+** SRAM creation: 1701.7 seconds
+SP: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.sp
+[openram.characterizer.functional/__init__]: Random seed for functional simulation: 1794637117931770352
+** Spice writing: 0.5 seconds
+DELAY: Writing stimulus...
+[openram.characterizer.delay/create_sen_and_bitline_path_measures]: self.bl_name = xsky130_sram_4kbyte_1rw1r_32x1024_8.xbank0.bl_0_127
+** DELAY: 2.3 seconds
+GDS: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.gds
+** GDS: 0.5 seconds
+LEF: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.lef
+** LEF: 0.0 seconds
+LVS: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.lvs.sp
+** LVS writing: 0.5 seconds
+LIB: Characterizing... 
+[openram.characterizer.lib/prepare_tables]: Slews: [0.00125 0.005   0.04   ]
+[openram.characterizer.lib/prepare_tables]: Loads: [ 1.7225  6.89   27.56  ]
+[openram.characterizer.lib/prepare_tables]: self.load_slews : [(np.float64(1.7225), np.float64(0.00125)), (np.float64(6.89), np.float64(0.00125)), (np.float64(27.56), np.float64(0.00125)), (np.float64(1.7225), np.float64(0.005)), (np.float64(6.89), np.float64(0.005)), (np.float64(27.56), np.float64(0.005)), (np.float64(1.7225), np.float64(0.04)), (np.float64(6.89), np.float64(0.04)), (np.float64(27.56), np.float64(0.04))]
+[openram.characterizer.lib/characterize_corners]: Characterizing corners: [('TT', 1.8, 25), ('SS', 1.6, 100), ('FF', 1.95, -40)]
+[openram.characterizer.lib/characterize_corners]: Corner: ('TT', 1.8, 25)
+[openram.characterizer.lib/characterize_corners]: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8_TT_1p8V_25C.lib
+[openram.characterizer.elmore/analytical_power]: Dynamic Power: 201972621337.50555 mW
+[openram.characterizer.elmore/analytical_power]: Leakage Power: 0.035146 mW
+[openram.characterizer.elmore/get_lib_values]: Slew, Load, Delay(ns), Slew(ns)
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 1.7225, 0.3355331171470992, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 6.89, 0.36460030464709925, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 27.56, 0.48086905464709917, 0.016211249999999996
+[openram.characterizer.elmore/get_lib_values]: 0.005, 1.7225, 0.3355331171470992, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.005, 6.89, 0.36460030464709925, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.005, 27.56, 0.48086905464709917, 0.016211249999999996
+[openram.characterizer.elmore/get_lib_values]: 0.04, 1.7225, 0.3355331171470992, 0.00167765625
+[openram.characterizer.elmore/get_lib_values]: 0.04, 6.89, 0.36460030464709925, 0.004584374999999999
+[openram.characterizer.elmore/get_lib_values]: 0.04, 27.56, 0.48086905464709917, 0.016211249999999996
+[openram.characterizer.lib/characterize_corners]: Corner: ('SS', 1.6, 100)
+[openram.characterizer.lib/characterize_corners]: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8_SS_1p6V_100C.lib
+[openram.characterizer.elmore/analytical_power]: Dynamic Power: 1799603551.9829698 mW
+[openram.characterizer.elmore/analytical_power]: Leakage Power: 0.035146 mW
+[openram.characterizer.elmore/get_lib_values]: Slew, Load, Delay(ns), Slew(ns)
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 1.7225, 33.47329997139049, 0.16736556850961667
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 6.89, 36.37308731514051, 0.45734430288461886
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 27.56, 47.9722366901406, 1.6172592403846278
+[openram.characterizer.elmore/get_lib_values]: 0.005, 1.7225, 33.47329997139049, 0.16736556850961667
+[openram.characterizer.elmore/get_lib_values]: 0.005, 6.89, 36.37308731514051, 0.45734430288461886
+[openram.characterizer.elmore/get_lib_values]: 0.005, 27.56, 47.9722366901406, 1.6172592403846278
+[openram.characterizer.elmore/get_lib_values]: 0.04, 1.7225, 33.47329997139049, 0.16736556850961667
+[openram.characterizer.elmore/get_lib_values]: 0.04, 6.89, 36.37308731514051, 0.45734430288461886
+[openram.characterizer.elmore/get_lib_values]: 0.04, 27.56, 47.9722366901406, 1.6172592403846278
+[openram.characterizer.lib/characterize_corners]: Corner: ('FF', 1.95, -40)
+[openram.characterizer.lib/characterize_corners]: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8_FF_1p95V_-40C.lib
+[openram.characterizer.elmore/analytical_power]: Dynamic Power: 488801497979.2842 mW
+[openram.characterizer.elmore/analytical_power]: Leakage Power: 0.035146 mW
+[openram.characterizer.elmore/get_lib_values]: Slew, Load, Delay(ns), Slew(ns)
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 1.7225, 0.15019569045353873, 0.0007509742732845559
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 6.89, 0.16320712233014542, 0.002052117460945224
+[openram.characterizer.elmore/get_lib_values]: 0.00125, 27.56, 0.2152528498365721, 0.007256690211587896
+[openram.characterizer.elmore/get_lib_values]: 0.005, 1.7225, 0.15019569045353873, 0.0007509742732845559
+[openram.characterizer.elmore/get_lib_values]: 0.005, 6.89, 0.16320712233014542, 0.002052117460945224
+[openram.characterizer.elmore/get_lib_values]: 0.005, 27.56, 0.2152528498365721, 0.007256690211587896
+[openram.characterizer.elmore/get_lib_values]: 0.04, 1.7225, 0.15019569045353873, 0.0007509742732845559
+[openram.characterizer.elmore/get_lib_values]: 0.04, 6.89, 0.16320712233014542, 0.002052117460945224
+[openram.characterizer.elmore/get_lib_values]: 0.04, 27.56, 0.2152528498365721, 0.007256690211587896
+** Characterization: 13.2 seconds
+Config: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.py
+** Config: 0.0 seconds
+Datasheet: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.html
+** Datasheet: 0.0 seconds
+Verilog: Writing to <scratch>/run-out/sky130_sram_4kbyte_1rw1r_32x1024_8.v
+** Verilog: 0.0 seconds
+[openram.globals/purge_temp]: Purging temp directory: <openram-tmp>/
+** End: 1719.4 seconds
