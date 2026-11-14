@@ -23,7 +23,7 @@
     "ARRAY_N": 8
   },
   "outputs": {
-    "dir": "records/20261111-sky130-hd"
+    "dir": "records/20261114-sky130-hd"
   },
   "defines": {
     "NPU_SRAM_MACRO": "1"

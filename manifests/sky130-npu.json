@@ -3,8 +3,8 @@
   "kind": "digital",
   "evidence": {
     "1": {
-      "file": "manifests/attestations/item-1-klt091.json",
-      "content_hash": "sha256:e8083f2a9084ccd66584f3c2ef91b1ed69303c0c7e407258e999ae344d10f69c"
+      "file": "manifests/attestations/item-1-klt091-20261114.json",
+      "content_hash": "sha256:94423f3c89d7340f625e5e74e05d89f751da25c4aed354fad897b98f4e77274b"
     },
     "6": {
       "not_applicable": {
@@ -19,7 +19,7 @@
       }
     },
     "9": {
-      "file": "manifests/attestations/item-9-klt091-20261113T125301Z.json",
+      "file": "manifests/attestations/item-9-klt091-20261114.json",
       "content_hash": "sha256:c7b336af8d5b427beab8a7b83a3f40b72358cb5fc234a488ef7f945e8d0b82d1"
     },
     "10": {

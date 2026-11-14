@@ -114,11 +114,15 @@ What this is, and is not:
 
 Latest run: `records/20261113T155441Z-2441991e/` — 14/14 pass on
 `rtl/synth/records/20261111-sky130-hd/npu_top_synth.v` (sha256 `0eef5aff…`, in
-the record's `source_sha256`), the record `synth-request.json` points at and
-`manifests/inventories/item-1.json` cites. Unfiltered (`testcase: null`,
-`sources_dirty: false`), so the 14 is the whole current suite: this is the first
-gate-level evidence on this netlist for `test_bus_error_denied_and_unmapped`,
-`test_soft_reset_mid_run` and `test_irq_level_and_gate`. Wall time about 43
+the record's `source_sha256`). `synth-request.json` and
+`manifests/inventories/item-1.json` have since moved to
+`records/20261114-sky130-hd/` (#149), whose `npu_top_synth.v` is byte-identical
+(same `0eef5aff…`), so this run is still gate-level evidence for the current
+netlist — it was taken against the old path, and was not re-run.
+Unfiltered (`testcase: null`, `sources_dirty: false`), so the 14 is the whole
+current suite: this is the first gate-level evidence on this netlist for
+`test_bus_error_denied_and_unmapped`, `test_soft_reset_mid_run` and
+`test_irq_level_and_gate`. Wall time about 43
 minutes on one core for this run (2602 s of simulator time, about 1140 simulated
 ns per second), so the ~75 min / ~630 ns per second above is an earlier
 measurement and the figure is host-dependent.
