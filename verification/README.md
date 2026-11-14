@@ -141,14 +141,20 @@ PDK-specific by construction, reading the sky130 synthesis record and the
 as files are added; `git ls-files verification` should leave nothing it does not
 account for.
 
-Nothing here references sky130 or any PDK except the default seam value
-(`rtl/pdk/sky130`). `tests/functional-verification-request.json` is stamped under
-that allowance rather than as a second exception: its `sources` array writes the
-default value out (`../../rtl/pdk/sky130/npu_sram_bank.v`) because a static JSON
-request has nothing to read `NPU_PDK_DIR` with, so a port edits that one path —
-the seam value, not PDK-specific content. Everywhere else the value is read from
-the variable (`runner.py`, `check_mutation.sh`) or is the directory copied from
-(`tests/test_relocated_layout.py`).
+No stamped script or data file references sky130 or any PDK except the default
+seam value (`rtl/pdk/sky130`). `tests/functional-verification-request.json` is
+stamped under that allowance rather than as a second exception: its `sources`
+array writes the default value out (`../../rtl/pdk/sky130/npu_sram_bank.v`)
+because a static JSON request has nothing to read `NPU_PDK_DIR` with, so a port
+edits that one path — the seam value, not PDK-specific content. In the rest of
+them the value is read from the variable (`runner.py`, `check_mutation.sh`) or is
+the directory copied from (`tests/test_relocated_layout.py`).
+
+Prose is outside that claim. This README is itself stamped, but its "Gate-level
+run" section is sky130-specific: the `sky130_fd_sc_hd` cell library under
+`~/.ciel/sky130A`, the pinned OpenRAM macro and the `20261111-sky130-hd`
+synthesis record are not reachable by editing a seam value. A port rewrites that
+section for its own PDK rather than repointing paths in it.
 
 ## Pointing the harness at another layout
 
