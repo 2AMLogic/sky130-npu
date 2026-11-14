@@ -64,7 +64,14 @@ a stated workload.
 Maturity ladder: spec ratified → golden model and RTL bit-exact on the
 reference workloads → synthesized with timing met → placed and routed with
 the SRAM banks, DRC/LVS-clean → post-route multi-corner STA closed →
-shuttle seat → measured silicon. **Current position: spec ratified; golden model, harness and RTL not started.**
+shuttle seat → measured silicon. **Current position: spec ratified; golden model,
+testbenches and RTL landed and bit-exact — T1 items 1, 9 and 10 graded `met`
+(3 of 11) in
+[`manifests/sky130-npu.signoff.json`](manifests/sky130-npu.signoff.json).
+Place-and-route is the open front: global routing has not closed on any
+committed attempt (`GRT-0116` congestion, see
+[layout/README.md](layout/README.md)), so items 2-5, 7, 8 and 11 carry no
+evidence.**
 
 ## Repo layout
 
