@@ -1,0 +1,97 @@
+{
+  "baked_parameters": [],
+  "cocotb": "2.0.1",
+  "defines": [],
+  "failures": 0,
+  "id": "b8353253",
+  "parameters": {
+    "ARRAY_N": "4"
+  },
+  "passed": true,
+  "results": {
+    "random": {
+      "basis": "simulated",
+      "gemms": 8,
+      "mismatches": 0,
+      "seed": 224444185
+    },
+    "requant_latency": {
+      "array_n": 4,
+      "basis": "simulated",
+      "measured_cycles": 3,
+      "req_lat": 3,
+      "result_words": 4
+    },
+    "seed": 224444185,
+    "workload:conv-3x3-a": {
+      "K": 144,
+      "M": 256,
+      "N": 32,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 81408,
+      "u_array": 0.9056603773584906
+    },
+    "workload:conv-3x3-edge": {
+      "K": 72,
+      "M": 196,
+      "N": 20,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 21315,
+      "u_array": 0.8275862068965517
+    },
+    "workload:mm-fc": {
+      "K": 256,
+      "M": 64,
+      "N": 64,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 69376,
+      "u_array": 0.9446494464944649
+    },
+    "workload:mm-smoke": {
+      "K": 64,
+      "M": 8,
+      "N": 8,
+      "array_n": 4,
+      "basis": "simulated",
+      "mismatches": 0,
+      "perf_cycles": 316,
+      "u_array": 0.810126582278481
+    }
+  },
+  "rtl_commit": "f79ce0153f05789f46e4fb124de4b93ba97d3fc0",
+  "seed": 224444185,
+  "simulator": "Icarus Verilog version 13.0 (stable) (v13_0)",
+  "source_sha256": {
+    "rtl/npu_array.v": "15c92e6fe78c8b80a59089cd2f9273207e7ee30d85461af3751ccf641875ce20",
+    "rtl/npu_banks.v": "aabd40e1c4974db5fc1adddedbd8710af6c78bc17119af0f690ce42a845bf864",
+    "rtl/npu_ctrl.v": "46098a8f346e4a4c4788cfae49f047be69d4259b9cce2e9e3130690c604f8168",
+    "rtl/npu_host.v": "ae5cf6522a91c1b4ec650e708570a6a1eaae083a9fdf06048856cec0f69cf24e",
+    "rtl/npu_pe.v": "1ea252c7c3060d5b2e5fecb41b5f668afc4f09982065e45e8832551276551bf5",
+    "rtl/npu_requant.v": "ba858f4b23f4fb9ff0cd9208ae2c633959c9609728d3338b799d55904c0b477a",
+    "rtl/npu_top.v": "a34f636ad59911bd1f54e5ca449118aa215f732cff1f4ec8c295cc39ebf00841",
+    "rtl/pdk/sky130/npu_sram_bank.v": "1541ca6f5e4f353664aba13b5608a62b680b80f67483dd31d54caa4bd281d17e"
+  },
+  "sources": [
+    "rtl/npu_top.v",
+    "rtl/npu_host.v",
+    "rtl/npu_ctrl.v",
+    "rtl/npu_banks.v",
+    "rtl/npu_array.v",
+    "rtl/npu_pe.v",
+    "rtl/npu_requant.v",
+    "rtl/pdk/sky130/npu_sram_bank.v"
+  ],
+  "sources_dirty": true,
+  "sources_last_commit": "c5a85481fe3782dcae6cd81ba225ceb131597d7c",
+  "test_module": "test_bitexact",
+  "testcase": null,
+  "tests": 15,
+  "toplevel": "npu_top",
+  "utc": "2026-11-14T05:41:15.504792+00:00"
+}
