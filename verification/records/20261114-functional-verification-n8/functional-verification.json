@@ -1,0 +1,127 @@
+{
+  "schema_version": 2,
+  "engine": "icarus",
+  "hdl_toplevel": "npu_top",
+  "testbench": "test_bitexact",
+  "status": "pass",
+  "test_count": 14,
+  "passed_count": 14,
+  "failed_count": 0,
+  "skipped_count": 0,
+  "tests": [
+    {
+      "name": "test_workload_mm_smoke",
+      "status": "passed",
+      "sim_time_ns": 6900.0,
+      "real_time_s": 0.066
+    },
+    {
+      "name": "test_workload_mm_fc",
+      "status": "passed",
+      "sim_time_ns": 960720.0,
+      "real_time_s": 10.797
+    },
+    {
+      "name": "test_workload_conv_3x3_a",
+      "status": "passed",
+      "sim_time_ns": 1061840.0,
+      "real_time_s": 13.579
+    },
+    {
+      "name": "test_workload_conv_3x3_edge",
+      "status": "passed",
+      "sim_time_ns": 347450.0,
+      "real_time_s": 4.142
+    },
+    {
+      "name": "test_requant_edges",
+      "status": "passed",
+      "sim_time_ns": 34540.0,
+      "real_time_s": 0.353
+    },
+    {
+      "name": "test_k_extremes",
+      "status": "passed",
+      "sim_time_ns": 149300.0,
+      "real_time_s": 1.449
+    },
+    {
+      "name": "test_back_to_back",
+      "status": "passed",
+      "sim_time_ns": 4820.0,
+      "real_time_s": 0.048
+    },
+    {
+      "name": "test_reset_mid_run",
+      "status": "passed",
+      "sim_time_ns": 12580.0,
+      "real_time_s": 0.111
+    },
+    {
+      "name": "test_errors_write_nothing",
+      "status": "passed",
+      "sim_time_ns": 177190.0,
+      "real_time_s": 1.534
+    },
+    {
+      "name": "test_constrained_random",
+      "status": "passed",
+      "sim_time_ns": 56500.0,
+      "real_time_s": 0.642
+    },
+    {
+      "name": "test_bank_window_does_not_alias_bias",
+      "status": "passed",
+      "sim_time_ns": 4200.0,
+      "real_time_s": 0.035
+    },
+    {
+      "name": "test_bus_error_denied_and_unmapped",
+      "status": "passed",
+      "sim_time_ns": 24130.0,
+      "real_time_s": 0.224
+    },
+    {
+      "name": "test_soft_reset_mid_run",
+      "status": "passed",
+      "sim_time_ns": 28580.0,
+      "real_time_s": 0.226
+    },
+    {
+      "name": "test_irq_level_and_gate",
+      "status": "passed",
+      "sim_time_ns": 9400.0,
+      "real_time_s": 0.088
+    }
+  ],
+  "coverage": null,
+  "trace": null,
+  "environment": {
+    "engine": "icarus",
+    "engine_version": "13.0",
+    "tools": [],
+    "cocotb_version": "2.1.0",
+    "results_xml": {
+      "path": null,
+      "scope": "external",
+      "sha256": "sha256:63cd31bf56b004713110ce32b3c3d778d6c3605c26e09174b7289908e9bd1590"
+    },
+    "test_log": {
+      "path": null,
+      "scope": "external",
+      "sha256": "sha256:70824e9c3859579353d122841d3f04c341ad0f8a32f19028ee6cbd371e67fffc"
+    },
+    "build_log": {
+      "path": null,
+      "scope": "external",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "random_seed": 1,
+    "source_defines": {},
+    "env": {
+      "ARRAY_N": "8"
+    },
+    "initial_state": null,
+    "sdf": null
+  }
+}
