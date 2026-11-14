@@ -17,16 +17,12 @@
 set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO="$(dirname "${HERE}")"
-resolve() { case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s\n' "${REPO}/$1" ;; esac; }
-RTL_DIR="$(resolve "${NPU_RTL_DIR:-rtl}")"
-PDK_DIR="$(resolve "${NPU_PDK_DIR:-rtl/pdk/sky130}")"
+REPO_ROOT="$(dirname "${HERE}")"
+# The file set and the seam rule, in one place for every script that reads them.
+. "${REPO_ROOT}/rtl/sources.sh"
+npu_seam_dirs
 
-SRC=()
-for f in npu_top npu_host npu_ctrl npu_banks npu_array npu_pe npu_requant; do
-  SRC+=("${RTL_DIR}/${f}.v")
-done
-SRC+=("${PDK_DIR}/npu_sram_bank.v")
+mapfile -t SRC < <(npu_rtl_files "${RTL_DIR}"; npu_seam_file "${PDK_DIR}")
 # Synthesis view: the same wrapper with -DNPU_SRAM_MACRO (the define
 # rtl/synth/synth-request.json sets), over the pinned 1024-word macro's Verilog.
 MACRO=sky130_sram_4kbyte_1rw1r_32x1024_8

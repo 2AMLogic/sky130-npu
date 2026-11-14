@@ -23,19 +23,20 @@
 set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO="$(dirname "${HERE}")"
+REPO_ROOT="$(dirname "${HERE}")"
+# The temp dir and the verdict this control shares with check_mutation.sh. It
+# does not source rtl/sources.sh: a synthesized netlist is one file and has no
+# PDK seam left to resolve.
+. "${REPO_ROOT}/verification/mutation-lib.sh"
 if [ "$#" -ge 1 ]; then
   NETLIST="$1"
 else
-  NETLIST="$("${REPO}/rtl/synth/current-netlist.sh")" || exit 2
+  NETLIST="$("${REPO_ROOT}/rtl/synth/current-netlist.sh")" || exit 2
 fi
 LIB="${PDK_VERILOG_DIR:-${HOME}/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog}"
-PY="${PYTHON:-python3}"
-MACRO_V="${REPO}/rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v"
-[ -x "${REPO}/.venv/bin/python" ] && PY="${REPO}/.venv/bin/python"
+MACRO_V="${REPO_ROOT}/rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v"
 
-TMP="$(mktemp -d)"
-trap 'rm -rf "${TMP}"' EXIT
+mutation_tmpdir
 
 "${PY}" -I - "${NETLIST}" "${TMP}/mutant.v" <<'PY' || { echo "FAIL: the mutation did not apply (netlist changed shape?)" >&2; exit 1; }
 import re, sys
@@ -67,17 +68,4 @@ TESTCASE=test_workload_mm_smoke "${PY}" "${HERE}/runner.py" \
   --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8 \
   --records-dir "${TMP}/records" --build-dir "${TMP}/build" >"${TMP}/run.log" 2>&1
 rc=$?
-tail -n 12 "${TMP}/run.log"
-
-REC="$(ls "${TMP}"/records/*/record.json 2>/dev/null | head -n 1)"
-if [ -z "${REC}" ]; then
-  echo "FAIL: no record written (the run broke before the tests ran, rc=${rc})" >&2
-  exit 1
-fi
-if [ "${rc}" -ne 0 ] && grep -q 'vs expected_out.hex: row' "${TMP}/run.log" \
-   && "${PY}" -I -c 'import json,sys; r=json.load(open(sys.argv[1])); sys.exit(0 if r["failures"]>0 and not r["passed"] else 1)' "${REC}"; then
-  echo "PASS: the suite caught the one-bit corruption at gate level"
-  exit 0
-fi
-echo "FAIL: the corrupted netlist was NOT caught as a mismatch (rc=${rc})" >&2
-exit 1
+mutation_verdict "${rc}" "the corrupted netlist" "at gate level"

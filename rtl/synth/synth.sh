@@ -19,10 +19,17 @@ set -euo pipefail
 N="${1:?usage: synth.sh N core|full}"
 MODE="${2:?usage: synth.sh N core|full}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${HERE}/../.." && pwd)"
+# The file set, from the one place that spells it out. This script reads the
+# files cd-relative and does NOT honour NPU_RTL_DIR / NPU_PDK_DIR, so it takes
+# the basenames and not npu_seam_dirs: verification/README.md names the three
+# scripts that read the seam, and this is deliberately not one of them.
+. "${REPO_ROOT}/rtl/sources.sh"
 cd "${HERE}/.."
 
-CORE="npu_top.v npu_host.v npu_ctrl.v npu_banks.v npu_array.v npu_pe.v npu_requant.v"
-BANK="pdk/sky130/npu_sram_bank.v"
+mapfile -t CORE_FILES < <(npu_rtl_files "")   # "": bare basenames, cd-relative
+CORE="${CORE_FILES[*]}"
+BANK="$(npu_seam_file pdk/sky130)"
 case "${MODE}" in
   core) READ="read_verilog -sv -lib ${BANK}; read_verilog -sv ${CORE}" ;;
   full) READ="read_verilog -sv ${CORE} ${BANK}" ;;
