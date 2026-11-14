@@ -70,7 +70,22 @@ jobs:
 
       - name: Re-attest T1 item 10 and check the committed attestation
         run: |
+          # The envelope is named in exactly one place: the manifest's own
+          # evidence block. Read it back out rather than keeping a second copy
+          # here -- this workflow is itself an inventoried file, so a literal
+          # path would have to be edited before the envelope that hashes it
+          # could be produced.
+          check="$(jq -r '.evidence["10"].file // empty' manifests/sky130-npu.json)"
+          if [ -z "$check" ]; then
+            echo "::error::manifests/sky130-npu.json names no evidence[\"10\"].file; item 10 has no attestation to check"
+            exit 1
+          fi
+          if [ ! -f "$check" ]; then
+            echo "::error::manifests/sky130-npu.json cites '$check' for item 10, but no such file exists"
+            exit 1
+          fi
+          echo "item-10 attestation cited by the manifest: $check"
           klt signoff --attest 10 \
             --inventory manifests/inventories/item-10.json \
-            --check manifests/attestations/item-10-klt091-20261114T002339Z.json \
+            --check "$check" \
             --format json
