@@ -132,11 +132,23 @@ this one.
 
 ## PDK-independent files (stamped into `asap7-npu`)
 
-All of them except `check_mutation_gl.sh`: `runner.py`, `check_mutation.sh`, `requirements.txt`, `tests/`
-(`npu_bench.py`, `test_bitexact.py`, `test_golden.py`), `golden/`, `workloads/`,
-`records/README.md` and this README, plus `.github/workflows/verification.yml`.
+Everything tracked under `verification/` except `check_mutation_gl.sh`, plus
+`.github/workflows/verification.yml`. Of `records/`, the `README.md` is stamped
+but not the record directories — they are this repo's evidence for its own runs,
+not port artifacts. `check_mutation_gl.sh` is the one file-level exception: it is
+PDK-specific by construction, reading the sky130 synthesis record and the
+`sky130_fd_sc_hd` Verilog. Stated as a rule and not a list, the set stays correct
+as files are added; `git ls-files verification` should leave nothing it does not
+account for.
+
 Nothing here references sky130 or any PDK except the default seam value
-(`rtl/pdk/sky130`).
+(`rtl/pdk/sky130`). `tests/functional-verification-request.json` is stamped under
+that allowance rather than as a second exception: its `sources` array writes the
+default value out (`../../rtl/pdk/sky130/npu_sram_bank.v`) because a static JSON
+request has nothing to read `NPU_PDK_DIR` with, so a port edits that one path —
+the seam value, not PDK-specific content. Everywhere else the value is read from
+the variable (`runner.py`, `check_mutation.sh`) or is the directory copied from
+(`tests/test_relocated_layout.py`).
 
 ## Pointing the harness at another layout
 
