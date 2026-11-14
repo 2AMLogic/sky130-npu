@@ -82,7 +82,9 @@ Current envelope: `records/20261114-functional-verification-n8/functional-verifi
 — `status: pass`, 14/14 at `ARRAY_N = 8`, 0 failed, 0 skipped, cocotb 2.1.0,
 Icarus 13.0. Produced from the committed
 `tests/functional-verification-request.json` by the `flow/toolchain.json` pin
-(`klayout-tools==0.9.1`):
+(`klayout-tools==0.9.1`). Taken before #158's seam check joined the suite;
+that check runs here too (RTL sources, no `NPU_NETLIST` in the request's
+`env`), so the next envelope is 15/15:
 
 ```sh
 # the [functional-verification] extra is required: a bare --from has no cocotb.
