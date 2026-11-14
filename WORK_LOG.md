@@ -3,6 +3,13 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-14
+
+- **PR #161**: test(verification): record a 14-test klt functional-verification envelope at ARRAY_N=8
+- **Issue #151** (closed): Re-run the klt functional-verification envelope on the 14-test bit-exact suite
+- **PR #147**: docs: state the verification stamp set as a rule, not a file list
+- **Issue #145** (closed): Remove the stamp-list file enumeration in verification/README.md: a copy of the directory listing that has drifted twice
+
 ### 2026-11-13
 
 - **PR #140**: chore: point the record-log negation at records/ and drop the dead sim rules
