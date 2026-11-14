@@ -20,6 +20,7 @@ Nothing in this directory is a timing, area or throughput result.
 | `npu_requant.v` | Drain datapath: bias, multiply, round-half-up shift, ReLU, saturate |
 | `pdk/sky130/npu_sram_bank.v` | **The PDK seam** (below) |
 | `check.sh` | Icarus + Yosys elaboration at N = 8 and N = 4, negative cases |
+| `sources.sh` | The file set above and the `NPU_RTL_DIR` / `NPU_PDK_DIR` seam rule, sourced by every script that needs them |
 | `synth/` | Synthesis request, generic Yosys estimate script, recorded estimates |
 
 ## Parameters
