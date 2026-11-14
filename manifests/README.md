@@ -61,7 +61,7 @@ This block's **graded** gap-to-T1 state, from `klt signoff`
   both move together with the citation.
 - **Item 1** (design sources) is attested from `inventories/item-1.json`: the
   RTL, the synthesis request and the `klt synthesize` netlist in
-  `rtl/synth/records/20261111-sky130-hd/` (SRAM macro as a black box generated from its LEF; see
+  `rtl/synth/records/20261114-sky130-hd/` (SRAM macro as a black box generated from its LEF; see
   `rtl/synth/README.md`). Its freshness check is `klt synthesize --pdk sky130A
   --check <report> <request>`, which needs the sky130A PDK locally. The
   manifest grade re-hashes only the inventory, so an RTL edit without a new

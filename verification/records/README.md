@@ -29,5 +29,9 @@ Added with the bit-exact suite (earlier records simply lack them): `seed`
 commit touching the source files), `sources_dirty` (uncommitted changes in the
 sources), and `results`: what the tests hand back, with every entry labelled
 `"basis": "simulated"`: `workload:<id>` (`array_n`, `M`, `K`, `N`,
-`perf_cycles`, `u_array`, `mismatches`) and `random` (`seed`, `gemms`,
-`mismatches`). `u_array = M*K*N / (perf_cycles * ARRAY_N^2)`.
+`perf_cycles`, `u_array`, `mismatches`), `random` (`seed`, `gemms`,
+`mismatches`) and `requant_latency` (`array_n`, `measured_cycles`,
+`req_lat`, `result_words`: the requantizer's measured `in_vld` to
+`out_vld` delay and the `REQ_LAT` the drain FSM counted, which
+`test_requant_latency_matches_req_lat` requires to be equal).
+`u_array = M*K*N / (perf_cycles * ARRAY_N^2)`.
