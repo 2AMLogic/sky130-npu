@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "generic",
+  "status": "pass",
+  "t1_item": 10,
+  "summary": "T1 item 10 (Repo hygiene): 5/5 attestation checks passed (klt signoff --attest)",
+  "source": "manifests/inventories/item-10.json",
+  "attestation": {
+    "producer": "klt signoff --attest",
+    "inventory_schema_version": 1,
+    "hash_algorithm": "sha256-raw-bytes",
+    "check_count": 5,
+    "passed_count": 5,
+    "checks": [
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": ".github/workflows/signoff.yml",
+        "passed": true,
+        "content_hash": "sha256:0c64ecc0a550e0dfd29212f607cad65bacbb29ec13c7dace4c22b7de1d1daa44"
+      },
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": ".github/workflows/verification.yml",
+        "passed": true,
+        "content_hash": "sha256:92b3d9e542654469d46f1b04f9601526415359079089d182d3b7635c660a6666"
+      },
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": "LICENSE",
+        "passed": true,
+        "content_hash": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "check": "present",
+        "role": "hygiene",
+        "path": "README.md",
+        "passed": true,
+        "content_hash": "sha256:293db9e05ed815735fb13d2da2c3f5bd5465afd7376b5fcbb856b2628abda9db"
+      },
+      {
+        "check": "command",
+        "role": "audit",
+        "name": "golden-model-tests",
+        "argv": [
+          "python3",
+          "-I",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "verification/tests",
+          "-p",
+          "test_golden.py"
+        ],
+        "cwd": ".",
+        "exit_status": 0,
+        "passed": true
+      }
+    ]
+  },
+  "provenance": {
+    "klt_version": "0.9.1",
+    "klayout_version": null,
+    "pdk": null,
+    "deck": null,
+    "input": {
+      "path": {
+        "path": "manifests/inventories/item-10.json",
+        "scope": "repo"
+      },
+      "content_hash": "sha256:e64fded544885d17d500e2a88f1212a0ebfb81e3549d804f4c998df77efadad9"
+    }
+  }
+}
