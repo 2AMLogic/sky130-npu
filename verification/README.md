@@ -264,3 +264,12 @@ Relative values resolve against the repo root; absolute values are used as given
 The two directories need not be nested. `verification.yml` sets both in its
 workflow-level `env:`, which is the one place a port changes.
 `tests/test_relocated_layout.py` runs `rtl/check.sh` against a relocated copy.
+
+The rule itself is written once, in `rtl/sources.sh`: the 7 module basenames,
+the seam file's basename, and the resolution above. `rtl/check.sh` and
+`check_mutation.sh` source it, so the three scripts named here still read the
+two variables and no other script gains them (`rtl/synth/synth.sh` takes the
+file set from it but stays cd-relative). `runner.py` builds the same list in
+Python -- a cocotb entry point must not need a shell -- and
+`tests/test_source_list.py` asserts the two agree, under the defaults and
+under a relocated layout.

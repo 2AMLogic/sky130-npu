@@ -50,6 +50,7 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -r verification/requirements.txt
           .venv/bin/python -m unittest discover -s verification/tests -p 'test_runner_count.py'
+          .venv/bin/python -m unittest discover -s verification/tests -p 'test_source_list.py'
           EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py --param ARRAY_N=8
           EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py --param ARRAY_N=4
 

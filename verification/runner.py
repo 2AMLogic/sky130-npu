@@ -42,7 +42,10 @@ def _dir(name, default):
     return (REPO / env(name, default)).resolve()
 
 
-# Same source list and directory variables as rtl/check.sh.
+# The same file set and seam rule as rtl/sources.sh, which every shell entry
+# point reads. This is the one deliberate second implementation of it -- a
+# cocotb entry point must not need a shell -- and tests/test_source_list.py
+# asserts the two agree, so this is not a claim taken on trust.
 RTL_DIR = _dir("NPU_RTL_DIR", "rtl")
 PDK_DIR = _dir("NPU_PDK_DIR", "rtl/pdk/sky130")
 DEFAULT_SOURCES = [
