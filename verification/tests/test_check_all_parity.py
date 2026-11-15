@@ -44,7 +44,7 @@ site-packages. PyYAML is importable on a developer host but absent from
 ``verification/requirements.txt``, so ``import yaml`` would pass locally and
 fail in CI; the workflow is parsed as text with ``re`` and ``shlex`` instead
 -- its ``run:`` lines are literal shell one-liners, which is why that is
-tractable. The test only reads two files off disk and resolves them from
+tractable. The test only reads three files off disk and resolves them from
 ``__file__``, so it runs from any cwd and under ``python3 -I``.
 
 Text parsing cannot establish that the file it walks is a workflow GitHub
@@ -56,7 +56,12 @@ step-parity assertions above would pass against such a file. Quoting the
 value is the whole fix, so the test asserts every ``name:`` value is
 quoted whenever it contains a colon -- a step's, the workflow's
 top-level ``name:``, or a job's, list item or not -- naming the
-offending line. The scan is line-based and does not track block-scalar
+offending line. The same scan covers ``signoff.yml``, which is outside
+the parity set by design (its grade check needs the pinned klt, so it is
+not a gate step) but carries ``name:`` keys that break the file
+identically; CI catches the parse failure there only via the other
+workflow, so the local guard reads it directly. The scan is line-based
+and does not track block-scalar
 indentation, so a ``name:``-shaped line inside a ``run: |`` block would
 be inspected too; none exists today. The errexit guard is sign-aware the
 same way: a ``-`` flag cluster containing ``e`` enables errexit wherever
@@ -75,6 +80,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 WORKFLOW = REPO / ".github" / "workflows" / "verification.yml"
 GATE = REPO / "verification" / "check-all.sh"
+SIGNOFF = REPO / ".github" / "workflows" / "signoff.yml"
 
 RUN_KEY_RE = re.compile(r"^(?P<indent>[ \t]*)run:(?P<rest>.*)$")
 BLOCK_INDICATORS = ("|", "|-", "|+", ">", ">-", ">+")
@@ -216,13 +222,15 @@ def gate_steps(text):
     return steps
 
 
-def step_name_findings(text):
+def step_name_findings(text, filename):
     """Every ``name:`` value in the text that holds an unquoted ``: ``.
 
     Covers every mapping-key spelling -- step list items, the workflow's
     top-level ``name:``, and job-level ``name:`` keys -- since all three
     break the YAML parse identically. Line-based: a ``name:``-shaped line
     inside a block scalar would be inspected too (none exists today).
+    ``filename`` is the file being scanned, interpolated into each finding
+    so a defect names the file a reader must actually fix.
     """
     problems = []
     for number, line in enumerate(text.splitlines(), start=1):
@@ -235,7 +243,7 @@ def step_name_findings(text):
         if re.search(r":(\s|$)", value):
             problems.append(
                 f"line {number}: {line.strip()!r} -- quote the name; an "
-                "unquoted colon makes verification.yml unparseable, so "
+                f"unquoted colon makes {filename} unparseable, so "
                 "GitHub never starts its jobs"
             )
     return problems
@@ -281,6 +289,7 @@ class CheckAllParity(unittest.TestCase):
     def setUpClass(cls):
         cls.workflow_text = WORKFLOW.read_text(encoding="utf-8")
         cls.gate_text = GATE.read_text(encoding="utf-8")
+        cls.signoff_text = SIGNOFF.read_text(encoding="utf-8")
         cls.workflow_steps = [
             step
             for command in workflow_commands(cls.workflow_text)
@@ -322,14 +331,22 @@ class CheckAllParity(unittest.TestCase):
         see (they pass against the unparseable file). Quoting the value is
         the whole fix, so an unquoted value containing a colon is the
         defect, whichever ``name:`` key carries it -- a step list item, the
-        workflow's top-level ``name:``, or a job's.
+        workflow's top-level ``name:``, or a job's. ``signoff.yml`` is
+        scanned too: it sits outside the parity set by design (its grade
+        check needs the pinned klt, so it is not a gate step), but its
+        ``name:`` keys break the file identically and CI only catches the
+        parse failure there via the *other* workflow.
         """
-        self.assertEqual(
-            step_name_findings(self.workflow_text),
-            [],
-            "verification.yml has names GitHub will refuse to parse:\n"
-            + "\n".join(step_name_findings(self.workflow_text)),
-        )
+        for side, text in (
+            ("verification.yml", self.workflow_text),
+            ("signoff.yml", self.signoff_text),
+        ):
+            self.assertEqual(
+                step_name_findings(text, side),
+                [],
+                f"{side} has names GitHub will refuse to parse:\n"
+                + "\n".join(step_name_findings(text, side)),
+            )
 
     def test_runner_steps_pin_expect_icarus(self):
         """Both runner.py steps pin EXPECT_ICARUS=13.0 (the Icarus pin)."""
@@ -404,7 +421,7 @@ class CheckAllParity(unittest.TestCase):
             "job-level": "jobs:\n  bitexact:\n    name: bitexact: suite\n",
         }
         for where, text in cases.items():
-            findings = step_name_findings(text)
+            findings = step_name_findings(text, "workflow.yml")
             self.assertEqual(
                 len(findings),
                 1,
@@ -412,6 +429,7 @@ class CheckAllParity(unittest.TestCase):
                 f"exactly one finding, got {findings}",
             )
             self.assertIn("line", findings[0])
+            self.assertIn("workflow.yml", findings[0])
 
     def test_name_guard_accepts_quoted_and_clean_values(self):
         """Quoted colons and colon-free names are not findings."""
@@ -424,7 +442,7 @@ class CheckAllParity(unittest.TestCase):
             '  - name: "Gate parity: mirrors"\n'
             "  - name: Cache Icarus\n"
         )
-        self.assertEqual(step_name_findings(text), [])
+        self.assertEqual(step_name_findings(text, "workflow.yml"), [])
 
     def test_errexit_guard_catches_e_anywhere_in_a_minus_cluster(self):
         """``-euo``, ``-eo``, ``-euox`` enable errexit exactly like ``-e``.
