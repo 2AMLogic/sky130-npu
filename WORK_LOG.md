@@ -5,6 +5,16 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-15
 
+- **PR #184**: fix(ci): cross-workflow parse check keeps a startup-failed workflow red
+- **PR #181**: fix: stage the mutation control's temp tree from the shared file list
+- **PR #179**: refactor(rtl): delete the dead AW and OW localparams and re-attest item 1
+- **PR #178**: fix: pin check-all.sh cwd, qualify the gate wording, add a verification.yml parity test
+- **PR #176**: docs: use per-run mktemp dirs instead of fixed /tmp paths in verification/README.md
+- **Issue #180** (closed): CI gate reports green when a workflow fails to start: verification.yml's three checks vanished from a PR head and wait-checks said GREEN
+- **Issue #174** (closed): check_mutation.sh stages the temp tree by glob but compiles from the shared list — the two can disagree silently
+- **Issue #173** (closed): verification/README.md fv example command fails on a clean host and clobbers concurrent runs (-o /tmp/fv151)
+- **Issue #168** (closed): verification/check-all.sh: pin cwd to the repo root, qualify the full-gate wording, and add a drift check against verification.yml
+- **Issue #157** (closed): Two more zero-reference localparams: AW in npu_ctrl.v and OW in npu_host.v
 - **PR #158**: refactor(rtl): delete the dead LATENCY localparam and measure REQ_LAT against the real requantizer pipeline
 - **Issue #149** (closed): Remove the dead LATENCY localparam in npu_requant.v: the requantizer pipeline depth is spelled three ways, one of them unreachable
 - **PR #156**: refactor: source the RTL file set and the mutation verdict from two libraries
