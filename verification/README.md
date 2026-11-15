@@ -78,13 +78,18 @@ of `runner.py`, on the **RTL** sources (`rtl/npu_top.v` and below, behavioral
 artifact from the `runner.py` ledger `record.json` described above, and from
 the gate-level run in the next section; the three are not interchangeable.
 
-Current envelope: `records/20261114-functional-verification-n8/functional-verification.json`
+Current envelope: `records/20261115-functional-verification-n8/functional-verification.json`
 — `status: pass`, 14/14 at `ARRAY_N = 8`, 0 failed, 0 skipped, cocotb 2.1.0,
 Icarus 13.0. Produced from the committed
 `tests/functional-verification-request.json` by the `flow/toolchain.json` pin
-(`klayout-tools==0.9.1`). Taken before #158's seam check joined the suite;
-that check runs here too (RTL sources, no `NPU_NETLIST` in the request's
-`env`), so the next envelope is 15/15:
+(`klayout-tools==0.9.1`), with the random-test seed pinned via
+`environment.env.NPU_SEED` — a re-run at this pin reproduced all 14
+`sim_time_ns` values of the `20261114` envelope one-for-one, including
+`test_constrained_random` at `56500.0` (`records/20261114-functional-verification-n8/`
+is the prior envelope it was compared against; wall-clock and log hashes differ
+as expected). Taken before #158's seam check joined the suite; that check runs
+here too (RTL sources, no `NPU_NETLIST` in the request's `env`), so the next
+envelope is 15/15:
 
 ```sh
 # the [functional-verification] extra is required: a bare --from has no cocotb.
@@ -108,9 +113,14 @@ run read it from different places:
   the suite still passes, but by coincidence rather than instruction.
 
 Setting both is also what makes the envelope self-describing: `environment.env`
-echoes `{"ARRAY_N": "8"}`, so the record states the size it covers. Nothing
-echoes `parameters`, so `env` is the only field that does
+echoes `{"ARRAY_N": "8", "NPU_SEED": "2344049752", "NPU_RANDOM_RUNS": "8"}`, so
+the record states the size it covers — and, via the seed keys, the exact random
+stimulus behind `test_constrained_random`. Nothing echoes `parameters`, so
+`env` is the only field that does
 ([klayout-tools#5697](https://github.com/2AMLogic/klayout-tools/issues/5697)).
+The seed keys live only in `env` (the testbench reads them from `os.environ` too,
+and they have no `parameters` counterpart); pinning them there is what makes an
+envelope re-derivable rather than merely inspectable.
 A mismatch between the two is caught rather than silently mis-verified:
 `test_bitexact.check_cap_regs` asserts the DUT's `CAP.ARRAY_N` equals the
 bench's N.
@@ -121,9 +131,13 @@ Two things the envelope does **not** give you:
   `environment.results_xml` / `test_log` / `build_log` fields are
   `{path, scope, sha256}` objects, and because `-o` must point outside the
   checkout they record `scope: "external"`, `path: null` — a sha256 with nothing
-  to check it against. The random test's `NPU_SEED` is printed only into that
-  unretained log; for this run it was `2344049752`. (`environment.random_seed: 1`
-  is the *cocotb* seed from `options.random_seed`, a different thing.)
+  to check it against. The random test's seed no longer depends on that
+  unretained log: it is pinned as `NPU_SEED` in the request file's `env` block
+  and echoed into the envelope as `environment.env.NPU_SEED`
+  (`2344049752`), so the committed artifact itself names the stimulus; the
+  log's `NPU_SEED=` line is corroboration, not the record.
+  (`environment.random_seed: 1` is the *cocotb* seed from `options.random_seed`,
+  a different thing.)
 - **No timing claim**, like everything else in this directory. It is a
   zero-delay RTL run.
 

@@ -5,7 +5,7 @@
   "scripts": {
     "worktree:return": "./.loom/scripts/worktree-return.sh",
     "test": "python3 verification/runner.py --param ARRAY_N=8",
-    "check:all": "pnpm run test && python3 verification/runner.py --param ARRAY_N=4",
-    "check:ci": "pnpm run test && python3 verification/runner.py --param ARRAY_N=4"
+    "check:ci": "./verification/check-all.sh",
+    "check:all": "pnpm run check:ci"
   }
 }
