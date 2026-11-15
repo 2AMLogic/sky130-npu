@@ -28,8 +28,22 @@ N="${1:-8}"
 mutation_tmpdir
 npu_seam_dirs
 mkdir "${TMP}/rtl" "${TMP}/pdk"
-cp "${RTL_DIR}"/*.v "${TMP}/rtl/"
-cp "${PDK_DIR}"/*.v "${TMP}/pdk/"
+# Stage the tree from the list rtl/sources.sh names, not from a *.v glob: the
+# staged set and the --sources set below are then the same set by
+# construction (#174). macro/ stays unstaged, as the globs left it. A listed
+# name with no file behind it fails here, in cp, and stops the control --
+# this script has no set -e, so the failure is made explicit.
+stage_listed() {
+  local dest="$1" src
+  while IFS= read -r src; do
+    cp "${src}" "${dest}/" || {
+      echo "FAIL: listed source missing or unreadable: ${src}" >&2
+      exit 1
+    }
+  done
+}
+stage_listed "${TMP}/rtl" < <(npu_rtl_files "${RTL_DIR}")
+stage_listed "${TMP}/pdk" < <(npu_seam_file "${PDK_DIR}")
 
 sed -i 's/lane_out = r\[7:0\];/lane_out = {r[7:1], ~r[0]};/' "${TMP}/rtl/npu_requant.v"
 if cmp -s "${RTL_DIR}/npu_requant.v" "${TMP}/rtl/npu_requant.v"; then
