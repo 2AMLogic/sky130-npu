@@ -95,10 +95,14 @@ envelope is 15/15:
 # the [functional-verification] extra is required: a bare --from has no cocotb.
 # -o MUST point outside the checkout; the default outdir is
 # .klt/functional-verification/ next to the request file, and .klt is not ignored.
+# Per-run dir, not a fixed /tmp path: the envelope goes to stdout, so the shell
+# opens the > redirect before klt creates -o (fails on a clean host), and a fixed
+# path is clobbered by a concurrent run.
+out=$(mktemp -d) && echo "artifacts: $out" && \
 uvx --from "klayout-tools[functional-verification]==0.9.1" \
     klt functional-verification \
     verification/tests/functional-verification-request.json \
-    --format json -o /tmp/fv151 > /tmp/fv151/envelope.json
+    --format json -o "$out" > "$out/envelope.json"
 ```
 
 `ARRAY_N` has to be set **twice** in the request, because the two halves of the
@@ -162,12 +166,15 @@ PDKV=~/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/verilog    # pinned in flow/pdk.js
 MACRO=rtl/pdk/sky130/macro/sky130_sram_4kbyte_1rw1r_32x1024_8/sky130_sram_4kbyte_1rw1r_32x1024_8.v
 NETLIST=$(rtl/synth/current-netlist.sh)   # rtl/synth/records/<current>/npu_top_synth.v
 # VERBOSE=0: the model prints a line per access, which floods the ~75 min log;
-# Icarus -P cannot reach a nested module's parameter, so silence a copy
-sed 's/parameter VERBOSE = 1 ;/parameter VERBOSE = 0 ;/' $MACRO > /tmp/macro_quiet.v
+# Icarus -P cannot reach a nested module's parameter, so silence a copy.
+# Per-run dir, not a fixed /tmp path: a peer overwriting the fixed file mid-run
+# makes the record's source_sha256 attest a file the simulator never compiled.
+MACRO_QUIET="$(mktemp -d)/macro_quiet.v"
+sed 's/parameter VERBOSE = 1 ;/parameter VERBOSE = 0 ;/' $MACRO > "$MACRO_QUIET"
 .venv/bin/python verification/runner.py --toplevel npu_top \
     --sources "$NETLIST" \
               $PDKV/primitives.v $PDKV/sky130_fd_sc_hd.v \
-              /tmp/macro_quiet.v \
+              "$MACRO_QUIET" \
     --define FUNCTIONAL --define 'UNIT_DELAY=#0' --baked-param ARRAY_N=8 \
     --netlist
 ./verification/check_mutation_gl.sh      # negative control: must exit 0
@@ -197,7 +204,10 @@ What this is, and is not:
   the same macro module as the netlist's black box. The netlist already contains the bank
   wrapper.
 - The record carries `defines`, `baked_parameters` and `source_sha256` (netlist,
-  both PDK model files, the macro model copy).
+  both PDK model files, the macro model copy). With a per-run `mktemp -d` macro
+  copy, that copy's `source_sha256` key is a random relative path (e.g.
+  `../../../../../../../tmp/tmp.AbC123/macro_quiet.v`) — expected, not a
+  regression; compare hashes by value, not by key.
 - Wall time on one core is about 75 minutes for the whole suite (about 630 simulated ns per second), plus a few minutes of simulator teardown before the record is written.
 
 Latest run: `records/20261113T155441Z-2441991e/` — 14/14 pass on
