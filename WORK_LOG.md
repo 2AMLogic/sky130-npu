@@ -5,6 +5,10 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-15
 
+- **PR #189**: test(verification): scan every name: key and make the errexit guard sign-aware
+- **PR #188**: fix(ci): workflow shape checker rejects non-mapping documents and duplicate keys
+- **Issue #185** (closed): check_workflows.py accepts two workflow inputs that may still fail startup: duplicate keys and a non-mapping document
+- **Issue #182** (closed): test_check_all_parity.py's structural guards are narrower than they claim: a '- name:'-only YAML check, and an errexit matcher that misses 'set -euo'
 - **PR #184**: fix(ci): cross-workflow parse check keeps a startup-failed workflow red
 - **PR #181**: fix: stage the mutation control's temp tree from the shared file list
 - **PR #179**: refactor(rtl): delete the dead AW and OW localparams and re-attest item 1
