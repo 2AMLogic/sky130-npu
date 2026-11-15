@@ -72,7 +72,6 @@ module npu_host #(
     input  wire [31:0] h_rdata
 );
 
-    localparam OW = $clog2(BANK_BYTES) + 1;
     localparam BW = $clog2(NBANKS);
     localparam [7:0] CAP_N     = ARRAY_N;
     localparam [7:0] CAP_BANKS = NBANKS;
