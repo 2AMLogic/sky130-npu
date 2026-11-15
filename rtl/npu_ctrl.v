@@ -12,8 +12,7 @@ module npu_ctrl #(
     parameter ARRAY_N     = 8,
     parameter NBANKS      = 4,
     parameter BANK_BYTES  = 4096,
-    parameter K_MAX       = 256,
-    parameter REQ_LAT     = 3          // npu_requant LATENCY
+    parameter K_MAX       = 256
 ) (
     input  wire        clk,
     input  wire        rst,
@@ -73,6 +72,15 @@ module npu_ctrl #(
     localparam NWORDS  = ARRAY_N * ARRAY_N / 4;      // result words per tile
     localparam AW      = $clog2(BANK_BYTES/4);
     localparam OW      = $clog2(BANK_BYTES) + 1;     // byte offset width (holds BANK_BYTES)
+
+    // npu_requant's structural pipeline depth: in_vld -> v1 -> v2 -> out_vld,
+    // the three flops in that module. S_TAIL runs for this many cycles so the
+    // last result word is written before done_set rises. Nothing overrides it,
+    // so it is a localparam rather than a parameter, and the claim that it
+    // equals the requantizer's real latency is enforced by
+    // test_requant_latency_matches_req_lat (verification/tests/test_bitexact.py)
+    // rather than by this comment.
+    localparam REQ_LAT = 3;
 
     localparam [2:0] S_IDLE = 3'd0, S_FEED = 3'd1, S_WAIT = 3'd2,
                      S_DRAIN = 3'd3, S_TAIL = 3'd4;

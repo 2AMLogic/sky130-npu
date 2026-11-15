@@ -86,6 +86,14 @@ def parse_args(argv):
         "recorded, but not passed to iverilog -P; repeatable",
     )
     p.add_argument(
+        "--netlist",
+        action="store_true",
+        default=env("HDL_NETLIST", "") not in ("", "0"),
+        help="sources are a synthesized netlist: exported to the test env as "
+        "NPU_NETLIST=1 and recorded as netlist_sources, so tests that read "
+        "the behavioral hierarchy can skip themselves (env HDL_NETLIST)",
+    )
+    p.add_argument(
         "--define",
         action="append",
         default=[],
@@ -220,6 +228,7 @@ def main(argv=None):
             **args.baked,
             "NPU_SEED": str(seed),
             "NPU_RESULTS_FILE": str(results_file),
+            "NPU_NETLIST": "1" if args.netlist else "0",
         },
     )
     tests, failures = count_results(results_xml)
@@ -235,6 +244,7 @@ def main(argv=None):
             "defines": args.defines,
             "parameters": {**args.params, **args.baked},
             "baked_parameters": sorted(args.baked),
+            "netlist_sources": args.netlist,
             "test_module": args.test_module,
             "cocotb": cocotb.__version__,
             "simulator": version,

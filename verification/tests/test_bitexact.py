@@ -6,7 +6,8 @@ live ``golden.gemm_int8`` call (the live call guards the vectors themselves).
 Utilization is recorded per workload, labelled ``simulated``.
 
 Env: ``ARRAY_N`` (4 or 8, set by the runner), ``NPU_SEED`` (random-test seed,
-printed and recorded), ``NPU_RANDOM_RUNS`` (random GEMM count, default 8).
+printed and recorded), ``NPU_RANDOM_RUNS`` (random GEMM count, default 8),
+``NPU_NETLIST`` (``1`` on a netlist run: the RTL-only seam check below skips).
 """
 
 import os
@@ -15,7 +16,7 @@ import sys
 from pathlib import Path
 
 import cocotb
-from cocotb.triggers import ClockCycles, FallingEdge
+from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -25,6 +26,12 @@ from verification.golden import gemm_int8, pack_a, pack_b, requantize  # noqa: E
 
 SEED = int(os.environ.get("NPU_SEED", random.SystemRandom().getrandbits(32)))
 RANDOM_RUNS = int(os.environ.get("NPU_RANDOM_RUNS", "8"))
+# The gate-level run synthesizes the hierarchy away: there is no ``u_ctrl``
+# instance to read a localparam from. The runner flags those runs with
+# ``NPU_NETLIST=1``, and the seam check below -- which needs exactly that
+# read -- skips itself there (cocotb records the skip in the results XML and
+# the ledger excludes skipped cases, so a gate-level run counts 14, not 15).
+GATE_LEVEL = os.environ.get("NPU_NETLIST") == "1"
 print(f"NPU_SEED={SEED}")
 nb.record_result("seed", SEED)
 
@@ -561,3 +568,89 @@ async def test_irq_level_and_gate(dut):
 
     await check_tile(bench, lay, a, b, bias, mult, shift, 0,
                      "tile run through the irq checks")
+
+
+# ------------------------------------------------- drain-FSM / requantizer seam
+# npu_requant's pipeline depth is spelled once, structurally (the v1 / v2 /
+# out_vld flops), and npu_ctrl's S_TAIL counts REQ_LAT cycles so the drain has
+# emptied before DONE. Nothing in the RTL ties those two together, so the test
+# below does (issue #149).
+
+
+# RTL-only: the netlist has no u_ctrl.REQ_LAT to read (see GATE_LEVEL above).
+@cocotb.test(skip=GATE_LEVEL)
+async def test_requant_latency_matches_req_lat(dut):
+    """npu_ctrl's REQ_LAT equals npu_requant's measured in_vld -> out_vld delay.
+
+    Watches the requantizer's own valid pair through a real tile -- ``drain_vld``
+    (its ``in_vld``) and ``rq_vld`` (its ``out_vld``) -- measures the delay
+    between them, and compares it with the ``REQ_LAT`` the FSM actually used.
+    Then checks the consequence that makes the match matter: ``done_set`` must
+    rise strictly after the last result word, or the host can observe DONE
+    before the final ``out_word`` reaches its bank.
+
+    A requantizer that gains or loses a register stage fails the first
+    assertion, and so does a REQ_LAT shortened below the real latency: either
+    perturbation breaks ``measured == req_lat``. The ``done_set`` check is the
+    second, kept because it is the consequence that makes the match matter.
+    """
+    bench = await setup(dut)
+    n = bench.n
+    nwords = n * n // 4
+    req_lat = int(dut.u_ctrl.REQ_LAT.value)
+    assert req_lat > 0, f"REQ_LAT={req_lat}: S_TAIL would not drain at all"
+
+    rng = random.Random(SEED ^ 0x1A7)
+    k, mult, shift = 16, 3, 9
+    a, b, bias, lay = await load_tile(bench, rng, k, mult, shift)
+    await bench.start()
+
+    # One sample per cycle, no bus traffic in flight: drain_vld and rq_vld are
+    # read at the settling point Bench._xfer uses, so each sample is the value
+    # that cycle presented to npu_banks.
+    drain, rq, done = [], [], None
+    for cyc in range(k + 2 * n + nwords + 4 * req_lat + 64):
+        await RisingEdge(dut.clk)
+        await FallingEdge(dut.clk)
+        if int(dut.drain_vld.value):
+            drain.append(cyc)
+        if int(dut.rq_vld.value):
+            rq.append(cyc)
+        if done is None and int(dut.done_set.value):
+            done = cyc
+        elif done is not None:
+            break                      # one cycle past done_set: rq_vld is done
+
+    assert done is not None, "done_set never rose; the tile did not finish"
+    assert len(drain) == nwords, \
+        f"drain_vld high for {len(drain)} cycles, want {nwords} result words"
+    assert len(rq) == nwords, \
+        f"rq_vld high for {len(rq)} cycles, want {nwords} result words"
+    assert drain == list(range(drain[0], drain[0] + nwords)), \
+        f"drain_vld is not one contiguous run: {drain}"
+    assert rq == list(range(rq[0], rq[0] + nwords)), \
+        f"rq_vld is not one contiguous run: {rq}"
+
+    measured = rq[0] - drain[0]
+    assert measured == req_lat, (
+        f"npu_requant delays in_vld by {measured} cycles, but npu_ctrl's S_TAIL "
+        f"counts REQ_LAT={req_lat}: the drain FSM and the requantizer disagree "
+        f"about the pipeline depth")
+    assert rq[-1] - drain[-1] == measured, (
+        f"the requantizer's latency changed within one tile: first word "
+        f"{measured}, last word {rq[-1] - drain[-1]}")
+    assert done > rq[-1], (
+        f"done_set rose at cycle {done} but the last result word was written at "
+        f"cycle {rq[-1]}: the host can observe DONE before the final out_word "
+        f"reaches its bank")
+
+    nb.record_result("requant_latency", {
+        "array_n": n, "measured_cycles": measured, "req_lat": req_lat,
+        "result_words": len(rq), "basis": "simulated",
+    })
+
+    st = await bench.read(nb.STATUS)
+    assert st & nb.ST_DONE and not st & nb.ST_ERR, f"STATUS={st:#x}"
+    await bench.write(nb.STATUS, nb.ST_DONE)
+    await check_tile(bench, lay, a, b, bias, mult, shift, 0,
+                     "tile measured for requantizer latency")

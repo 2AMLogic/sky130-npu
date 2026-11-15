@@ -9,7 +9,10 @@
 //   out = clamp(r, -128, 127)
 //
 // Three register stages: t, p, out. in_vld travels with the data; out_vld is
-// in_vld delayed by LATENCY cycles. `flush` clears the valid bits (SOFT_RESET).
+// in_vld delayed by three cycles -- the `v1`, `v2`, `out_vld` flops below are
+// the only place that depth is spelled. The drain FSM's matching constant is
+// `REQ_LAT` in npu_ctrl, and test_requant_latency_matches_req_lat measures this
+// delay against it. `flush` clears the valid bits (SOFT_RESET).
 module npu_requant (
     input  wire         clk,
     input  wire         flush,
@@ -22,8 +25,6 @@ module npu_requant (
     output reg          out_vld,
     output reg  [31:0]  out_word  // byte j = lane j
 );
-
-    localparam LATENCY = 3;
 
     reg                v1, v2;
     reg signed [31:0]  t_q [0:3];
