@@ -35,6 +35,14 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
+      # Workflow-startup guard, mirrored into verification.yml's golden job:
+      # this job parses every file in .github/workflows/ (both of them, this
+      # workflow included) with a real YAML parser. If verification.yml
+      # cannot parse, its jobs never start but this one does and fails, so
+      # the head goes red instead of losing its checks silently.
+      - name: Every workflow file parses
+        run: uv run --with pyyaml==6.0.3 python verification/check_workflows.py
+
       - name: Install the pinned klt (klayout-tools)
         run: |
           uv tool install "$(jq -r '.klayout_tools.pypi' flow/toolchain.json)"

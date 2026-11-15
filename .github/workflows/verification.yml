@@ -70,6 +70,17 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Workflow-startup guard, mirrored into signoff.yml's grade job: each
+      # workflow parses every file in .github/workflows/ (both of them, this
+      # one included) with a real YAML parser, so a workflow that cannot
+      # start leaves a surviving reader in the other workflow to go red
+      # instead of vanishing from a green gate.
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Every workflow file parses
+        run: uv run --with pyyaml==6.0.3 python verification/check_workflows.py
+
       - name: Golden model unit tests
         run: python -m unittest discover -s verification/tests -p 'test_golden.py'
 
