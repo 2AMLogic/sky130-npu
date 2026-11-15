@@ -73,7 +73,7 @@ jobs:
       - name: Golden model unit tests
         run: python -m unittest discover -s verification/tests -p 'test_golden.py'
 
-      - name: Gate parity: check-all.sh mirrors this workflow
+      - name: "Gate parity: check-all.sh mirrors this workflow"
         run: python -m unittest discover -s verification/tests -p 'test_check_all_parity.py'
 
   # Elaboration and lint of rtl/ at the target (8) and fallback (4) sizes, and

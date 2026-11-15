@@ -46,6 +46,15 @@ fail in CI; the workflow is parsed as text with ``re`` and ``shlex`` instead
 -- its ``run:`` lines are literal shell one-liners, which is why that is
 tractable. The test only reads two files off disk and resolves them from
 ``__file__``, so it runs from any cwd and under ``python3 -I``.
+
+Text parsing cannot establish that the file it walks is a workflow GitHub
+will accept, so a structural check closes that gap: an unquoted ``name``
+value containing a colon (``name: Gate parity: ...``) is a YAML parse
+error -- GitHub refuses to start the workflow, its jobs silently vanish
+(no check-runs at all, so a green check list proves nothing) -- and the
+step-parity assertions above would pass against such a file. Quoting the
+value is the whole fix, so the test asserts every ``- name:`` value is
+quoted whenever it contains a colon, naming the offending line.
 """
 
 import re
@@ -65,6 +74,7 @@ BLOCK_INDICATORS = ("|", "|-", "|+", ">", ">-", ">+")
 ENV_PAIR_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=.*")
 STEP_CALL_RE = re.compile(r'^\s*step\s+"(?P<name>[^"]*)"\s*(?P<rest>.*)$')
 ARRAY_N_RE = re.compile(r"ARRAY_N=\d+$")
+STEP_NAME_RE = re.compile(r"^\s*-\s+name:\s+(?P<value>\S.*)$")
 
 
 @dataclass(frozen=True)
@@ -235,6 +245,36 @@ class CheckAllParity(unittest.TestCase):
             (dict(missing), dict(extra)),
             ({}, {}),
             "check-all.sh and verification.yml disagree on the gate's steps:\n"
+            + "\n".join(problems),
+        )
+
+    def test_step_names_survive_yaml_parsing(self):
+        """Every ``- name:`` value with a colon in it must be quoted.
+
+        A plain (unquoted) scalar cannot contain ``: `` -- such a line is a
+        YAML parse error, GitHub refuses to start the workflow, and the jobs
+        emit no check-runs at all, which the parity assertions above cannot
+        see (they pass against the unparseable file). Quoting the value is
+        the whole fix, so an unquoted value containing a colon is the defect.
+        """
+        problems = []
+        for number, line in enumerate(self.workflow_text.splitlines(), start=1):
+            match = STEP_NAME_RE.match(line)
+            if not match:
+                continue
+            value = match.group("value")
+            if value[0] in ('"', "'"):
+                continue
+            if re.search(r":(\s|$)", value):
+                problems.append(
+                    f"line {number}: {line.strip()!r} -- quote the name; an "
+                    "unquoted colon makes verification.yml unparseable, so "
+                    "GitHub never starts its jobs"
+                )
+        self.assertEqual(
+            problems,
+            [],
+            "verification.yml has step names GitHub will refuse to parse:\n"
             + "\n".join(problems),
         )
 
