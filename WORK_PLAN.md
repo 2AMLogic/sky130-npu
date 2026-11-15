@@ -32,8 +32,7 @@ _None._
 
 Issues currently being built (`loom:building`).
 
-- **#146**: Deduplicate the RTL source list and the mutation-control verdict: four hand-synced copies across rtl/ and verification/
-- **#149**: Remove the dead LATENCY localparam in npu_requant.v: the requantizer pipeline depth is spelled three ways, one of them unreachable
+_None._
 
 ## PRs Awaiting Review
 
@@ -45,8 +44,7 @@ _None._
 
 PRs that passed review and are queued for Champion auto-merge (`loom:pr`).
 
-- **#156**: refactor: source the RTL file set and the mutation verdict from two libraries
-- **#158**: refactor(rtl): delete the dead LATENCY localparam and measure REQ_LAT against the real requantizer pipeline
+_None._
 
 ## Proposed
 
@@ -55,8 +53,6 @@ Issues carrying `loom:curated`.
 - **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)*
 - **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(curated)*
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)*
-- **#157**: Two more zero-reference localparams: AW in npu_ctrl.v and OW in npu_host.v *(curated)*
-- **#173**: verification/README.md fv example command fails on a clean host and clobbers concurrent runs (-o /tmp/fv151) *(curated)*
 
 ## Proposed (Architect / Hermit)
 
@@ -74,10 +70,10 @@ _None._
 | Very important | 1 |
 | Important | 1 |
 | Ready (`loom:issue`) | 0 |
-| In Progress (`loom:building`) | 2 |
+| In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 0 |
-| Approved PRs awaiting merge | 2 |
-| Curated | 5 |
+| Approved PRs awaiting merge | 0 |
+| Curated | 3 |
 | Architect / Hermit proposals | 0 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
