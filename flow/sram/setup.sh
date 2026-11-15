@@ -134,6 +134,14 @@ check "sky130_sram_macros tree sha256" "$(pin macro_configs.tree_sha256)" "$(tre
 # The macro configs are also pinned file by file in the macro pins (same commit).
 COMMON="$MC/configs/sky130_sram_common.py"
 check "sky130_sram_common.py sha256" "$(pin macro_configs.common_py_sha256)" "$(sha256sum "$COMMON" | cut -d' ' -f1)"
+# Validate --macro-config before any destructive step: $MC/configs/ only exists
+# after the fetch above, so this is the earliest possible point, and it must
+# precede `rm -rf "$OUT"` (a typo must not destroy a previous run's outputs)
+# and precede the compiler (SRAM_MACRO_CONFIG is exported only on a valid path).
+[ -z "$MACRO_CONFIG" ] || {
+  export SRAM_MACRO_CONFIG="$MC/configs/$MACRO_CONFIG"
+  [ -f "$SRAM_MACRO_CONFIG" ] || { echo "--macro-config not in the pinned configs/: $MACRO_CONFIG" >&2; exit 2; }
+}
 
 # --- Python venv -------------------------------------------------------------
 VENV="$SCRATCH/venv"
@@ -207,13 +215,15 @@ if [ -n "$RUN_CONFIG" ]; then
 else
   CONFIG="$HERE/probe_16x32_1rw1r.py"; STEM="probe_sram_32x16_1rw1r"; LOGSTEM="probe"
 fi
+# The record is committed, append-only evidence: name the config by its
+# repo-relative path, and never write a host path into it.
+case "$CONFIG" in
+  "$REPO"/*) CONFIG_REC="${CONFIG#"$REPO"/}" ;;
+  *)         CONFIG_REC="<external>/$(basename "$CONFIG")" ;;
+esac
 OUT="$SCRATCH/run-out"
 rm -rf "$OUT"; mkdir -p "$OUT"
 export SRAM_COMMON_PY="$COMMON" SRAM_OUT_DIR="$OUT"
-[ -z "$MACRO_CONFIG" ] || {
-  export SRAM_MACRO_CONFIG="$MC/configs/$MACRO_CONFIG"
-  [ -f "$SRAM_MACRO_CONFIG" ] || { echo "--macro-config not in the pinned configs/: $MACRO_CONFIG" >&2; exit 2; }
-}
 LOG="$SCRATCH/$LOGSTEM.log"
 START="$(date +%s)"
 set +e
@@ -239,7 +249,7 @@ if [ -n "$RECORD_ID" ]; then
     echo "openram_version: $(cat "$OR/VERSION")"
     echo "sram_cells_commit: $(git -C "$BD" rev-parse HEAD)"
     echo "python: $("$VENV/bin/python" --version 2>&1)"
-    echo "config: flow/sram/$(basename "$CONFIG")"
+    echo "config: $CONFIG_REC"
     echo "output_name: $STEM"
     echo "exit_code: $RC"
     echo "wall_seconds: $WALL"
