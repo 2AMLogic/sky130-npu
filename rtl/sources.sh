@@ -32,6 +32,8 @@
 #     entry point and must not need a shell. That second implementation is
 #     held to this one by verification/tests/test_source_list.py, which
 #     compares the two file sets instead of asking a comment to be trusted.
+#     That test also holds the disk to the list: a .v file present but
+#     unlisted is a loud, named failure there, not a silent omission.
 #
 # Shell options are the sourcing script's to set.
 
