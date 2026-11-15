@@ -55,7 +55,7 @@ no synthesis input, script or binary changed, and the byte-identical netlist
 above is the cross-check. Filed upstream as
 [2AMLogic/klayout-tools#5830](https://github.com/2AMLogic/klayout-tools/issues/5830).
 
-The 20261114 run reproduces the 20261111 run's `instance_count` (70 823), `area_um2`,
+The 20261111 run reproduces the 20261027 run's `instance_count` (70 823), `area_um2`,
 `sequential_area_um2`, per-cell-type counts and `blackbox_modules` exactly; only the
 blackbox's origin differs (generated from the LEF, with `vccd1`/`vssd1` power pins, instead
 of a hand-written declaration). The envelope also gains `defines` and `macros`.
