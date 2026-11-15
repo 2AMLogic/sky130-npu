@@ -13,5 +13,6 @@
   ],
   "testbench": { "module": "test_bitexact" },
   "parameters": { "ARRAY_N": 8 },
+  "env": { "ARRAY_N": "8" },
   "options": { "random_seed": 1 }
 }
