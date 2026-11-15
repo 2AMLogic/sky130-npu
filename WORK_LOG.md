@@ -5,6 +5,10 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-15
 
+- **PR #158**: refactor(rtl): delete the dead LATENCY localparam and measure REQ_LAT against the real requantizer pipeline
+- **Issue #149** (closed): Remove the dead LATENCY localparam in npu_requant.v: the requantizer pipeline depth is spelled three ways, one of them unreachable
+- **PR #156**: refactor: source the RTL file set and the mutation verdict from two libraries
+- **Issue #146** (closed): Deduplicate the RTL source list and the mutation-control verdict: four hand-synced copies across rtl/ and verification/
 - **PR #170**: test(verification): deduplicate tile setup — retrofit test_reset_mid_run onto load_tile, hoist pack_a/pack_b imports
 - **Issue #160** (closed): Deduplicate tile setup in test_bitexact.py: test_reset_mid_run hand-rolls load_tile, and pack_a/pack_b is imported locally four times
 - **PR #172**: test(verification): pin NPU_SEED in the fv request and record a reproducible 14/14 envelope
