@@ -53,8 +53,15 @@ value containing a colon (``name: Gate parity: ...``) is a YAML parse
 error -- GitHub refuses to start the workflow, its jobs silently vanish
 (no check-runs at all, so a green check list proves nothing) -- and the
 step-parity assertions above would pass against such a file. Quoting the
-value is the whole fix, so the test asserts every ``- name:`` value is
-quoted whenever it contains a colon, naming the offending line.
+value is the whole fix, so the test asserts every ``name:`` value is
+quoted whenever it contains a colon -- a step's, the workflow's
+top-level ``name:``, or a job's, list item or not -- naming the
+offending line. The scan is line-based and does not track block-scalar
+indentation, so a ``name:``-shaped line inside a ``run: |`` block would
+be inspected too; none exists today. The errexit guard is sign-aware the
+same way: a ``-`` flag cluster containing ``e`` enables errexit wherever
+the letter sits (``-euo`` as much as ``-e``), while a ``+`` cluster
+disables it and is fine.
 """
 
 import re
@@ -74,7 +81,7 @@ BLOCK_INDICATORS = ("|", "|-", "|+", ">", ">-", ">+")
 ENV_PAIR_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=.*")
 STEP_CALL_RE = re.compile(r'^\s*step\s+"(?P<name>[^"]*)"\s*(?P<rest>.*)$')
 ARRAY_N_RE = re.compile(r"ARRAY_N=\d+$")
-STEP_NAME_RE = re.compile(r"^\s*-\s+name:\s+(?P<value>\S.*)$")
+STEP_NAME_RE = re.compile(r"^\s*(?:-\s+)?name:\s+(?P<value>\S.*)$")
 
 
 @dataclass(frozen=True)
@@ -209,6 +216,64 @@ def gate_steps(text):
     return steps
 
 
+def step_name_findings(text):
+    """Every ``name:`` value in the text that holds an unquoted ``: ``.
+
+    Covers every mapping-key spelling -- step list items, the workflow's
+    top-level ``name:``, and job-level ``name:`` keys -- since all three
+    break the YAML parse identically. Line-based: a ``name:``-shaped line
+    inside a block scalar would be inspected too (none exists today).
+    """
+    problems = []
+    for number, line in enumerate(text.splitlines(), start=1):
+        match = STEP_NAME_RE.match(line)
+        if not match:
+            continue
+        value = match.group("value")
+        if value[0] in ('"', "'"):
+            continue
+        if re.search(r":(\s|$)", value):
+            problems.append(
+                f"line {number}: {line.strip()!r} -- quote the name; an "
+                "unquoted colon makes verification.yml unparseable, so "
+                "GitHub never starts its jobs"
+            )
+    return problems
+
+
+def errexit_findings(text):
+    """Every ``set`` line in the text that would enable errexit.
+
+    Sign-aware: a ``-`` flag cluster enables errexit if it contains ``e``
+    anywhere (bash parses cluster flags letter by letter, so ``-euo``
+    enables exactly what ``-e`` does), while a ``+`` cluster disables it
+    and is fine, and ``-o errexit`` goes through the option branch.
+    """
+    problems = []
+    for number, line in enumerate(text.splitlines(), start=1):
+        match = re.match(r"\s*set\s+(.*?)(?:\s*#.*)?$", line)
+        if not match:
+            continue
+        previous_option = False
+        for token in match.group(1).split():
+            if token == "-o":
+                previous_option = True
+                continue
+            if previous_option and token == "errexit":
+                problems.append(
+                    f"line {number}: {line.strip()!r} -- the gate must "
+                    "run every step after an earlier failure"
+                )
+            previous_option = False
+            if re.fullmatch(r"-[A-Za-z]*e[A-Za-z]*", token):
+                problems.append(
+                    f"line {number}: sets errexit ({token}): "
+                    f"{line.strip()!r} -- the gate must run every step "
+                    "after an earlier failure"
+                )
+    return problems
+
+
 class CheckAllParity(unittest.TestCase):
     """check-all.sh's step set must equal verification.yml's."""
 
@@ -249,33 +314,21 @@ class CheckAllParity(unittest.TestCase):
         )
 
     def test_step_names_survive_yaml_parsing(self):
-        """Every ``- name:`` value with a colon in it must be quoted.
+        """Every ``name:`` value with a colon in it must be quoted.
 
         A plain (unquoted) scalar cannot contain ``: `` -- such a line is a
         YAML parse error, GitHub refuses to start the workflow, and the jobs
         emit no check-runs at all, which the parity assertions above cannot
         see (they pass against the unparseable file). Quoting the value is
-        the whole fix, so an unquoted value containing a colon is the defect.
+        the whole fix, so an unquoted value containing a colon is the
+        defect, whichever ``name:`` key carries it -- a step list item, the
+        workflow's top-level ``name:``, or a job's.
         """
-        problems = []
-        for number, line in enumerate(self.workflow_text.splitlines(), start=1):
-            match = STEP_NAME_RE.match(line)
-            if not match:
-                continue
-            value = match.group("value")
-            if value[0] in ('"', "'"):
-                continue
-            if re.search(r":(\s|$)", value):
-                problems.append(
-                    f"line {number}: {line.strip()!r} -- quote the name; an "
-                    "unquoted colon makes verification.yml unparseable, so "
-                    "GitHub never starts its jobs"
-                )
         self.assertEqual(
-            problems,
+            step_name_findings(self.workflow_text),
             [],
-            "verification.yml has step names GitHub will refuse to parse:\n"
-            + "\n".join(problems),
+            "verification.yml has names GitHub will refuse to parse:\n"
+            + "\n".join(step_name_findings(self.workflow_text)),
         )
 
     def test_runner_steps_pin_expect_icarus(self):
@@ -325,28 +378,103 @@ class CheckAllParity(unittest.TestCase):
 
     def test_gate_runs_every_step_after_a_failure(self):
         """No errexit anywhere, and the exit status carries the FAIL flag."""
-        for line in self.gate_text.splitlines():
-            match = re.match(r"\s*set\s+(.*?)(?:\s*#.*)?$", line)
-            if not match:
-                continue
-            previous_option = False
-            for token in match.group(1).split():
-                if token == "-o":
-                    previous_option = True
-                    continue
-                if previous_option and token == "errexit":
-                    self.fail(f"check-all.sh sets errexit: {line.strip()!r}")
-                previous_option = False
-                if re.fullmatch(r"[-+][A-Za-z]*e", token):
-                    self.fail(
-                        f"check-all.sh sets errexit ({token}): {line.strip()!r} "
-                        "-- the gate must run every step after an earlier failure"
-                    )
+        self.assertEqual(
+            errexit_findings(self.gate_text),
+            [],
+            "check-all.sh must not set errexit: it must run every step "
+            "after an earlier failure\n"
+            + "\n".join(errexit_findings(self.gate_text)),
+        )
         self.assertRegex(
             self.gate_text,
             r'(?m)^exit "\$\{FAIL\}"\s*$',
             "check-all.sh must exit with the accumulated FAIL flag",
         )
+
+    def test_name_guard_catches_every_mapping_key_spelling(self):
+        """Step, top-level, and job-level ``name:`` keys are all scanned.
+
+        The step-level form was always caught; the other two spellings
+        break the file identically and are the hole the ``- ``-only matcher
+        used to leave open. One finding per offending line, naming it.
+        """
+        cases = {
+            "step-level": "steps:\n  - name: Gate parity: mirrors workflow\n",
+            "top-level": "name: verification: npu gate\n",
+            "job-level": "jobs:\n  bitexact:\n    name: bitexact: suite\n",
+        }
+        for where, text in cases.items():
+            findings = step_name_findings(text)
+            self.assertEqual(
+                len(findings),
+                1,
+                f"{where} name: with an unquoted colon must produce "
+                f"exactly one finding, got {findings}",
+            )
+            self.assertIn("line", findings[0])
+
+    def test_name_guard_accepts_quoted_and_clean_values(self):
+        """Quoted colons and colon-free names are not findings."""
+        text = (
+            "name: verification\n"
+            "jobs:\n"
+            "  bitexact:\n"
+            "    name: 'bitexact: suite'\n"
+            "steps:\n"
+            '  - name: "Gate parity: mirrors"\n'
+            "  - name: Cache Icarus\n"
+        )
+        self.assertEqual(step_name_findings(text), [])
+
+    def test_errexit_guard_catches_e_anywhere_in_a_minus_cluster(self):
+        """``-euo``, ``-eo``, ``-euox`` enable errexit exactly like ``-e``.
+
+        ``set -euo pipefail`` is the most likely way anyone would tighten
+        the gate; the finding names the offending token and line.
+        """
+        for set_line in (
+            "set -e",
+            "set -eu",
+            "set -eo pipefail",
+            "set -euox",
+            "set -euo pipefail",
+        ):
+            findings = errexit_findings(set_line + "\n")
+            self.assertEqual(
+                len(findings),
+                1,
+                f"{set_line!r} enables errexit and must produce exactly "
+                f"one finding, got {findings}",
+            )
+            self.assertIn(set_line.split()[1], findings[0])
+
+    def test_errexit_guard_ignores_plus_clusters_and_e_free_flags(self):
+        """``+`` clusters disable errexit; ``-`` clusters without ``e`` are fine.
+
+        ``set +e`` is the opposite of the defect, so flagging it would be a
+        false positive; this pins the sign-awareness.
+        """
+        for set_line in (
+            "set +e",
+            "set +eu",
+            "set +euo pipefail",
+            "set -uo pipefail",
+        ):
+            self.assertEqual(
+                errexit_findings(set_line + "\n"),
+                [],
+                f"{set_line!r} does not enable errexit",
+            )
+
+    def test_errexit_guard_keeps_the_o_option_branch(self):
+        """``-o errexit`` still fails and ``+o errexit`` still passes."""
+        findings = errexit_findings("set -o errexit\n")
+        self.assertEqual(
+            len(findings),
+            1,
+            f"set -o errexit enables errexit, got {findings}",
+        )
+        self.assertEqual(errexit_findings("set +o errexit\n"), [])
 
 
 if __name__ == "__main__":
