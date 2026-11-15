@@ -81,6 +81,9 @@ jobs:
       - name: Every workflow file parses
         run: uv run --with pyyaml==6.0.3 python verification/check_workflows.py
 
+      - name: Workflow checker's own unit tests
+        run: uv run --with pyyaml==6.0.3 python -m unittest discover -s verification/tests -p 'test_check_workflows.py'
+
       - name: Golden model unit tests
         run: python -m unittest discover -s verification/tests -p 'test_golden.py'
 
