@@ -30,17 +30,17 @@
       "reason": null,
       "graded_by_build": true,
       "citation": {
-        "file": "manifests/attestations/item-1-klt091-20261114.json",
+        "file": "manifests/attestations/item-1-klt091-20261115.json",
         "command": null,
         "kind": "generic",
         "check_status": "pass",
-        "content_hash": "sha256:94423f3c89d7340f625e5e74e05d89f751da25c4aed354fad897b98f4e77274b",
+        "content_hash": "sha256:b15eb91dce0b37f48ba7a8358b45c612fe68699fe0d1aa816c39e2840c073c79",
         "input_verified": true,
         "exit_status": 0,
         "artifact_binding": {
           "t1_item": 1,
           "path": null,
-          "content_hash": "sha256:94423f3c89d7340f625e5e74e05d89f751da25c4aed354fad897b98f4e77274b",
+          "content_hash": "sha256:b15eb91dce0b37f48ba7a8358b45c612fe68699fe0d1aa816c39e2840c073c79",
           "input_verified": true,
           "members": [
             {
@@ -48,7 +48,7 @@
                 "path": "manifests/inventories/item-1.json",
                 "scope": "repo"
               },
-              "content_hash": "sha256:7ba8df949479433d8c5a686618d4d70f361b0f88d06f34a08edcf1f66fd595c9",
+              "content_hash": "sha256:97013a4403cda1aab52fceb2bd6b14274febb2abbf4225c4aa714dd3b90c32be",
               "status": "verified"
             },
             {
@@ -72,7 +72,7 @@
                 "path": "rtl/npu_ctrl.v",
                 "scope": "repo"
               },
-              "content_hash": "sha256:46098a8f346e4a4c4788cfae49f047be69d4259b9cce2e9e3130690c604f8168",
+              "content_hash": "sha256:30e5d08fc40012533f4a66356816ebedc94e226307697c19abd7492e36b73971",
               "status": "verified"
             },
             {
@@ -80,7 +80,7 @@
                 "path": "rtl/npu_host.v",
                 "scope": "repo"
               },
-              "content_hash": "sha256:ae5cf6522a91c1b4ec650e708570a6a1eaae083a9fdf06048856cec0f69cf24e",
+              "content_hash": "sha256:7005dac142273330ecebae9116958b143e2370d88f21f6c5cd77ad50ccd92c8e",
               "status": "verified"
             },
             {
@@ -117,7 +117,7 @@
             },
             {
               "path": {
-                "path": "rtl/synth/records/20261114-sky130-hd/npu_top_synth.v",
+                "path": "rtl/synth/records/20261115-sky130-hd/npu_top_synth.v",
                 "scope": "repo"
               },
               "content_hash": "sha256:0eef5aff70680d5da761fdf0adf85eef81d7e7970ae14761209ad53e88a04fef",
@@ -128,7 +128,7 @@
                 "path": "rtl/synth/synth-request.json",
                 "scope": "repo"
               },
-              "content_hash": "sha256:d291e1359489fbec1ce4e94e6f8d6d3aea0c01649199209d5f7ac38a80b9123d",
+              "content_hash": "sha256:71e8c22ad165b9027c518f560ac863868e3c29ee8e534aff906cee45706953ec",
               "status": "verified"
             }
           ],

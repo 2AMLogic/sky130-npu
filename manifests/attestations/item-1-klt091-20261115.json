@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "kind": "generic",
+  "status": "pass",
+  "t1_item": 1,
+  "summary": "T1 item 1 (Design sources): 11/11 attestation checks passed (klt signoff --attest)",
+  "source": "manifests/inventories/item-1.json",
+  "attestation": {
+    "producer": "klt signoff --attest",
+    "inventory_schema_version": 1,
+    "hash_algorithm": "sha256-raw-bytes",
+    "check_count": 11,
+    "passed_count": 11,
+    "checks": [
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_array.v",
+        "passed": true,
+        "content_hash": "sha256:15c92e6fe78c8b80a59089cd2f9273207e7ee30d85461af3751ccf641875ce20"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_banks.v",
+        "passed": true,
+        "content_hash": "sha256:aabd40e1c4974db5fc1adddedbd8710af6c78bc17119af0f690ce42a845bf864"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_ctrl.v",
+        "passed": true,
+        "content_hash": "sha256:30e5d08fc40012533f4a66356816ebedc94e226307697c19abd7492e36b73971"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_host.v",
+        "passed": true,
+        "content_hash": "sha256:7005dac142273330ecebae9116958b143e2370d88f21f6c5cd77ad50ccd92c8e"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_pe.v",
+        "passed": true,
+        "content_hash": "sha256:1ea252c7c3060d5b2e5fecb41b5f668afc4f09982065e45e8832551276551bf5"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_requant.v",
+        "passed": true,
+        "content_hash": "sha256:ba858f4b23f4fb9ff0cd9208ae2c633959c9609728d3338b799d55904c0b477a"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/npu_top.v",
+        "passed": true,
+        "content_hash": "sha256:a34f636ad59911bd1f54e5ca449118aa215f732cff1f4ec8c295cc39ebf00841"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/pdk/sky130/npu_sram_bank.v",
+        "passed": true,
+        "content_hash": "sha256:1541ca6f5e4f353664aba13b5608a62b680b80f67483dd31d54caa4bd281d17e"
+      },
+      {
+        "check": "present",
+        "role": "source",
+        "path": "rtl/synth/synth-request.json",
+        "passed": true,
+        "content_hash": "sha256:71e8c22ad165b9027c518f560ac863868e3c29ee8e534aff906cee45706953ec"
+      },
+      {
+        "check": "present",
+        "role": "derived",
+        "path": "rtl/synth/records/20261115-sky130-hd/npu_top_synth.v",
+        "passed": true,
+        "content_hash": "sha256:0eef5aff70680d5da761fdf0adf85eef81d7e7970ae14761209ad53e88a04fef"
+      },
+      {
+        "check": "command",
+        "role": "freshness",
+        "target": "rtl/synth/records/20261115-sky130-hd/npu_top_synth.v",
+        "generator": "klt synthesize --pdk sky130A --format json rtl/synth/synth-request.json",
+        "argv": [
+          "klt",
+          "synthesize",
+          "--pdk",
+          "sky130A",
+          "--check",
+          "rtl/synth/records/20261115-sky130-hd/synth-report.json",
+          "rtl/synth/synth-request.json"
+        ],
+        "cwd": ".",
+        "exit_status": 0,
+        "passed": true
+      }
+    ]
+  },
+  "provenance": {
+    "klt_version": "0.9.1",
+    "klayout_version": null,
+    "pdk": null,
+    "deck": null,
+    "input": {
+      "paths": [
+        {
+          "path": {
+            "path": "manifests/inventories/item-1.json",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:97013a4403cda1aab52fceb2bd6b14274febb2abbf4225c4aa714dd3b90c32be"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_array.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:15c92e6fe78c8b80a59089cd2f9273207e7ee30d85461af3751ccf641875ce20"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_banks.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:aabd40e1c4974db5fc1adddedbd8710af6c78bc17119af0f690ce42a845bf864"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_ctrl.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:30e5d08fc40012533f4a66356816ebedc94e226307697c19abd7492e36b73971"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_host.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:7005dac142273330ecebae9116958b143e2370d88f21f6c5cd77ad50ccd92c8e"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_pe.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:1ea252c7c3060d5b2e5fecb41b5f668afc4f09982065e45e8832551276551bf5"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_requant.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:ba858f4b23f4fb9ff0cd9208ae2c633959c9609728d3338b799d55904c0b477a"
+        },
+        {
+          "path": {
+            "path": "rtl/npu_top.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:a34f636ad59911bd1f54e5ca449118aa215f732cff1f4ec8c295cc39ebf00841"
+        },
+        {
+          "path": {
+            "path": "rtl/pdk/sky130/npu_sram_bank.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:1541ca6f5e4f353664aba13b5608a62b680b80f67483dd31d54caa4bd281d17e"
+        },
+        {
+          "path": {
+            "path": "rtl/synth/records/20261115-sky130-hd/npu_top_synth.v",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:0eef5aff70680d5da761fdf0adf85eef81d7e7970ae14761209ad53e88a04fef"
+        },
+        {
+          "path": {
+            "path": "rtl/synth/synth-request.json",
+            "scope": "repo"
+          },
+          "content_hash": "sha256:71e8c22ad165b9027c518f560ac863868e3c29ee8e534aff906cee45706953ec"
+        }
+      ],
+      "content_hash": "sha256:b15eb91dce0b37f48ba7a8358b45c612fe68699fe0d1aa816c39e2840c073c79"
+    }
+  }
+}

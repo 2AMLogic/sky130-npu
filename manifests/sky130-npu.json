@@ -3,8 +3,8 @@
   "kind": "digital",
   "evidence": {
     "1": {
-      "file": "manifests/attestations/item-1-klt091-20261114.json",
-      "content_hash": "sha256:94423f3c89d7340f625e5e74e05d89f751da25c4aed354fad897b98f4e77274b"
+      "file": "manifests/attestations/item-1-klt091-20261115.json",
+      "content_hash": "sha256:b15eb91dce0b37f48ba7a8358b45c612fe68699fe0d1aa816c39e2840c073c79"
     },
     "6": {
       "not_applicable": {

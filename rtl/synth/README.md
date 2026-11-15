@@ -10,13 +10,14 @@ Synthesis of the NPU at the target size (`ARRAY_N = 8`, the default).
 | `records/20261020-yosys-generic/` | `stat` output of three runs, append-only |
 | `records/20261027-sky130-hd/` | first `klt synthesize` run (klt 0.8.1.dev55), from the former hand-written blackbox file `npu_sram_bank_bb.v` (since removed). Append-only, superseded by the next row. No runner or request reads it any more (#121); it is cited only by records and by `manifests/attestations/item-1.json`, the superseded item-1 attestation, itself kept as append-only evidence (the manifest cites `manifests/attestations/item-1-klt091.json`, which attests the next row) |
 | `records/20261111-sky130-hd/` | the `klt synthesize` run of the RTL as it stood before #149. Append-only, superseded by the next row. Its `npu_top_synth.v` is byte-identical to that row's, so the gate-level runs taken against this path (`verification/README.md`) are still evidence for the current netlist; the two envelopes differ only in `run_id`, the record paths and `provenance.input.content_hash`. Now cited only by records and by `manifests/attestations/item-1-klt091.json`, the superseded item-1 attestation |
-| `records/20261114-sky130-hd/` | the `klt synthesize` run of the current `synth-request.json`: gate-level netlist `npu_top_synth.v`, envelope `synth-report.json`, generated macro blackbox, scripts, `tool-versions.txt`. Append-only |
+| `records/20261114-sky130-hd/` | the `klt synthesize` run taken for #149, which deleted an unreferenced `localparam` from `npu_requant` and demoted `npu_ctrl`'s `REQ_LAT` to a `localparam`. Append-only, superseded by the next row. Its `npu_top_synth.v` is byte-identical to that row's (sha256 `0eef5aff…`); the two envelopes differ only in `run_id`, the record paths and `provenance.input.content_hash`. Now cited only by records and by `manifests/attestations/item-1-klt091-20261114.json`, the superseded item-1 attestation |
+| `records/20261115-sky130-hd/` | the `klt synthesize` run of the current `synth-request.json`: gate-level netlist `npu_top_synth.v`, envelope `synth-report.json`, generated macro blackbox, scripts, `tool-versions.txt`. Append-only |
 
-## Recorded sky130 netlist (`records/20261114-sky130-hd/`)
+## Recorded sky130 netlist (`records/20261115-sky130-hd/`)
 
 `klt synthesize --pdk sky130A --format json rtl/synth/synth-request.json`
 (klt 0.9.1, Yosys 0.67+post, open_pdks `f6eeac7` from `~/.ciel`,
-`sky130_fd_sc_hd__tt_025C_1v80`), one local run, 229 s. 70 823 instances,
+`sky130_fd_sc_hd__tt_025C_1v80`), one local run. 70 823 instances,
 the four `npu_sram_bank` instances each holding one
 `sky130_sram_4kbyte_1rw1r_32x1024_8` black box (envelope `blackbox_modules`).
 Read it with these limits:
@@ -29,22 +30,32 @@ Read it with these limits:
 - Not a P&R, area or signoff result.
 
 **Freshness**: `klt synthesize --pdk sky130A --check
-records/20261114-sky130-hd/synth-report.json synth-request.json` re-hashes the
+records/20261115-sky130-hd/synth-report.json synth-request.json` re-hashes the
 request's RTL and the Liberty and exits 3 when the RTL changed without a new
 netlist (no Yosys run). It is the `check` of the item-1 inventory
 (`manifests/inventories/item-1.json`). After an RTL change, make a new dated
 record and re-attest; do not edit this one.
 
-The 20261114 run was taken for #149, which deleted an unreferenced `localparam` from
-`npu_requant` and demoted `npu_ctrl`'s `REQ_LAT` to a `localparam`. Its
-`npu_top_synth.v` is **byte-identical** to the 20261111 netlist (sha256
+The 20261115 run was taken for #157, which deleted the two remaining
+unreferenced `localparam`s (`AW` in `npu_ctrl`, `OW` in `npu_host`). Its
+`npu_top_synth.v` is **byte-identical** to the 20261114 netlist (sha256
 `0eef5aff…`), as are `npu_top_stats.json`, the cell lists, the generated blackbox
 and `npu_top_abc.constr`; the two envelopes differ only in `run_id`, the record
 paths and `provenance.input.content_hash` (the RTL bytes). That is the measured
 form of "an unreferenced `localparam` emits nothing" — the record exists because
 the freshness check hashes the RTL, not because the hardware moved.
 
-The 20261111 run reproduces the 20261027 run's `instance_count` (70 823), `area_um2`,
+One host note for reproducing the run: the yosys 0.67 ↔ `yosys-abc` pair
+installed on the 2026-11-15 build worker deadlocks in ABC's script handshake
+(this abc build echoes the `source` command in a mangled form yosys's
+`read_until_abc_done` never recognizes, so yosys waits forever on abc's
+stdout). The recorded run drove the same pinned `yosys`/`yosys-abc` binaries
+through a thin stdout filter that injects the one prompt line yosys expects;
+no synthesis input, script or binary changed, and the byte-identical netlist
+above is the cross-check. Filed upstream as
+[2AMLogic/klayout-tools#5830](https://github.com/2AMLogic/klayout-tools/issues/5830).
+
+The 20261114 run reproduces the 20261111 run's `instance_count` (70 823), `area_um2`,
 `sequential_area_um2`, per-cell-type counts and `blackbox_modules` exactly; only the
 blackbox's origin differs (generated from the LEF, with `vccd1`/`vssd1` power pins, instead
 of a hand-written declaration). The envelope also gains `defines` and `macros`.
