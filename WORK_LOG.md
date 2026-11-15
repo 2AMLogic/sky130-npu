@@ -3,6 +3,18 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-15
+
+- **PR #170**: test(verification): deduplicate tile setup — retrofit test_reset_mid_run onto load_tile, hoist pack_a/pack_b imports
+- **Issue #160** (closed): Deduplicate tile setup in test_bitexact.py: test_reset_mid_run hand-rolls load_tile, and pack_a/pack_b is imported locally four times
+- **PR #172**: test(verification): pin NPU_SEED in the fv request and record a reproducible 14/14 envelope
+- **Issue #162** (closed): Pin NPU_SEED in functional-verification-request.json so the random test is reproducible from committed evidence
+- **PR #169**: fix: record repo-relative config path and validate --macro-config before destructive rm in sram setup
+- **Issue #164** (closed): flow/sram/setup.sh: --config record path is hardcoded and --macro-config validates late
+- **PR #167**: build: make pnpm check:ci run the full CI gate via verification/check-all.sh
+- **Issue #163** (closed): package.json check:all / check:ci are named for the full gate but run 2 of CI's 8 steps, skipping both negative controls
+- **PR #150**: docs: roadmap as of 2026-11-13
+
 ### 2026-11-14
 
 - **PR #166**: feat: record a pre-route tt STA read of npu_top through the SRAM macro at 20 ns
