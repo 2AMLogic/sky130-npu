@@ -81,7 +81,7 @@ jobs:
       - name: Every workflow file parses
         run: uv run --with pyyaml==6.0.3 python verification/check_workflows.py
 
-      - name: Golden model unit tests
+      - name: Golden model: unit tests
         run: python -m unittest discover -s verification/tests -p 'test_golden.py'
 
   # Elaboration and lint of rtl/ at the target (8) and fallback (4) sizes, and
