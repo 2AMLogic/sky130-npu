@@ -5,6 +5,12 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-14
 
+- **PR #166**: feat: record a pre-route tt STA read of npu_top through the SRAM macro at 20 ns
+- **Issue #154** (closed): Record a pre-route klt sta read at tt through the SRAM macro on the 20261111 netlist
+- **PR #159**: flow/sram: generate ss/ff Liberty for the 4 KB macro and pin with caveats
+- **Issue #153** (closed): Attempt slow- and fast-corner Liberty views for the pinned 4 KB OpenRAM macro (spec gaps G1, G2)
+- **PR #148**: ci: read the item-10 attestation path from the manifest, not a literal
+- **Issue #144** (closed): Remove the second item-10 citation: signoff.yml hard-codes an attestation path the manifest already names
 - **PR #161**: test(verification): record a 14-test klt functional-verification envelope at ARRAY_N=8
 - **Issue #151** (closed): Re-run the klt functional-verification envelope on the 14-test bit-exact suite
 - **PR #147**: docs: state the verification stamp set as a rule, not a file list
