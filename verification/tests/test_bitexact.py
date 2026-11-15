@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import npu_bench as nb  # noqa: E402
-from verification.golden import gemm_int8, requantize  # noqa: E402
+from verification.golden import gemm_int8, pack_a, pack_b, requantize  # noqa: E402
 
 SEED = int(os.environ.get("NPU_SEED", random.SystemRandom().getrandbits(32)))
 RANDOM_RUNS = int(os.environ.get("NPU_RANDOM_RUNS", "8"))
@@ -166,7 +166,6 @@ async def test_back_to_back(dut):
         tiles.append((a, b))
     bias = [rng.randint(-5000, 5000) for _ in range(n)]
     await bench.set_bias(bias)
-    from verification.golden import pack_a, pack_b
     for i, (a, b) in enumerate(tiles):
         await bench.store_bytes(0, i * k * n, pack_a(a, n))
         await bench.store_bytes(1, i * k * n, pack_b(b, n))
@@ -191,15 +190,7 @@ async def test_reset_mid_run(dut):
     bench = await setup(dut)
     n, k = bench.n, 64
     rng = random.Random(SEED ^ 0x7E5)
-    a = [[rng.randint(-128, 127) for _ in range(k)] for _ in range(n)]
-    b = [[rng.randint(-128, 127) for _ in range(n)] for _ in range(k)]
-    bias = [rng.randint(-1000, 1000) for _ in range(n)]
-    from verification.golden import pack_a, pack_b
-    await bench.store_bytes(0, 0, pack_a(a, n))
-    await bench.store_bytes(1, 0, pack_b(b, n))
-    await bench.set_bias(bias)
-    lay = bench.layout(k)
-    await bench.configure(k, mult=5, shift=8, relu=0, **lay)
+    a, b, bias, _ = await load_tile(bench, rng, k, 5, 8)
     await bench.start()
     await ClockCycles(dut.clk, 20)
     assert await bench.read(nb.STATUS) & nb.ST_BUSY, "expected BUSY before reset"
@@ -216,7 +207,6 @@ async def test_errors_write_nothing(dut):
     n, k = bench.n, 8
     nbanks = 4 if n == 8 else 2
     rng = random.Random(SEED ^ 0xE44)
-    from verification.golden import pack_a, pack_b
     a = [[rng.randint(-128, 127) for _ in range(k)] for _ in range(n)]
     b = [[rng.randint(-128, 127) for _ in range(n)] for _ in range(k)]
     await bench.set_bias([0] * n)
@@ -346,7 +336,6 @@ async def load_tile(bench, rng, k, mult, shift, relu=0):
     Returns ``(a, b, bias, lay)`` with ``lay`` the bank plan actually used.
     """
     n = bench.n
-    from verification.golden import pack_a, pack_b
     a = [[rng.randint(-128, 127) for _ in range(k)] for _ in range(n)]
     b = [[rng.randint(-128, 127) for _ in range(n)] for _ in range(k)]
     bias = [rng.randint(-1000, 1000) for _ in range(n)]
