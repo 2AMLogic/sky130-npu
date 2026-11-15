@@ -70,7 +70,6 @@ module npu_ctrl #(
 
     localparam WPV     = ARRAY_N / 4;                // 32-bit words per k-vector
     localparam NWORDS  = ARRAY_N * ARRAY_N / 4;      // result words per tile
-    localparam AW      = $clog2(BANK_BYTES/4);
     localparam OW      = $clog2(BANK_BYTES) + 1;     // byte offset width (holds BANK_BYTES)
 
     // npu_requant's structural pipeline depth: in_vld -> v1 -> v2 -> out_vld,
