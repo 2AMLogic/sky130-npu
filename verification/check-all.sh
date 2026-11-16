@@ -7,8 +7,8 @@
 #
 # .github/workflows/verification.yml is the canonical gate (attested as a
 # shipped testbench in manifests/inventories/item-9.json:11); this script
-# mirrors its ten steps for local runs. The step set is no longer only
-# hand-synced: verification/tests/test_check_all_parity.py (step 8 below) is
+# mirrors its eleven steps for local runs. The step set is no longer only
+# hand-synced: verification/tests/test_check_all_parity.py (step 9 below) is
 # run by both sides and fails if a step is added to one and not the other.
 # The header's step list and line citations remain hand-synced.
 #
@@ -19,13 +19,18 @@
 #   4. runner.py --param ARRAY_N=4            (:55, EXPECT_ICARUS=13.0)
 #   5. check_mutation.sh 8                    (:61)
 #   6. check_mutation.sh 4                    (:62)
-#   7. unittest test_golden.py                (:74)
-#   8. unittest test_check_all_parity.py      (:77)
-#   9. rtl/check.sh                           (:95)
-#  10. unittest test_relocated_layout.py      (:98, python3 -I)
+#   7. check_workflows.py                     (:82, uv run --with pyyaml==6.0.3)
+#   8. unittest test_golden.py                (:74)
+#   9. unittest test_check_all_parity.py      (:77)
+#  10. rtl/check.sh                           (:95)
+#  11. unittest test_relocated_layout.py      (:98, python3 -I)
 #
 # verification/check_mutation_gl.sh is deliberately absent: it is PDK-specific
-# and not part of the workflow. Every step runs even after an earlier failure
+# and not part of the workflow. verification.yml's uv-wrapped run of the
+# checker's own test suite (test_check_workflows.py, :85) is deliberately
+# absent too: CI-only -- each of its tests spawns a uv subprocess, so this
+# gate runs the checker itself (step 7) and leaves its test suite to CI.
+# Every step runs even after an earlier failure
 # (the workflow's mutation step carries `if: !cancelled()` for the same
 # reason), and the exit status is non-zero if any step failed. A missing tool
 # is a loud exit before any step, never a silently narrowed gate.
@@ -42,7 +47,7 @@ cd "${REPO}" || { say "error: cannot cd to ${REPO}" >&2; exit 2; }
 PY="${PYTHON:-python3}"
 [ -x "${REPO}/.venv/bin/python" ] && PY="${REPO}/.venv/bin/python"
 
-for tool in iverilog yosys; do
+for tool in iverilog yosys uv; do
   command -v "${tool}" >/dev/null || { say "error: ${tool} not on PATH" >&2; exit 2; }
 done
 if ! "${PY}" -c 'import cocotb' >/dev/null 2>&1; then
@@ -75,6 +80,9 @@ step "runner.py --param ARRAY_N=4" \
 
 step "check_mutation.sh 8" "${HERE}/check_mutation.sh" 8
 step "check_mutation.sh 4" "${HERE}/check_mutation.sh" 4
+
+step "check_workflows.py" \
+  uv run --with pyyaml==6.0.3 python verification/check_workflows.py
 
 step "unittest test_golden.py" \
   "${PY}" -m unittest discover -s verification/tests -p 'test_golden.py'
