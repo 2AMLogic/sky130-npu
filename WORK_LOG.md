@@ -5,6 +5,8 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-15
 
+- **PR #192**: test(verification): scan signoff.yml name: keys and name the file a finding comes from
+- **Issue #190** (closed): Extend the name:-quoting guard to signoff.yml (local gate only; CI already covers it)
 - **PR #189**: test(verification): scan every name: key and make the errexit guard sign-aware
 - **PR #188**: fix(ci): workflow shape checker rejects non-mapping documents and duplicate keys
 - **Issue #185** (closed): check_workflows.py accepts two workflow inputs that may still fail startup: duplicate keys and a non-mapping document
