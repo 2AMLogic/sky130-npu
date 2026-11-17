@@ -5,6 +5,10 @@ triage agent; entries are grouped by date, newest first.
 
 ### 2026-11-17
 
+- **PR #202**: docs: drop hand-maintained step count from check-all.sh header
+- **PR #200**: fix: assert check-all.sh header line citations in the parity test
+- **Issue #201** (closed): check-all.sh header's prose step count ("eleven steps") is still hand-maintained
+- **Issue #198** (closed): check-all.sh header cites stale verification.yml line numbers (4 steps, off by 14)
 - **PR #197**: test: run check_workflows.py in the local gate, drop the regex name: scan
 - **Issue #194** (closed): Remove regex name: scan in test_check_all_parity.py: duplicates check_workflows.py
 
