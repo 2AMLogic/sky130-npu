@@ -8,7 +8,10 @@ instead of hand-synced: it parses the ``run:`` blocks of
 ``verification/check-all.sh`` and asserts the two sets are equal, so a step
 added to one side and not the other fails naming that step -- the #163 defect
 class (a gate named for the full set, running a subset) becomes detectable
-instead of silent.
+instead of silent. The header's per-step ``(:line)`` citations into
+``verification.yml`` are checked too: each must land on a ``run:`` command
+line that classifies to the step of the same name, so renumbering the
+workflow fails here instead of leaving a stale hand-synced index.
 
 What counts as a mirrored step: a ``run:`` command is a step iff it is
 
@@ -79,6 +82,9 @@ BLOCK_INDICATORS = ("|", "|-", "|+", ">", ">-", ">+")
 ENV_PAIR_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=.*")
 STEP_CALL_RE = re.compile(r'^\s*step\s+"(?P<name>[^"]*)"\s*(?P<rest>.*)$')
 ARRAY_N_RE = re.compile(r"ARRAY_N=\d+$")
+HEADER_CITATION_RE = re.compile(
+    r"(?m)^# +\d+\. +(?P<name>.+?) +\(:(?P<line>\d+)[^)]*\)\s*$"
+)
 
 
 @dataclass(frozen=True)
@@ -173,7 +179,10 @@ def parse_step(command: str):
 
 
 def workflow_commands(text):
-    """Each shell command line found in the workflow's ``run:`` keys."""
+    """Each shell command line in the workflow's ``run:`` keys as
+    ``(1-based line number, command)`` pairs; the line number lets the
+    header-citation check tie a command back to the line check-all.sh's
+    header cites for it."""
     commands = []
     lines = text.splitlines()
     i = 0
@@ -191,10 +200,10 @@ def workflow_commands(text):
                 if line.strip() and (len(line) - len(line.lstrip())) <= run_indent:
                     break
                 if line.strip():
-                    commands.append(line.strip())
+                    commands.append((i + 1, line.strip()))
                 i += 1
         elif rest:
-            commands.append(rest)
+            commands.append((i + 1, rest))
             i += 1
         else:
             i += 1
@@ -272,7 +281,7 @@ class CheckAllParity(unittest.TestCase):
         cls.gate_text = GATE.read_text(encoding="utf-8")
         cls.workflow_steps = [
             step
-            for command in workflow_commands(cls.workflow_text)
+            for _, command in workflow_commands(cls.workflow_text)
             if (step := parse_step(command)) is not None
         ]
         # The gate has no plumbing, so an unclassifiable step is a defect
@@ -299,6 +308,67 @@ class CheckAllParity(unittest.TestCase):
             (dict(missing), dict(extra)),
             ({}, {}),
             "check-all.sh and verification.yml disagree on the gate's steps:\n"
+            + "\n".join(problems),
+        )
+
+    def test_header_citations_point_at_the_named_steps(self):
+        """Every header ``(:line)`` citation lands on the step it names.
+
+        The header's step list carries a verification.yml line citation per
+        entry; this asserts each citation points at a ``run:`` command line
+        whose classification equals the gate step of the same name (block
+        ``run: |`` steps cite the command line inside the block), so a
+        workflow edit that shifts lines fails here instead of silently
+        rotting the index the header advertises.
+        """
+        gate_by_name = {
+            name: step or Step("unrecognized", f'step "{name}" command did not classify')
+            for name, step in gate_steps(self.gate_text)
+        }
+        commands_by_line = dict(workflow_commands(self.workflow_text))
+        entries = list(HEADER_CITATION_RE.finditer(self.gate_text))
+        problems = []
+        if not entries:
+            problems.append(
+                "no step-citation entries found in check-all.sh's header"
+            )
+        cited_names = set()
+        for match in entries:
+            name = match.group("name").strip()
+            line = int(match.group("line"))
+            cited_names.add(name)
+            if name not in gate_by_name:
+                problems.append(f'header entry "{name}" is not a gate step name')
+                continue
+            if line not in commands_by_line:
+                problems.append(
+                    f'"{name}" cites verification.yml:{line}, which is not a '
+                    "command line inside a run: key"
+                )
+                continue
+            cited_step = parse_step(commands_by_line[line])
+            if cited_step is None:
+                problems.append(
+                    f'"{name}" cites verification.yml:{line}, whose command '
+                    "is workflow plumbing rather than a mirrored step"
+                )
+                continue
+            if cited_step != gate_by_name[name]:
+                problems.append(
+                    f'"{name}" cites verification.yml:{line}, which '
+                    f'classifies to "{cited_step.label()}" but the gate '
+                    f'runs "{gate_by_name[name].label()}"'
+                )
+        uncited = sorted(set(gate_by_name) - cited_names)
+        if uncited:
+            problems.append(
+                "gate steps with no header citation entry: "
+                + ", ".join(uncited)
+            )
+        self.assertEqual(
+            problems,
+            [],
+            "check-all.sh header citations disagree with verification.yml:\n"
             + "\n".join(problems),
         )
 
