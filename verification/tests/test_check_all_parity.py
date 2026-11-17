@@ -16,11 +16,17 @@ What counts as a mirrored step: a ``run:`` command is a step iff it is
   ``-m unittest discover -s verification/tests -p '<pattern>'``,
 - an ``EXPECT_ICARUS=<ver> <python> verification/runner.py --param
   ARRAY_N=<n>`` invocation,
-- a ``check_mutation.sh <n>`` invocation, or
-- an ``rtl/check.sh`` invocation.
+- a ``check_mutation.sh <n>`` invocation,
+- an ``rtl/check.sh`` invocation, or
+- a ``uv run [--with <spec>]... python verification/check_workflows.py``
+  invocation -- the workflow-parse guard, run through uv with PyYAML as CI
+  runs it.
 
 Everything else in the workflow (apt-get, the Icarus build, venv and pip
-setup, PATH exports) is plumbing and is ignored. Every ``step`` in
+setup, PATH exports, and verification.yml's uv-wrapped run of the checker's
+own test suite, which the local gate does not run -- each of its tests
+spawns a uv subprocess, so check-all.sh runs the checker itself and leaves
+its test suite to CI) is plumbing and is ignored. Every ``step`` in
 check-all.sh must classify, since that script has no plumbing; an
 unclassifiable step fails the test.
 
@@ -44,29 +50,16 @@ site-packages. PyYAML is importable on a developer host but absent from
 ``verification/requirements.txt``, so ``import yaml`` would pass locally and
 fail in CI; the workflow is parsed as text with ``re`` and ``shlex`` instead
 -- its ``run:`` lines are literal shell one-liners, which is why that is
-tractable. The test only reads three files off disk and resolves them from
+tractable. The test only reads two files off disk and resolves them from
 ``__file__``, so it runs from any cwd and under ``python3 -I``.
 
 Text parsing cannot establish that the file it walks is a workflow GitHub
-will accept, so a structural check closes that gap: an unquoted ``name``
-value containing a colon (``name: Gate parity: ...``) is a YAML parse
-error -- GitHub refuses to start the workflow, its jobs silently vanish
-(no check-runs at all, so a green check list proves nothing) -- and the
-step-parity assertions above would pass against such a file. Quoting the
-value is the whole fix, so the test asserts every ``name:`` value is
-quoted whenever it contains a colon -- a step's, the workflow's
-top-level ``name:``, or a job's, list item or not -- naming the
-offending line. The same scan covers ``signoff.yml``, which is outside
-the parity set by design (its grade check needs the pinned klt, so it is
-not a gate step) but carries ``name:`` keys that break the file
-identically; CI catches the parse failure there only via the other
-workflow, so the local guard reads it directly. The scan is line-based
-and does not track block-scalar
-indentation, so a ``name:``-shaped line inside a ``run: |`` block would
-be inspected too; none exists today. The errexit guard is sign-aware the
-same way: a ``-`` flag cluster containing ``e`` enables errexit wherever
-the letter sits (``-euo`` as much as ``-e``), while a ``+`` cluster
-disables it and is fine.
+will accept, but ``check-all.sh`` now runs the real YAML parse
+(``verification/check_workflows.py`` through uv, step 7 in its header) as
+CI does, so that gap is closed by the gate itself rather than by a regex
+here. The errexit guard is sign-aware: a ``-`` flag cluster containing
+``e`` enables errexit wherever the letter sits (``-euo`` as much as
+``-e``), while a ``+`` cluster disables it and is fine.
 """
 
 import re
@@ -80,21 +73,19 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 WORKFLOW = REPO / ".github" / "workflows" / "verification.yml"
 GATE = REPO / "verification" / "check-all.sh"
-SIGNOFF = REPO / ".github" / "workflows" / "signoff.yml"
 
 RUN_KEY_RE = re.compile(r"^(?P<indent>[ \t]*)run:(?P<rest>.*)$")
 BLOCK_INDICATORS = ("|", "|-", "|+", ">", ">-", ">+")
 ENV_PAIR_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=.*")
 STEP_CALL_RE = re.compile(r'^\s*step\s+"(?P<name>[^"]*)"\s*(?P<rest>.*)$')
 ARRAY_N_RE = re.compile(r"ARRAY_N=\d+$")
-STEP_NAME_RE = re.compile(r"^\s*(?:-\s+)?name:\s+(?P<value>\S.*)$")
 
 
 @dataclass(frozen=True)
 class Step:
     """One mirrored gate step; equality covers the pins that must match."""
 
-    kind: str  # unittest | runner | mutation | rtl-check
+    kind: str  # unittest | runner | mutation | rtl-check | check-workflows
     detail: str  # -p pattern / ARRAY_N=n / mutation size / ""
     isolated: bool = False  # interpreter runs with -I
     expect_icarus: str | None = None  # EXPECT_ICARUS= prefix on the command
@@ -130,6 +121,23 @@ def parse_step(command: str):
         i += 1
     rest = tokens[i:]
     if not rest:
+        return None
+    if rest[:2] == ["uv", "run"]:
+        # The uv wrapper is environment plumbing, not a step boundary, but
+        # only the checker invocation behind it is a mirrored step: any
+        # other uv payload stays unmirrored plumbing (see the module
+        # docstring). Only ``--with`` is unwrapped -- the one uv option the
+        # workflows use -- so an unknown uv invocation keeps today's
+        # plumbing classification instead of guessing.
+        rest = rest[2:]
+        while len(rest) >= 2 and rest[0] == "--with":
+            rest = rest[2:]
+        if (
+            len(rest) == 2
+            and is_python_interpreter(rest[0])
+            and rest[1] == "verification/check_workflows.py"
+        ):
+            return Step("check-workflows", "")
         return None
     exe, args = rest[0], rest[1:]
     if exe.endswith("/check_mutation.sh"):
@@ -222,33 +230,6 @@ def gate_steps(text):
     return steps
 
 
-def step_name_findings(text, filename):
-    """Every ``name:`` value in the text that holds an unquoted ``: ``.
-
-    Covers every mapping-key spelling -- step list items, the workflow's
-    top-level ``name:``, and job-level ``name:`` keys -- since all three
-    break the YAML parse identically. Line-based: a ``name:``-shaped line
-    inside a block scalar would be inspected too (none exists today).
-    ``filename`` is the file being scanned, interpolated into each finding
-    so a defect names the file a reader must actually fix.
-    """
-    problems = []
-    for number, line in enumerate(text.splitlines(), start=1):
-        match = STEP_NAME_RE.match(line)
-        if not match:
-            continue
-        value = match.group("value")
-        if value[0] in ('"', "'"):
-            continue
-        if re.search(r":(\s|$)", value):
-            problems.append(
-                f"line {number}: {line.strip()!r} -- quote the name; an "
-                f"unquoted colon makes {filename} unparseable, so "
-                "GitHub never starts its jobs"
-            )
-    return problems
-
-
 def errexit_findings(text):
     """Every ``set`` line in the text that would enable errexit.
 
@@ -289,7 +270,6 @@ class CheckAllParity(unittest.TestCase):
     def setUpClass(cls):
         cls.workflow_text = WORKFLOW.read_text(encoding="utf-8")
         cls.gate_text = GATE.read_text(encoding="utf-8")
-        cls.signoff_text = SIGNOFF.read_text(encoding="utf-8")
         cls.workflow_steps = [
             step
             for command in workflow_commands(cls.workflow_text)
@@ -321,32 +301,6 @@ class CheckAllParity(unittest.TestCase):
             "check-all.sh and verification.yml disagree on the gate's steps:\n"
             + "\n".join(problems),
         )
-
-    def test_step_names_survive_yaml_parsing(self):
-        """Every ``name:`` value with a colon in it must be quoted.
-
-        A plain (unquoted) scalar cannot contain ``: `` -- such a line is a
-        YAML parse error, GitHub refuses to start the workflow, and the jobs
-        emit no check-runs at all, which the parity assertions above cannot
-        see (they pass against the unparseable file). Quoting the value is
-        the whole fix, so an unquoted value containing a colon is the
-        defect, whichever ``name:`` key carries it -- a step list item, the
-        workflow's top-level ``name:``, or a job's. ``signoff.yml`` is
-        scanned too: it sits outside the parity set by design (its grade
-        check needs the pinned klt, so it is not a gate step), but its
-        ``name:`` keys break the file identically and CI only catches the
-        parse failure there via the *other* workflow.
-        """
-        for side, text in (
-            ("verification.yml", self.workflow_text),
-            ("signoff.yml", self.signoff_text),
-        ):
-            self.assertEqual(
-                step_name_findings(text, side),
-                [],
-                f"{side} has names GitHub will refuse to parse:\n"
-                + "\n".join(step_name_findings(text, side)),
-            )
 
     def test_runner_steps_pin_expect_icarus(self):
         """Both runner.py steps pin EXPECT_ICARUS=13.0 (the Icarus pin)."""
@@ -407,42 +361,6 @@ class CheckAllParity(unittest.TestCase):
             r'(?m)^exit "\$\{FAIL\}"\s*$',
             "check-all.sh must exit with the accumulated FAIL flag",
         )
-
-    def test_name_guard_catches_every_mapping_key_spelling(self):
-        """Step, top-level, and job-level ``name:`` keys are all scanned.
-
-        The step-level form was always caught; the other two spellings
-        break the file identically and are the hole the ``- ``-only matcher
-        used to leave open. One finding per offending line, naming it.
-        """
-        cases = {
-            "step-level": "steps:\n  - name: Gate parity: mirrors workflow\n",
-            "top-level": "name: verification: npu gate\n",
-            "job-level": "jobs:\n  bitexact:\n    name: bitexact: suite\n",
-        }
-        for where, text in cases.items():
-            findings = step_name_findings(text, "workflow.yml")
-            self.assertEqual(
-                len(findings),
-                1,
-                f"{where} name: with an unquoted colon must produce "
-                f"exactly one finding, got {findings}",
-            )
-            self.assertIn("line", findings[0])
-            self.assertIn("workflow.yml", findings[0])
-
-    def test_name_guard_accepts_quoted_and_clean_values(self):
-        """Quoted colons and colon-free names are not findings."""
-        text = (
-            "name: verification\n"
-            "jobs:\n"
-            "  bitexact:\n"
-            "    name: 'bitexact: suite'\n"
-            "steps:\n"
-            '  - name: "Gate parity: mirrors"\n'
-            "  - name: Cache Icarus\n"
-        )
-        self.assertEqual(step_name_findings(text, "workflow.yml"), [])
 
     def test_errexit_guard_catches_e_anywhere_in_a_minus_cluster(self):
         """``-euo``, ``-eo``, ``-euox`` enable errexit exactly like ``-e``.
