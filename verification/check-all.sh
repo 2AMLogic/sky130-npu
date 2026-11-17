@@ -7,10 +7,11 @@
 #
 # .github/workflows/verification.yml is the canonical gate (attested as a
 # shipped testbench in manifests/inventories/item-9.json:11); this script
-# mirrors its eleven steps for local runs. The step set is no longer only
-# hand-synced: verification/tests/test_check_all_parity.py (step 9 below) is
-# run by both sides and fails if a step is added to one and not the other.
-# The header's step list and line citations remain hand-synced.
+# mirrors its eleven steps for local runs. The header is mechanically
+# checked, not hand-synced: verification/tests/test_check_all_parity.py
+# (step 9 below) is run by both sides, fails if a step is added to one and
+# not the other, and asserts that every (:line) citation below points at
+# the verification.yml line whose command runs that step.
 #
 # Steps, in the order run (verification.yml line):
 #   1. unittest test_runner_count.py          (:52)
@@ -20,10 +21,10 @@
 #   5. check_mutation.sh 8                    (:61)
 #   6. check_mutation.sh 4                    (:62)
 #   7. check_workflows.py                     (:82, uv run --with pyyaml==6.0.3)
-#   8. unittest test_golden.py                (:74)
-#   9. unittest test_check_all_parity.py      (:77)
-#  10. rtl/check.sh                           (:95)
-#  11. unittest test_relocated_layout.py      (:98, python3 -I)
+#   8. unittest test_golden.py                (:88)
+#   9. unittest test_check_all_parity.py      (:91)
+#  10. rtl/check.sh                           (:109)
+#  11. unittest test_relocated_layout.py      (:112, python3 -I)
 #
 # verification/check_mutation_gl.sh is deliberately absent: it is PDK-specific
 # and not part of the workflow. verification.yml's uv-wrapped run of the
