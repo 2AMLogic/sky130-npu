@@ -7,7 +7,7 @@
 #
 # .github/workflows/verification.yml is the canonical gate (attested as a
 # shipped testbench in manifests/inventories/item-9.json:11); this script
-# mirrors its eleven steps for local runs. The header is mechanically
+# mirrors its steps for local runs. The header is mechanically
 # checked, not hand-synced: verification/tests/test_check_all_parity.py
 # (step 9 below) is run by both sides, fails if a step is added to one and
 # not the other, and asserts that every (:line) citation below points at
