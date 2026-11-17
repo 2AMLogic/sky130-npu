@@ -3,6 +3,11 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-17
+
+- **PR #197**: test: run check_workflows.py in the local gate, drop the regex name: scan
+- **Issue #194** (closed): Remove regex name: scan in test_check_all_parity.py: duplicates check_workflows.py
+
 ### 2026-11-15
 
 - **PR #192**: test(verification): scan signoff.yml name: keys and name the file a finding comes from
