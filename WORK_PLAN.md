@@ -38,7 +38,7 @@ _None._
 
 PRs waiting on Judge (`loom:review-requested`).
 
-_None._
+- **#204**: docs: record decision not to adopt the weight-streaming MVM architecture
 
 ## Approved (Awaiting Merge)
 
@@ -71,7 +71,7 @@ _None._
 | Important | 1 |
 | Ready (`loom:issue`) | 0 |
 | In Progress (`loom:building`) | 0 |
-| PRs awaiting review | 0 |
+| PRs awaiting review | 1 |
 | Approved PRs awaiting merge | 0 |
 | Curated | 3 |
 | Architect / Hermit proposals | 0 |
