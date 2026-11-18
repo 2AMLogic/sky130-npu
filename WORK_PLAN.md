@@ -4,6 +4,7 @@ Roadmap generated from GitHub label state by the Guide triage agent. Only the
 region between the markers is machine-generated.
 
 <!-- guide:plan-body:start -->
+_Generated: 2026-11-18T22:29:37Z (snapshot; compare against live labels)_
 ## Operator Attention: Merge-Risk-Hold Pileup
 
 Judge-approved PRs under a hold (`loom:blocked` or `loom:operator`) — only a human merge decision is missing.
@@ -38,7 +39,7 @@ _None._
 
 PRs waiting on Judge (`loom:review-requested`).
 
-- **#204**: docs: record decision not to adopt the weight-streaming MVM architecture
+- **#204**: docs: record decision not to adopt the weight-streaming MVM architecture *(held)*
 
 ## Approved (Awaiting Merge)
 
