@@ -44,22 +44,12 @@ jobs:
           make -j2
           make install
 
-      - name: Bit-exact suite, ARRAY_N 8 and 4
+      - name: Verification gate, bitexact group (ARRAY_N 8 and 4)
         run: |
           export PATH="$HOME/icarus/bin:$PATH"
           python -m venv .venv
           .venv/bin/pip install -r verification/requirements.txt
-          .venv/bin/python -m unittest discover -s verification/tests -p 'test_runner_count.py'
-          .venv/bin/python -m unittest discover -s verification/tests -p 'test_source_list.py'
-          EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py --param ARRAY_N=8
-          EXPECT_ICARUS=13.0 .venv/bin/python verification/runner.py --param ARRAY_N=4
-
-      - name: One-bit RTL corruption is caught
-        if: ${{ !cancelled() }}
-        run: |
-          export PATH="$HOME/icarus/bin:$PATH"
-          ./verification/check_mutation.sh 8
-          ./verification/check_mutation.sh 4
+          ./verification/check-all.sh bitexact
 
   golden:
     runs-on: ubuntu-24.04
@@ -78,17 +68,13 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Every workflow file parses
-        run: uv run --with pyyaml==6.0.3 python verification/check_workflows.py
+      # The script's golden group runs the same uv-wrapped checker this job's
+      # comment above describes.
+      - name: Verification gate, golden group
+        run: ./verification/check-all.sh golden
 
       - name: Workflow checker's own unit tests
         run: uv run --with pyyaml==6.0.3 python -m unittest discover -s verification/tests -p 'test_check_workflows.py'
-
-      - name: Golden model unit tests
-        run: python -m unittest discover -s verification/tests -p 'test_golden.py'
-
-      - name: "Gate parity: check-all.sh mirrors this workflow"
-        run: python -m unittest discover -s verification/tests -p 'test_check_all_parity.py'
 
   # Elaboration and lint of rtl/ at the target (8) and fallback (4) sizes, and
   # the negative cases (6, 16). Two small Icarus + Yosys `hierarchy -check`
@@ -105,8 +91,5 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y iverilog yosys
 
-      - name: Elaborate and lint at ARRAY_N 8 and 4, reject 6 and 16
-        run: ./rtl/check.sh
-
-      - name: Relocated-layout seam test
-        run: python3 -I -m unittest discover -s verification/tests -p 'test_relocated_layout.py'
+      - name: Verification gate, rtl-elaborate group
+        run: ./verification/check-all.sh rtl-elaborate

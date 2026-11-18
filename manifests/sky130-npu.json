@@ -19,11 +19,11 @@
       }
     },
     "9": {
-      "file": "manifests/attestations/item-9-klt091-20261115T173024Z.json",
-      "content_hash": "sha256:0576ee12563009c7b798615fb2f32d0197fefe56ccf9a767d6722c622b122106"
+      "file": "manifests/attestations/item-9-klt091-20261118.json",
+      "content_hash": "sha256:f83595ccd6d166353fca78addcb6d05e4b210bdedb45fd05532838244e1b6b26"
     },
     "10": {
-      "file": "manifests/attestations/item-10-klt091-20261115T173024Z.json",
+      "file": "manifests/attestations/item-10-klt091-20261118.json",
       "content_hash": "sha256:e64fded544885d17d500e2a88f1212a0ebfb81e3549d804f4c998df77efadad9"
     }
   }

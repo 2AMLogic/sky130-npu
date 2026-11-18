@@ -2,13 +2,14 @@
   "schema_version": 1,
   "kind": "t1-attestation-inventory",
   "t1_item": 9,
-  "description": "Testbenches shipped: the bit-exact and golden-model benches, the mutation check, the runner and the verification workflow, with the cold-start run from verification/README.md in a fresh venv.",
+  "description": "Testbenches shipped: the bit-exact and golden-model benches, the mutation check, the runner, the verification gate script (verification/check-all.sh, the single source of the gate's step commands) and the verification workflow that calls it one group per job, with the cold-start run from verification/README.md in a fresh venv.",
   "testbenches": [
     "verification/tests/test_bitexact.py",
     "verification/tests/test_golden.py",
     "verification/check_mutation.sh",
     "verification/mutation-lib.sh",
     "verification/runner.py",
+    "verification/check-all.sh",
     ".github/workflows/verification.yml"
   ],
   "cold_start": {
