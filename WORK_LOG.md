@@ -3,6 +3,11 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-18
+
+- **PR #207**: ci: make check-all.sh the single source of the verification gate's commands
+- **Issue #206** (closed): Make check-all.sh the sole source of the verification gate's commands; CI calls it per group
+
 ### 2026-11-17
 
 - **PR #202**: docs: drop hand-maintained step count from check-all.sh header
