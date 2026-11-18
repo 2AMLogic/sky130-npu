@@ -14,17 +14,17 @@ _None._
 
 `loom:very-important` (one counts per workspace); every stage takes these first.
 
-- **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed
+- **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(held)*
 
 ## Important
 
 `loom:important`; taken before unlabelled work.
 
-- **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz
+- **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(held)*
 
 ## Ready
 
-Human-approved issues ready for implementation (`loom:issue`).
+Human-approved issues (`loom:issue`) ready for implementation — excluding held (`loom:blocked`/`loom:operator`/`loom:frozen`), `loom:building`, and issues closed by an open `loom:pr` PR (listed under Approved).
 
 _None._
 
@@ -50,9 +50,9 @@ _None._
 
 Issues carrying `loom:curated`.
 
-- **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)*
-- **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(curated)*
-- **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)*
+- **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)* *(held)*
+- **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(curated)* *(held)*
+- **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)* *(held)*
 
 ## Proposed (Architect / Hermit)
 
@@ -69,7 +69,7 @@ _None._
 | Operator merge-risk holds | 0 |
 | Very important | 1 |
 | Important | 1 |
-| Ready (`loom:issue`) | 0 |
+| Ready (`loom:issue`, net of holds/building/merge-pending) | 0 |
 | In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 1 |
 | Approved PRs awaiting merge | 0 |
