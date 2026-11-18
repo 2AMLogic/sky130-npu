@@ -14,8 +14,7 @@ pins the checker to match it. The loader refuses duplicates at every nesting
 level, so a duplicate key inside a job is covered too.
 
 Test shape, and why it is odd: PyYAML is importable on a developer host but
-absent from ``verification/requirements.txt`` (the rule
-``test_check_all_parity.py``'s docstring states), so this file must not
+absent from ``verification/requirements.txt``, so this file must not
 ``import yaml`` -- and neither may the code under test be imported, since
 ``check_workflows.py`` imports ``yaml`` itself. The checker resolves its
 workflows directory from ``__file__``, not cwd, so pointing it at a fixture

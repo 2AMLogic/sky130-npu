@@ -40,6 +40,7 @@ exported to the test as environment variables.
 | Path | Role |
 |---|---|
 | `runner.py` | cocotb runner, Icarus, parameter-driven; writes the ledger record |
+| `check-all.sh` | the one gate: the single copy of verification.yml's step commands, one group per CI job — `./verification/check-all.sh [bitexact\|golden\|rtl-elaborate]`, no argument for every group |
 | `requirements.txt` | pinned cocotb |
 | `tests/npu_bench.py` | Wishbone master, bank load/store, tiling, utilization accounting (touches only `npu_top` ports) |
 | `tests/test_bitexact.py` | the four reference workloads, requantization edge vectors, K extremes, back-to-back, reset mid-run, `ERR_CODE` 1..5, constrained random, bus error on a denied or unmapped access, `CTRL.SOFT_RESET`, the `irq` / `IRQ_EN` gate, the `npu_ctrl`/requantizer latency seam (RTL-only, skips at gate level) |
