@@ -169,8 +169,8 @@ the deferred part is not specified now:
 
 1. Its gain is small by construction and unmeasured: at most 9 register transfers per tile, and
    no record times the host gap between `DONE` and the next `START`.
-2. It cannot pay without the shadow accumulator, which is already a deferred row with an owner
-   "to file" (`npu.md:345`).
+2. It cannot pay without the shadow accumulator, which is already a deferred row owned by the
+   RTL issue, T1 item 6, tracked in #4 (`npu.md:345`).
 3. The target has not routed (`README.md` status, `ROADMAP.md`), and the open routing ruling in
    #43 may change decision 0002 or move to the 4 x 4 fallback. The reasoning of `CLAUDE.md:45-47`,
    that stretch-size requirements do not drive the architecture before the target closes, is
