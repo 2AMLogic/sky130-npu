@@ -9,3 +9,4 @@ through a new decision record; nothing here is relaxed to make a result pass.
 | [floorplan-sketch.md](floorplan-sketch.md) | First floorplan sketch: banks, array, bus widths, SRAM area fraction (estimate), congestion note |
 | [decisions/0001-dataflow.md](decisions/0001-dataflow.md) | Output-stationary dataflow, with the SRAM bandwidth arithmetic |
 | [decisions/0002-sram-source.md](decisions/0002-sram-source.md) | SRAM macro source (adopt-or-record) |
+| [decisions/0006-weight-streaming-evaluation.md](decisions/0006-weight-streaming-evaluation.md) | Weight-streaming MVM architecture: three lessons evaluated, not adopted (adopt-or-record) |
