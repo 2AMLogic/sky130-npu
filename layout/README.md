@@ -7,7 +7,7 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   for placement, full GDS for stream merge. `macros[].instance` is a hierarchical
   path **into the netlist being routed**, so it is coupled to the synthesis record:
   the four paths here end in `genblk1.g_macro.u_macro`, the macro instance name in
-  the current (20261111) netlist. A mismatch is loud, not silent — OpenROAD stops
+  the netlist selected by `rtl/synth/current-netlist.sh`. A mismatch is loud, not silent — OpenROAD stops
   the floorplan stage with `[ERROR MPL-0020] Couldn't find a macro named ...`.
 - `run.sh`: cold-start runner (inputs staged into `layout/build/`). The record
   id, the pinned klt via `uvx`, both pin checks and the host-path scrub come
@@ -39,13 +39,18 @@ Place-and-route of `npu_top` (`ARRAY_N = 8`, four OpenRAM 4 KB macros).
   wider channel). None routes; lowest unverified reading is 3229 global-routing
   congestion cells (counts not re-derived, logs not committed) (`20261111-wider-channel`, which `par-request.json` now holds).
   Halo and placement density cannot be set through the klt 0.8.0 request.
-- klt pin: `flow/runner-lib.sh` reads `flow/toolchain.json` (the single pin,
-  0.9.1; halo and `placement_density` exist from 0.9.0).
+- `flow/runner-lib.sh` reads the klt 0.9.2 pin from `flow/toolchain.json`.
+  This release supports placement-only macro keep-outs and GCell overflow reporting.
 - `records/20261111-klt091-*`: the same floorplan under klt 0.9.1, with
   **sourced** counts (OpenROAD logs and route metrics committed). Baseline 3229
   congestion cells; `placement_density` 0.45 gives 4383 and 0.75 gives 6096
   (both worse than the 0.6 default). Halo is unusable on this netlist
   (`PDN-0217`, klayout-tools#5302). Still no routed GDS.
+
+- The [klt 0.9.2 wider-channel baseline](records/20261120-klt092-baseline/NOTES.md)
+  reached global routing and stopped at `GRT-0116` with total overflow 3,229.
+  The worst 20 GCell centers are inside bank 0 (12) and bank 1 (8). This run
+  uses the `20261115-sky130-hd` netlist.
 
 - `records/20261111-macro-pin-geometry/`: analysis, no run. The macro LEF puts
   port 0 data pins (`din0`, `dout0`) on the south edge and port 1's data output

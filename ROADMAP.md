@@ -31,7 +31,7 @@ Done and evidenced:
   `reuse.lock.json` — the slow and fast views are pinned
   `usable_for_signoff: false` (gaps G1 and G2 stay open; closing them needs
   SPICE characterization of the macro, out of scope).
-- **Toolchain pinned**: `flow/toolchain.json` (klt 0.9.1), `flow/pdk.json`.
+- **Toolchain pinned**: `flow/toolchain.json` (klt 0.9.2), `flow/pdk.json`.
 
 T1 checklist, as graded in `manifests/sky130-npu.signoff.json`:
 
@@ -122,10 +122,10 @@ item 1.
   exposes both ports on one edge (changes decision 0002) and the 4 x 4 at
   25 MHz fallback. Neither is open to an agent. The issue carries
   `loom:operator`.
-- **Upstream**: klayout-tools#5313 (macro-edge congestion control; this block
-  is a reproducer) is still open. klayout-tools#5302 (halo) closed COMPLETED
-  on 2026-11-11 and its fix ships in v0.9.2 (tagged 2026-11-14), so the halo
-  lever is reopenable today by moving the toolchain pin off klt 0.9.1.
+- **Upstream macro-edge congestion control.** The pinned klt 0.9.2 includes
+  the halo fix (klayout-tools#5302), placement-only macro keep-outs and GCell
+  overflow reporting (klayout-tools#5313). A before/after keep-out measurement
+  still depends on the floorplan decision in #43.
 - **#52**: an unanswered decision, see Later. **#4**: the tracker; it closes
   when `klt signoff` grades T1.
 

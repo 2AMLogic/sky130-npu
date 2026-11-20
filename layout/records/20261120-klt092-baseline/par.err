@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "error": {
+    "command": "place-and-route",
+    "message": "openroad 'route' stage failed: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. -- global-route congestion: total overflow 3229 (max H 3 / max V 3); worst layer met1 with overflow 1617 -- openroad invocation: {\"directory\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/8170efdb6f8f4747887221aced9cf36c\", \"scope\": \"repo\"}, \"invocation_id\": \"8170efdb6f8f4747887221aced9cf36c\", \"metadata_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/8170efdb6f8f4747887221aced9cf36c/invocation.json\", \"scope\": \"repo\"}, \"metrics_path\": {\"path\": \"layout/build/.klt/place-and-route/npu_top_route_metrics.json\", \"scope\": \"repo\"}, \"outcome\": \"exited\", \"retention_errors\": [], \"returncode\": 1, \"script_name\": \"pnr_npu_top_route.tcl\", \"script_path\": {\"path\": \"layout/build/.klt/place-and-route/pnr_npu_top_route.tcl\", \"scope\": \"repo\"}, \"script_sha256\": \"3eb5237ed74fd8747048020804e16357d5a87c3ec1576389576cab58d345b233\", \"stderr_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/8170efdb6f8f4747887221aced9cf36c/stderr.log\", \"scope\": \"repo\"}, \"stdout_path\": {\"path\": \"layout/build/.klt/place-and-route/openroad-logs/8170efdb6f8f4747887221aced9cf36c/stdout.log\", \"scope\": \"repo\"}}"
+  }
+}

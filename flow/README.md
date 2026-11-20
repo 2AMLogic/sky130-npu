@@ -41,7 +41,7 @@ To check the two pins by hand before running anything:
 ```bash
 # klt at the pinned release (a throwaway tool env, not a host-wide install)
 uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" klt --version
-#    -> must report klt 0.9.1
+#    -> must report klt 0.9.2
 # the PDK: open_pdks commit from flow/pdk.json (klt resolves ~/.ciel, then ~/.volare)
 uvx --from "$(jq -r .klayout_tools.pypi flow/toolchain.json)" \
   klt pdk find --pdk sky130A --format json | jq -r .version

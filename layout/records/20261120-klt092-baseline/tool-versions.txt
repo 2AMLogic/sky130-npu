@@ -1,0 +1,4 @@
+openroad 26Q3-1510-g6cb3f2b704 
+klt klt 0.9.2
+open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7
+netlist rtl/synth/records/20261115-sky130-hd/npu_top_synth.v sha256:0eef5aff70680d5da761fdf0adf85eef81d7e7970ae14761209ad53e88a04fef
