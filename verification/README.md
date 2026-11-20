@@ -81,16 +81,16 @@ the gate-level run in the next section; the three are not interchangeable.
 
 Current envelope: `records/20261115-functional-verification-n8/functional-verification.json`
 — `status: pass`, 14/14 at `ARRAY_N = 8`, 0 failed, 0 skipped, cocotb 2.1.0,
-Icarus 13.0. Produced from the committed
-`tests/functional-verification-request.json` by the `flow/toolchain.json` pin
-(`klayout-tools==0.9.1`), with the random-test seed pinned via
-`environment.env.NPU_SEED` — a re-run at this pin reproduced all 14
+Icarus 13.0. The record was produced with klt 0.9.1 from the committed
+`tests/functional-verification-request.json`, with the random-test seed pinned
+via `environment.env.NPU_SEED`. The repeat run on that release reproduced all 14
 `sim_time_ns` values of the `20261114` envelope one-for-one, including
 `test_constrained_random` at `56500.0` (`records/20261114-functional-verification-n8/`
 is the prior envelope it was compared against; wall-clock and log hashes differ
 as expected). Taken before #158's seam check joined the suite; that check runs
-here too (RTL sources, no `NPU_NETLIST` in the request's `env`), so the next
-envelope is 15/15:
+here too (RTL sources, no `NPU_NETLIST` in the request's `env`), bringing the
+suite to 15 tests. The command below uses the current `flow/toolchain.json` pin
+(`klayout-tools==0.9.2`).
 
 ```sh
 # the [functional-verification] extra is required: a bare --from has no cocotb.
@@ -100,7 +100,7 @@ envelope is 15/15:
 # opens the > redirect before klt creates -o (fails on a clean host), and a fixed
 # path is clobbered by a concurrent run.
 out=$(mktemp -d) && echo "artifacts: $out" && \
-uvx --from "klayout-tools[functional-verification]==0.9.1" \
+uvx --from "klayout-tools[functional-verification]==0.9.2" \
     klt functional-verification \
     verification/tests/functional-verification-request.json \
     --format json -o "$out" > "$out/envelope.json"
@@ -111,8 +111,7 @@ run read it from different places:
 
 - `parameters` elaborates the RTL. cocotb's Icarus backend turns it into
   `-Pnpu_top.ARRAY_N=8`, so this is what sizes the DUT.
-- `env` (present at the 0.9.1 pin) is what the testbench reads:
-  `npu_bench.array_n()` takes
+- At the 0.9.2 pin the testbench reads `env`. `npu_bench.array_n()` takes
   `ARRAY_N` from `os.environ`, and `parameters` is not exported there. Without
   it the bench silently falls back to its own default of 8 — the same value, so
   the suite still passes, but by coincidence rather than instruction.
