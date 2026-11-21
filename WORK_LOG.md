@@ -3,6 +3,11 @@
 Chronological record of merged PRs and closed issues. Maintained by the Guide
 triage agent; entries are grouped by date, newest first.
 
+### 2026-11-20
+
+- **PR #213**: build: pin klt 0.9.2 and record wider-channel routing overflow
+- **Issue #211** (closed): Bump the klayout-tools pin 0.9.1 -> 0.9.2 and record a per-region overflow baseline of the current floorplan
+
 ### 2026-11-18
 
 - **PR #207**: ci: make check-all.sh the single source of the verification gate's commands
