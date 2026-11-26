@@ -4,7 +4,7 @@ Roadmap generated from GitHub label state by the Guide triage agent. Only the
 region between the markers is machine-generated.
 
 <!-- guide:plan-body:start -->
-_Generated: 2026-11-21T05:27:15Z (snapshot; compare against live labels)_
+_Generated: 2026-11-26T09:20:00Z (snapshot; compare against live labels)_
 ## Operator Attention: Merge-Risk-Hold Pileup
 
 Judge-approved PRs under a hold (`loom:blocked` or `loom:operator`) — only a human merge decision is missing.
@@ -22,6 +22,7 @@ _None._
 `loom:important`; taken before unlabelled work.
 
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(held)*
+- **#211**: Bump the klayout-tools pin 0.9.1 -> 0.9.2 and record a per-region overflow baseline of the current floorplan *(held)*
 
 ## Ready
 
@@ -54,6 +55,7 @@ Issues carrying `loom:curated`.
 - **#4**: Track the gap to T1 (klayout-tools design-evidence-tiers.md) *(curated)* *(held)*
 - **#43**: T1 item 2 (layout): routed npu_top GDS from a committed klt place-and-route flow with the four OpenRAM macros placed *(curated)* *(held)*
 - **#46**: T1 item 5 (corner verification): klt functional-verification of the bit-exact suite plus multi-corner klt sta at 50 MHz *(curated)* *(held)*
+- **#211**: Bump the klayout-tools pin 0.9.1 -> 0.9.2 and record a per-region overflow baseline of the current floorplan *(curated)* *(held)*
 
 ## Proposed (Architect / Hermit)
 
@@ -69,12 +71,12 @@ _None._
 |------|-------|
 | Operator merge-risk holds | 0 |
 | Very important | 1 |
-| Important | 1 |
+| Important | 2 |
 | Ready (`loom:issue`, net of holds/building/merge-pending) | 0 |
 | In Progress (`loom:building`) | 0 |
 | PRs awaiting review | 1 |
 | Approved PRs awaiting merge | 0 |
-| Curated | 3 |
+| Curated | 4 |
 | Architect / Hermit proposals | 0 |
 | Active epics | 0 |
 <!-- guide:plan-body:end -->
